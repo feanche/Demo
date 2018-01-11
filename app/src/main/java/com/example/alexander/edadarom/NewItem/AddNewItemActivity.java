@@ -45,7 +45,7 @@ public class AddNewItemActivity extends AppCompatActivity {
                 //mRootRef.child("new").setValue(editText.getText().toString());
 
                 String id = mRootRef.child("new").push().getKey();
-                UserModel userModel = new UserModel(editText.getText().toString());
+                UserModel userModel = new UserModel(editText.getText().toString(), id);
                 Map<String, Object> userValues = userModel.toMap();
                 Map<String, Object> user = new HashMap<>();
                 user.put(id, userValues);
@@ -63,8 +63,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         };
 
         backButton.setOnClickListener(backToMainActivity);
-
-
-
     }
+
+
 }

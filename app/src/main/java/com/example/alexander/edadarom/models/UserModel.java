@@ -10,21 +10,21 @@ import java.util.Map;
 public class UserModel {
 
     public String adTitle;
-    //public String key;
+    public String key;
 
     public UserModel() {
 
     }
 
-    public UserModel(String adTitle) {
+    public UserModel(String adTitle, String key) {
         this.adTitle = adTitle;
-        //this.key = key;
+        this.key = key;
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("adTitle",adTitle);
-        //result.put
+        result.put("key",key);
         return result;
     }
 

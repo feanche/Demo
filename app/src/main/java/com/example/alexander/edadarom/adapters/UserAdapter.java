@@ -28,7 +28,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_new_item_add,parent,false));
+        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_browse_cards,parent,false));
     }
 
     @Override
@@ -43,10 +43,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder  {
-        EditText adTitle;
+        TextView adTitle;
         public UserViewHolder(View itemView) {
             super(itemView);
-            adTitle = itemView.findViewById(R.id.editText);
+            adTitle = itemView.findViewById(R.id.textView4);
         }
     }
 }
