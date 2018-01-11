@@ -11,9 +11,11 @@
     <string name="text_offering">Предложение</string>
     <string name="text_offering_food">Еда</string>
     <string name="text_offering_non_food">Предметы</string>
-    <string name="text_price">Цена</string>
+    <string name="text_price">Плата</string>
     <string name="text_price_free">Бесплатно</string>
     <string name="text_price_donate">Вознаграждение</string>
+    <string name="text_sample">например: Томаты красные, 1 пачка, свежие</string>
+    <string name="text_second_activity">Создать объявление</string>
 
-    <string name="button_submit">Предложить</string>
+    <string name="button_submit">Разместить</string>
 </resources>

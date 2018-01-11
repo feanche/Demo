@@ -5,8 +5,11 @@
     <color name="colorAccent">#795548</color>
     <color name="secondColorAccent">#FFC107</color>
     <color name="primaryLight">#C8E6C9</color>
-    <color name="primaryText">#212121</color>
+    <color name="primaryText">#4e4e4e</color>
     <color name="secondaryText">#757575</color>
+    <color name="hint">#a7a7a7</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="layout_background">#FFFFFF</color>
+    <color name="card_background">#e7e7e7</color>
 </resources>
