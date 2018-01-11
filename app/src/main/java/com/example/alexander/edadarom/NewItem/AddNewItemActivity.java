@@ -12,8 +12,12 @@ import android.widget.ImageView;
 
 import com.example.alexander.edadarom.R;
 
+import com.example.alexander.edadarom.models.UserModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -38,7 +42,14 @@ public class AddNewItemActivity extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRootRef.child("new").setValue(editText.getText().toString());
+                //mRootRef.child("new").setValue(editText.getText().toString());
+
+                String id = mRootRef.child("new").push().getKey();
+                UserModel userModel = new UserModel(editText.getText().toString());
+                Map<String, Object> userValues = userModel.toMap();
+                Map<String, Object> user = new HashMap<>();
+                user.put(id, userValues);
+                mRootRef.child("new").updateChildren(user);
             }
         };
 
@@ -52,6 +63,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         };
 
         backButton.setOnClickListener(backToMainActivity);
+
 
 
     }

@@ -10,6 +10,7 @@ import java.util.Map;
 public class UserModel {
 
     public String adTitle;
+    //public String key;
 
     public UserModel() {
 
@@ -17,11 +18,13 @@ public class UserModel {
 
     public UserModel(String adTitle) {
         this.adTitle = adTitle;
+        //this.key = key;
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("result",result);
+        result.put("adTitle",adTitle);
+        //result.put
         return result;
     }
 
