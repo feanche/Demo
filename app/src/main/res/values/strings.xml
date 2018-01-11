@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">EdaDarom</string>
+
+    <string name="menu_browse">Обзор</string>
+    <string name="menu_add">Рядом со мной</string>
+    <string name="menu_messages">Сообщения</string>
+    <string name="menu_personal">Профиль</string>
+
+    <string name="text_photo">Фотография</string>
+    <string name="text_title">Название</string>
+    <string name="text_offering">Предложение</string>
+    <string name="text_offering_food">Еда</string>
+    <string name="text_offering_non_food">Предметы</string>
+    <string name="text_price">Цена</string>
+    <string name="text_price_free">Бесплатно</string>
+    <string name="text_price_donate">Вознаграждение</string>
+
+    <string name="button_submit">Предложить</string>
+</resources>
