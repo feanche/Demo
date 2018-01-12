@@ -16,12 +16,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 
@@ -53,6 +55,8 @@ public class AddNewItemActivity extends AppCompatActivity {
     Target target;
 
     final static String TAG = "myLogs_AddNewItem";
+    private ImageView photoImage;
+    private TextView photoTextHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,8 @@ public class AddNewItemActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button2);
         backButton = (ImageView) findViewById(R.id.iv_close);
         photoButton = (ImageButton) findViewById(R.id.imageButton);
+        photoImage = (ImageView) findViewById(R.id.imageView);
+        photoTextHide = (TextView) findViewById(R.id.textView);
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -93,14 +99,23 @@ public class AddNewItemActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(backToMainActivity);
 
-        View.OnClickListener photoButtonListener = new View.OnClickListener() {
+        View.OnClickListener photoButtonClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
             }
         };
 
-        photoButton.setOnClickListener(photoButtonListener);
+        photoButton.setOnClickListener(photoButtonClickListener);
+
+        View.OnClickListener photoImageClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        };
+
+        photoImage.setOnClickListener(photoImageClickListener);
     }
 
     public void takePicture() {
@@ -159,9 +174,10 @@ public class AddNewItemActivity extends AppCompatActivity {
     }
 
     public void uploadImage(Bitmap bitmap) {
-
-        photoButton.setImageBitmap(bitmap);
-
+        photoImage.setImageBitmap(bitmap);
+        photoImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        photoImage.setVisibility(View.VISIBLE);
+        photoButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
