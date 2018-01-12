@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,9 +29,15 @@ import android.widget.TextView;
 import com.example.alexander.edadarom.R;
 
 import com.example.alexander.edadarom.models.UserModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,7 +53,8 @@ import com.squareup.picasso.Target;
 
 public class AddNewItemActivity extends AppCompatActivity {
 
-    DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     private EditText editText;
     private Button button;
     private ImageView backButton;
@@ -62,6 +70,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item_add);
+        Log.d(TAG,"onCreate");
 
         editText = (EditText)findViewById(R.id.editText);
         button = (Button)findViewById(R.id.button2);
@@ -174,10 +183,32 @@ public class AddNewItemActivity extends AppCompatActivity {
     }
 
     public void uploadImage(Bitmap bitmap) {
+
+        StorageReference mountainsRef = mStorageRef.child("mountains.jpg");
+
         photoImage.setImageBitmap(bitmap);
         photoImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         photoImage.setVisibility(View.VISIBLE);
         photoButton.setVisibility(View.INVISIBLE);
+
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] data = byteArrayOutputStream.toByteArray();
+
+
+        UploadTask uploadTask = mountainsRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUri = taskSnapshot.getDownloadUrl();
+            }
+        });
     }
 
     @Override
@@ -189,4 +220,15 @@ public class AddNewItemActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume");
+    }
 }

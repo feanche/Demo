@@ -4,6 +4,8 @@ package com.example.alexander.edadarom.models;
  * Created by Alexander on 11.01.2018.
  */
 
+import android.graphics.Bitmap;
+
 import java.util.HashMap;
 import java.util.Map;
 
