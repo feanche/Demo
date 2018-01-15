@@ -14,7 +14,7 @@ public class UserModel {
     public String description;
     public String endTime;
     public Float location;
-    public String price;
+    public float price;
     public String publicTime;
     public String title;
     public String type;

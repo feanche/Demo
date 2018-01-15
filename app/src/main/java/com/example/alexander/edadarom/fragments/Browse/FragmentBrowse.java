@@ -1,4 +1,4 @@
-package com.example.alexander.edadarom.fragments;
+package com.example.alexander.edadarom.fragments.Browse;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.adapters.UserAdapter;
+import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
 import com.example.alexander.edadarom.models.UserModel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,8 +28,9 @@ import java.util.List;
  * Created by Alexander on 10.01.2018.
  */
 
-public class FragmentBrowse extends Fragment {
+public class FragmentBrowse extends Fragment implements BrowseFragmentContract.View {
 
+    private BrowseFragmentContract.Presenter presenter;
     private View view;
     private RecyclerView recyclerView;
     FloatingActionButton mFab;
@@ -112,7 +114,7 @@ public class FragmentBrowse extends Fragment {
     private int getItemIndex(UserModel user) {
         int index = -1;
         for(int i = 0; i < result.size(); i++) {
-            if(result.get(i).key.equals(user.key)){
+            if(result.get(i).equals(user)){
                 index = i;
                 break;
             }
@@ -121,6 +123,21 @@ public class FragmentBrowse extends Fragment {
     }
 
     private void removeUser(int position){
-        mRootRef.child("new").child(result.get(position).key).removeValue();
+        mRootRef.child("new").child(result.get(position).description);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void addDate(ArrayList<Ad> arAds) {
+
     }
 }

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
 import com.example.alexander.edadarom.fragments.FragmentNearby;
-import com.example.alexander.edadarom.fragments.FragmentBrowse;
+import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.FragmentMessages;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
 
