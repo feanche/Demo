@@ -11,22 +11,37 @@ import java.util.Map;
 
 public class UserModel {
 
-    public String adTitle;
-    public String key;
+    public String description;
+    public String endTime;
+    public Float location;
+    public String price;
+    public String publicTime;
+    public String title;
+    public String type;
 
     public UserModel() {
 
     }
 
-    public UserModel(String adTitle, String key) {
-        this.adTitle = adTitle;
-        this.key = key;
+    public UserModel(String description, String endTime, Float location, Float price, String publicTime, String title, String type) {
+        this.description = description;
+        this.endTime = endTime;
+        this.location = location;
+        this.price = price;
+        this.publicTime = publicTime;
+        this.title = title;
+        this.type = type;
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("adTitle",adTitle);
-        result.put("key",key);
+        result.put("description",description);
+        result.put("endTime",endTime);
+        result.put("location",location);
+        result.put("price",price);
+        result.put("publicTime",publicTime);
+        result.put("title",title);
+        result.put("type",type);
         return result;
     }
 

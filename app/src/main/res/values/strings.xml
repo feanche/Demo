@@ -6,16 +6,21 @@
     <string name="menu_messages">Сообщения</string>
     <string name="menu_personal">Профиль</string>
 
-    <string name="text_photo">Фотография</string>
+    <string name="text_photo">Фотографии</string>
     <string name="text_title">Название</string>
+    <string name="text_description">Описание</string>
     <string name="text_offering">Предложение</string>
     <string name="text_offering_food">Еда</string>
     <string name="text_offering_non_food">Предметы</string>
     <string name="text_price">Плата</string>
     <string name="text_price_free">Бесплатно</string>
     <string name="text_price_donate">Вознаграждение</string>
-    <string name="text_sample">например: Томаты красные, 1 кг, свежие</string>
+    <string name="text_title_sample">Например: Дрель, ударная 1200 rpm</string>
+    <string name="text_description_sample">Описание (до 300 символов)</string>
     <string name="text_second_activity">Создать объявление</string>
+    <string name="price">Стоимость, ₽</string>
+    <string name="test">Здесь категория и местоположение</string>
+
 
     <string name="button_submit">Разместить</string>
 </resources>

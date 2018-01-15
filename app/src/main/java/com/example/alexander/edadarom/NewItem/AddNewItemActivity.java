@@ -26,17 +26,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.alexander.edadarom.R;
-
-import com.example.alexander.edadarom.models.UserModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -44,8 +33,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.models.UserModel;
+
+
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -53,17 +51,15 @@ import com.squareup.picasso.Target;
 
 public class AddNewItemActivity extends AppCompatActivity {
 
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-    private EditText editText;
+    private EditText title, description, price;
     private Button button;
     private ImageView backButton;
     Uri file;
     private ImageButton photoButton;
     Target target;
+    FirebaseFirestore db;
 
     final static String TAG = "myLogs_AddNewItem";
-    private ImageView photoImage;
     private TextView photoTextHide;
 
     @Override
@@ -72,12 +68,12 @@ public class AddNewItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_item_add);
         Log.d(TAG,"onCreate");
 
-        editText = (EditText)findViewById(R.id.editText);
-        button = (Button)findViewById(R.id.button2);
-        backButton = (ImageView) findViewById(R.id.iv_close);
-        photoButton = (ImageButton) findViewById(R.id.imageButton);
-        photoImage = (ImageView) findViewById(R.id.imageView);
-        photoTextHide = (TextView) findViewById(R.id.textView);
+        db = FirebaseFirestore.getInstance();
+
+        title = (EditText)findViewById(R.id.editText);
+        description = (EditText)findViewById(R.id.editText2);
+        price = (EditText)findViewById(R.id.editText3);
+
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -86,14 +82,44 @@ public class AddNewItemActivity extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mRootRef.child("new").setValue(editText.getText().toString());
 
-                String id = mRootRef.child("new").push().getKey();
+                /*String id = mRootRef.child("new").push().getKey();
                 UserModel userModel = new UserModel(editText.getText().toString(), id);
                 Map<String, Object> userValues = userModel.toMap();
                 Map<String, Object> user = new HashMap<>();
                 user.put(id, userValues);
-                mRootRef.child("new").updateChildren(user);
+                mRootRef.child("new").updateChildren(user);*/
+
+                UserModel userModel = new UserModel(
+                        description.getText().toString(),
+                        null,
+                        null,
+                        ,
+                        null,
+                        title.getText().toString(),
+                        null
+                );
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("name","Tokyo");
+                data.put("country","Japan");
+
+                db.collection("ads")
+                        .add(data)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "Document snapshot written by ID: "+documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Error adding document ", e);
+                            }
+                        });
+
+
             }
         };
 
@@ -116,15 +142,6 @@ public class AddNewItemActivity extends AppCompatActivity {
         };
 
         photoButton.setOnClickListener(photoButtonClickListener);
-
-        View.OnClickListener photoImageClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        };
-
-        photoImage.setOnClickListener(photoImageClickListener);
     }
 
     public void takePicture() {
@@ -184,31 +201,9 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     public void uploadImage(Bitmap bitmap) {
 
-        StorageReference mountainsRef = mStorageRef.child("mountains.jpg");
-
-        photoImage.setImageBitmap(bitmap);
-        photoImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        photoImage.setVisibility(View.VISIBLE);
+        photoButton.setImageBitmap(bitmap);
         photoButton.setVisibility(View.INVISIBLE);
 
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        byte[] data = byteArrayOutputStream.toByteArray();
-
-
-        UploadTask uploadTask = mountainsRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUri = taskSnapshot.getDownloadUrl();
-            }
-        });
     }
 
     @Override
