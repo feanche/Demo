@@ -63,7 +63,7 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView photoTextHide;
-    private Uri photoUri;
+    private Uri photoUri, uploadPhotoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadDataToFirestore();
+                uploadPhotoToFirestore();
             }
         };
 
@@ -129,8 +129,33 @@ public class AddNewItemActivity extends AppCompatActivity {
         startActivityForResult(intent, 100);
     }
 
-    public void uploadDataToFirestore(){
+    public void uploadPhotoToFirestore(){
+        StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
+        ref.putFile(photoUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(), "Uploaded",Toast.LENGTH_SHORT).show();
+                        uploadPhotoUrl = taskSnapshot.getDownloadUrl();
+                        sendDataToFirestore();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Failed",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
 
+                    }
+                });
+
+    }
+
+    public void sendDataToFirestore(){
         UserModel userModel = new UserModel(
                 description.getText().toString(),
                 1250,
@@ -138,7 +163,8 @@ public class AddNewItemActivity extends AppCompatActivity {
                 Integer.parseInt(price.getText().toString()),
                 1250,
                 title.getText().toString(),
-                "Столярный инструмент"
+                "Столярный инструмент",
+                uploadPhotoUrl.toString()
         );
 
         Map<String, Object> userValues = userModel.toMap();
@@ -155,27 +181,6 @@ public class AddNewItemActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "Error adding document ", e);
-                    }
-                });
-
-        StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
-        ref.putFile(photoUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(), "Uploaded",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Failed",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
                     }
                 });
     }

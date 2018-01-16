@@ -18,12 +18,13 @@ public class UserModel {
     public long publicTime;
     public String title;
     public String type;
+    public String photoUrl;
 
     public UserModel() {
 
     }
 
-    public UserModel(String description, long endTime, int location, int price, long publicTime, String title, String type) {
+    public UserModel(String description, long endTime, int location, int price, long publicTime, String title, String type, String photoUrl) {
         this.description = description;
         this.endTime = endTime;
         this.location = location;
@@ -31,6 +32,7 @@ public class UserModel {
         this.publicTime = publicTime;
         this.title = title;
         this.type = type;
+        this.photoUrl = photoUrl;
     }
 
     public Map<String, Object> toMap() {
@@ -42,6 +44,7 @@ public class UserModel {
         result.put("publicTime",publicTime);
         result.put("title",title);
         result.put("type",type);
+        result.put("photoUrl",photoUrl);
         return result;
     }
 
