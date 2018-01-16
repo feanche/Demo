@@ -92,23 +92,19 @@ public class AddNewItemActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 uploadPhotoToFirestore();
             }
-        };
+        });
 
-        button.setOnClickListener(onClickListener);
-
-        View.OnClickListener backToMainActivity = new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        };
-
-        backButton.setOnClickListener(backToMainActivity);
+        });
 
         View.OnClickListener photoButtonClickListener = new View.OnClickListener() {
             @Override

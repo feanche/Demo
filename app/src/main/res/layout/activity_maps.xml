@@ -39,7 +39,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.hasibezafer.googlemapsapp.MapsActivity"
+        tools:context="com.example.alexander.edadarom.MapsActivity"
         android:layout_below="@+id/lineer"/>
 
     <ZoomControls
