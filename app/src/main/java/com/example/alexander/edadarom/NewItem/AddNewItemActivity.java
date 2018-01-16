@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -60,6 +61,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageReference;
+    Long currentTime;
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView photoTextHide;
@@ -155,13 +157,18 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     }
 
+    public void getCurrentTime(){
+        currentTime = System.currentTimeMillis();
+    }
+
     public void sendDataToFirestore(){
+        getCurrentTime();
         UserAdsModel userAdsModel = new UserAdsModel(
                 description.getText().toString(),
                 1250,
                 2342,
                 Integer.parseInt(price.getText().toString()),
-                1250,
+                currentTime,
                 title.getText().toString(),
                 "Столярный инструмент",
                 uploadPhotoUrl.toString()
