@@ -21,16 +21,22 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -52,9 +58,12 @@ public class AddNewItemActivity extends AppCompatActivity {
     private ImageButton photoButton1, photoButton2, photoButton3;
     Target target;
     FirebaseFirestore db;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView photoTextHide;
+    private Uri photoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,8 @@ public class AddNewItemActivity extends AppCompatActivity {
         Log.d(TAG,"onCreate");
 
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         title = (EditText)findViewById(R.id.editText);
         description = (EditText)findViewById(R.id.editText2);
@@ -83,35 +94,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                UserModel userModel = new UserModel(
-                        description.getText().toString(),
-                        1250,
-                        2342,
-                        Integer.parseInt(price.getText().toString()),
-                        1250,
-                        title.getText().toString(),
-                        "dsgf"
-                );
-
-                Map<String, Object> userValues = userModel.toMap();
-
-                db.collection("ads")
-                        .add(userValues)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "Document snapshot written by ID: "+documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Error adding document ", e);
-                            }
-                        });
-
-
+                uploadDataToFirestore();
             }
         };
 
@@ -146,6 +129,57 @@ public class AddNewItemActivity extends AppCompatActivity {
         startActivityForResult(intent, 100);
     }
 
+    public void uploadDataToFirestore(){
+
+        UserModel userModel = new UserModel(
+                description.getText().toString(),
+                1250,
+                2342,
+                Integer.parseInt(price.getText().toString()),
+                1250,
+                title.getText().toString(),
+                "Столярный инструмент"
+        );
+
+        Map<String, Object> userValues = userModel.toMap();
+
+        db.collection("ads")
+                .add(userValues)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Document snapshot written by ID: "+documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Error adding document ", e);
+                    }
+                });
+
+        StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
+        ref.putFile(photoUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(), "Uploaded",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Failed",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    }
+                });
+    }
+
 
     private Uri getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -157,7 +191,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File path = new File(mediaStorageDir.getPath()+File.separator+"IMG_"+timeStamp+".jpg");
-        Uri photoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName()+".com.example.alexander.edadarom.provider",path);
+        photoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName()+".com.example.alexander.edadarom.provider",path);
         return photoUri;
     }
 
