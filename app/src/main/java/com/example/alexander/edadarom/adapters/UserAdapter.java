@@ -34,7 +34,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
         UserModel user = list.get(position);
-        holder.adTitle.setText(user.adTitle);
+        holder.title.setText(user.title);
     }
 
     @Override
@@ -43,10 +43,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder  {
-        TextView adTitle;
+        EditText title;
         public UserViewHolder(View itemView) {
             super(itemView);
-            adTitle = itemView.findViewById(R.id.textView4);
+            title = itemView.findViewById(R.id.editText);
         }
     }
 }

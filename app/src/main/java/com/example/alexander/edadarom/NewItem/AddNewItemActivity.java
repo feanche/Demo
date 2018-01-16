@@ -1,8 +1,6 @@
 package com.example.alexander.edadarom.NewItem;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,12 +10,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,11 +22,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,7 +49,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     private Button button;
     private ImageView backButton;
     Uri file;
-    private ImageButton photoButton;
+    private ImageButton photoButton1, photoButton2, photoButton3;
     Target target;
     FirebaseFirestore db;
 
@@ -74,6 +68,13 @@ public class AddNewItemActivity extends AppCompatActivity {
         description = (EditText)findViewById(R.id.editText2);
         price = (EditText)findViewById(R.id.editText3);
 
+        button = (Button)findViewById(R.id.button2);
+        backButton = (ImageView)findViewById(R.id.iv_close);
+
+        photoButton1 = (ImageButton)findViewById(R.id.imageButton2);
+        photoButton2 = (ImageButton)findViewById(R.id.imageButton1);
+        photoButton3 = (ImageButton)findViewById(R.id.imageButton);
+
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -83,29 +84,20 @@ public class AddNewItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                /*String id = mRootRef.child("new").push().getKey();
-                UserModel userModel = new UserModel(editText.getText().toString(), id);
-                Map<String, Object> userValues = userModel.toMap();
-                Map<String, Object> user = new HashMap<>();
-                user.put(id, userValues);
-                mRootRef.child("new").updateChildren(user);*/
-
                 UserModel userModel = new UserModel(
                         description.getText().toString(),
-                        null,
-                        null,
-                        ,
-                        null,
+                        1250,
+                        2342,
+                        Integer.parseInt(price.getText().toString()),
+                        1250,
                         title.getText().toString(),
-                        null
+                        "dsgf"
                 );
 
-                Map<String, Object> data = new HashMap<>();
-                data.put("name","Tokyo");
-                data.put("country","Japan");
+                Map<String, Object> userValues = userModel.toMap();
 
                 db.collection("ads")
-                        .add(data)
+                        .add(userValues)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
@@ -141,7 +133,9 @@ public class AddNewItemActivity extends AppCompatActivity {
             }
         };
 
-        photoButton.setOnClickListener(photoButtonClickListener);
+        photoButton1.setOnClickListener(photoButtonClickListener);
+        photoButton2.setOnClickListener(photoButtonClickListener);
+        photoButton3.setOnClickListener(photoButtonClickListener);
     }
 
     public void takePicture() {
@@ -200,10 +194,8 @@ public class AddNewItemActivity extends AppCompatActivity {
     }
 
     public void uploadImage(Bitmap bitmap) {
-
-        photoButton.setImageBitmap(bitmap);
-        photoButton.setVisibility(View.INVISIBLE);
-
+            photoButton1.setImageBitmap(bitmap);
+            photoButton1.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     @Override

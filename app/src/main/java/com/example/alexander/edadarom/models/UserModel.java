@@ -12,10 +12,10 @@ import java.util.Map;
 public class UserModel {
 
     public String description;
-    public String endTime;
-    public Float location;
-    public float price;
-    public String publicTime;
+    public long endTime;
+    public int location;
+    public int price;
+    public long publicTime;
     public String title;
     public String type;
 
@@ -23,7 +23,7 @@ public class UserModel {
 
     }
 
-    public UserModel(String description, String endTime, Float location, Float price, String publicTime, String title, String type) {
+    public UserModel(String description, long endTime, int location, int price, long publicTime, String title, String type) {
         this.description = description;
         this.endTime = endTime;
         this.location = location;
