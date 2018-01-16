@@ -41,7 +41,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.models.UserModel;
+import com.example.alexander.edadarom.models.UserAdsModel;
 
 
 
@@ -156,7 +156,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     }
 
     public void sendDataToFirestore(){
-        UserModel userModel = new UserModel(
+        UserAdsModel userAdsModel = new UserAdsModel(
                 description.getText().toString(),
                 1250,
                 2342,
@@ -167,7 +167,7 @@ public class AddNewItemActivity extends AppCompatActivity {
                 uploadPhotoUrl.toString()
         );
 
-        Map<String, Object> userValues = userModel.toMap();
+        Map<String, Object> userValues = userAdsModel.toMap();
 
         db.collection("ads")
                 .add(userValues)

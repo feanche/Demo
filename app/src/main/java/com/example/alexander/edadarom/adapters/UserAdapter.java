@@ -1,16 +1,13 @@
 package com.example.alexander.edadarom.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.models.UserModel;
+import com.example.alexander.edadarom.models.UserAdsModel;
 
 import java.util.List;
 
@@ -20,9 +17,9 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
-    private List<UserModel> list;
+    private List<UserAdsModel> list;
 
-    public UserAdapter(List<UserModel> list) {
+    public UserAdapter(List<UserAdsModel> list) {
         this.list = list;
     }
 
@@ -33,7 +30,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
-        UserModel user = list.get(position);
+        UserAdsModel user = list.get(position);
         holder.title.setText(user.title);
     }
 

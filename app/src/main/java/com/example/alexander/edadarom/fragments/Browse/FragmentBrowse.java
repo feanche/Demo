@@ -14,7 +14,7 @@ import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.adapters.UserAdapter;
 import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
-import com.example.alexander.edadarom.models.UserModel;
+import com.example.alexander.edadarom.models.UserAdsModel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +36,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     FloatingActionButton mFab;
     private UserAdapter adapter;
     public static final int NEW_ITEM = 1;
-    private List<UserModel> result;
+    private List<UserAdsModel> result;
     DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
     public String key;
 
@@ -71,14 +71,14 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         mRootRef.child("new").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                result.add(dataSnapshot.getValue(UserModel.class));
+                result.add(dataSnapshot.getValue(UserAdsModel.class));
                 adapter.notifyDataSetChanged();
                 //checkEmpty();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                UserModel model = dataSnapshot.getValue(UserModel.class);
+                UserAdsModel model = dataSnapshot.getValue(UserAdsModel.class);
                 int index = getItemIndex(model);
                 result.set(index, model);
                 adapter.notifyItemChanged(index);
@@ -86,7 +86,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                UserModel model = dataSnapshot.getValue(UserModel.class);
+                UserAdsModel model = dataSnapshot.getValue(UserAdsModel.class);
                 int index = getItemIndex(model);
                 result.remove(index);
                 adapter.notifyItemRemoved(index);
@@ -111,7 +111,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private int getItemIndex(UserModel user) {
+    private int getItemIndex(UserAdsModel user) {
         int index = -1;
         for(int i = 0; i < result.size(); i++) {
             if(result.get(i).equals(user)){

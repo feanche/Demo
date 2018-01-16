@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserModel {
+public class UserAdsModel {
 
     public String description;
     public long endTime;
@@ -20,11 +20,11 @@ public class UserModel {
     public String type;
     public String photoUrl;
 
-    public UserModel() {
+    public UserAdsModel() {
 
     }
 
-    public UserModel(String description, long endTime, int location, int price, long publicTime, String title, String type, String photoUrl) {
+    public UserAdsModel(String description, long endTime, int location, int price, long publicTime, String title, String type, String photoUrl) {
         this.description = description;
         this.endTime = endTime;
         this.location = location;
