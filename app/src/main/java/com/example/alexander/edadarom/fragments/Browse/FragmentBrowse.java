@@ -14,17 +14,10 @@ import android.widget.Button;
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.adapters.UserAdapter;
-import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
+import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -36,25 +29,25 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private View view;
     private RecyclerView recyclerView;
     FloatingActionButton mFab;
-    private UserAdapter adapter;
+    private UserAdsAdapter adapter;
     public static final int NEW_ITEM = 1;
     public static final int GET_LOCATION = 1;
-    private List<UserAdsModel> result;
-    DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-    public String key;
+    private ArrayList<UserAdsModel> arUserAds;
     private Button mapButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
-        result = new ArrayList<>();
-        recyclerView = (RecyclerView) view.findViewById(R.id.items);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        adapter = new UserAdapter(result);
-        recyclerView.setAdapter(adapter);
+
+        initRecyclerView();
+        initButtons();
+        presenter = new BrowsePresenter(this);
+        presenter.getAds();
+
+        return view;
+    }
+
+    private void initButtons() {
         mFab = (FloatingActionButton)view.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -72,71 +65,22 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
                 startActivityForResult(intent, GET_LOCATION);
             }
         });
-
-
-        updateList();
-        //checkEmpty();
-        return view;
     }
 
-    private void updateList() {
-
-        mRootRef.child("new").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                result.add(dataSnapshot.getValue(UserAdsModel.class));
-                adapter.notifyDataSetChanged();
-                //checkEmpty();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                UserAdsModel model = dataSnapshot.getValue(UserAdsModel.class);
-                int index = getItemIndex(model);
-                result.set(index, model);
-                adapter.notifyItemChanged(index);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                UserAdsModel model = dataSnapshot.getValue(UserAdsModel.class);
-                int index = getItemIndex(model);
-                result.remove(index);
-                adapter.notifyItemRemoved(index);
-                //checkEmpty();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+    private void initRecyclerView() {
+        arUserAds = new ArrayList<>();
+        recyclerView = (RecyclerView) view.findViewById(R.id.items);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        adapter = new UserAdsAdapter(getContext(), arUserAds);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private int getItemIndex(UserAdsModel user) {
-        int index = -1;
-        for(int i = 0; i < result.size(); i++) {
-            if(result.get(i).equals(user)){
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
-    private void removeUser(int position){
-        mRootRef.child("new").child(result.get(position).description);
     }
 
     @Override
@@ -150,7 +94,9 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     }
 
     @Override
-    public void addDate(ArrayList<Ad> arAds) {
-
+    public void addDate(ArrayList<UserAdsModel> ar) {
+        arUserAds.clear();
+        arUserAds.addAll(ar);
+        adapter.notifyDataSetChanged();
     }
 }

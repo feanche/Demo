@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
+import com.example.alexander.edadarom.models.UserAdsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,7 +23,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
     public static String TAG = "BrowsePresenter";
 
      private BrowseFragmentContract.View view;
-     private ArrayList<Ad> arAds;
+     private ArrayList<UserAdsModel> arAds = new ArrayList<>();
 
     public BrowsePresenter(BrowseFragmentContract.View view) {
         this.view = view;
@@ -47,8 +48,8 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
 
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                Ad ad = document.toObject(Ad.class);
-                                arAds.add(ad);
+                                UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                arAds.add(userAdsModel);
                             }
                             view.hideLoading();
                             Collections.reverse(arAds);
