@@ -43,8 +43,6 @@ import com.squareup.picasso.Target;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 
-
-
 /**
  * Created by Alexander on 10.01.2018.
  */
@@ -61,7 +59,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     Long currentTime;
-    Long timeOfAction = 2592000000L;
+    Long timeOfAction = 2592000000L; //30-дней, время до окончания действия объявления
     Long adEndTime;
 
     final static String TAG = "myLogs_AddNewItem";
