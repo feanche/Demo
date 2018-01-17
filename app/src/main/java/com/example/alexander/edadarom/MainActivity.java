@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentPersonal fragmentPersonal;
     private ViewPager viewPager;
     MenuItem prevMenuItem;
+    final static String TAG = "myLogs_MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,5 +93,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(fragmentPersonal);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(4);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy");
     }
 }

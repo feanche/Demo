@@ -75,7 +75,6 @@ public class AddNewItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item_add);
-        Log.d(TAG,"onCreate");
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -296,6 +295,5 @@ public class AddNewItemActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
     }
 }
