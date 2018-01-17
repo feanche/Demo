@@ -61,6 +61,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     Long currentTime;
     Long timeOfAction = 2592000000L; //millis, 30 дней - время до окончания действия объявления
     Long adEndTime;
+    boolean complete = true;
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView photoTextHide;
@@ -118,6 +119,26 @@ public class AddNewItemActivity extends AppCompatActivity {
         photoButton3.setOnClickListener(photoButtonClickListener);
     }
 
+    public void completenessCheck() {
+        String mTitle = title.getText().toString();
+        String mDescription = description.getText().toString();
+        String mPrice = price.getText().toString();
+        if(mTitle.matches("")) {
+            title.setHintTextColor(getResources().getColor(R.color.red));
+        }
+        if(mDescription.matches("")) {
+            description.setHintTextColor(getResources().getColor(R.color.red));
+        }
+        if(mPrice.matches("")) {
+            price.setHintTextColor(getResources().getColor(R.color.red));
+        }
+        if(mTitle.matches("")|mDescription.matches("")|mPrice.matches("")){
+            complete = false;
+        } else {
+            complete = true;
+        }
+    }
+
     public void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         file = getOutputMediaFile();
@@ -126,30 +147,36 @@ public class AddNewItemActivity extends AppCompatActivity {
         startActivityForResult(intent, 100);
     }
 
-    public void uploadPhotoToFirestore(){
-        StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
-        ref.putFile(photoUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(), "Uploaded",Toast.LENGTH_SHORT).show();
-                        uploadPhotoUrl = taskSnapshot.getDownloadUrl();
-                        sendDataToFirestore();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Failed",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    }
-                });
-
+    public void uploadPhotoToFirestore() {
+        completenessCheck();
+        if(complete) {
+            StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
+            ref.putFile(photoUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                            uploadPhotoUrl = taskSnapshot.getDownloadUrl();
+                            sendDataToFirestore();
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Ошибка загрузки изображения",Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                        }
+                    });
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Заполните все поля помеченные красным!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getTimes(){

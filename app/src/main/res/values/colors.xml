@@ -12,4 +12,5 @@
     <color name="divider">#BDBDBD</color>
     <color name="layout_background">#FFFFFF</color>
     <color name="card_background">#e7e7e7</color>
+    <color name="red">#ff0000</color>
 </resources>
