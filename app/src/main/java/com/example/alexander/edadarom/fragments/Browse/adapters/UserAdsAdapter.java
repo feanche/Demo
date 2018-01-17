@@ -30,7 +30,7 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_browse_cards,parent,false));
+        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_browse_recycler_item,parent,false));
     }
 
     @Override

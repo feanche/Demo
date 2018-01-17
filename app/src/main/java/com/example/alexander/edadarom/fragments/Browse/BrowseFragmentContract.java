@@ -1,6 +1,5 @@
 package com.example.alexander.edadarom.fragments.Browse;
 
-import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.BaseView;
 

@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
+
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem=bottomNavigationView.getMenu().getItem(position);
             }

@@ -51,6 +51,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                                 UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
                                 arAds.add(userAdsModel);
                             }
+
                             view.hideLoading();
                             Collections.reverse(arAds);
                             view.addDate(arAds);

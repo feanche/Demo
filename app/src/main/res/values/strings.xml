@@ -26,4 +26,5 @@
 
 
     <string name="button_submit">Разместить</string>
+    <string name="title_activity_full_info">FullInfoActivity</string>
 </resources>

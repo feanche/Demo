@@ -6,16 +6,19 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.alexander.edadarom.FullInfoActivity.FullInfoActivity;
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -58,13 +61,24 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
 
     private void initRecyclerView() {
         arUserAds = new ArrayList<>();
+
+        adapter = new UserAdsAdapter(getContext(), arUserAds);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        adapter = new UserAdsAdapter(getContext(), arUserAds);
         recyclerView.setAdapter(adapter);
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Log.d("fd", "click");
+                startActivity(new Intent(getActivity(), FullInfoActivity.class));
+            }
+        });
+
     }
 
     @Override
