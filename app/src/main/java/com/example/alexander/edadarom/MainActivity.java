@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
-import com.example.alexander.edadarom.fragments.FragmentNearby;
+import com.example.alexander.edadarom.fragments.FragmentFavorites;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.FragmentMessages;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     FragmentBrowse fragmentBrowse;
-    FragmentNearby fragmentNearby;
+    FragmentFavorites fragmentFavorites;
     FragmentMessages fragmentMessages;
     FragmentPersonal fragmentPersonal;
     private ViewPager viewPager;
@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragmentBrowse = new FragmentBrowse();
-        fragmentNearby = new FragmentNearby();
+        fragmentFavorites = new FragmentFavorites();
         fragmentMessages = new FragmentMessages();
         fragmentPersonal = new FragmentPersonal();
         adapter.addFragment(fragmentBrowse);
-        adapter.addFragment(fragmentNearby);
+        adapter.addFragment(fragmentFavorites);
         adapter.addFragment(fragmentMessages);
         adapter.addFragment(fragmentPersonal);
         viewPager.setAdapter(adapter);

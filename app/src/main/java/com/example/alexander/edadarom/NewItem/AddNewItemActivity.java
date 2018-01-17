@@ -59,7 +59,7 @@ public class AddNewItemActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     Long currentTime;
-    Long timeOfAction = 2592000000L; //30-дней, время до окончания действия объявления
+    Long timeOfAction = 2592000000L; //millis, 30 дней - время до окончания действия объявления
     Long adEndTime;
 
     final static String TAG = "myLogs_AddNewItem";

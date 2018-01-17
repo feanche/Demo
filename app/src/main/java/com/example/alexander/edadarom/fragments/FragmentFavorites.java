@@ -12,17 +12,17 @@ import com.example.alexander.edadarom.R;
  * Created by Alexander on 10.01.2018.
  */
 
-public class FragmentNearby extends Fragment {
+public class FragmentFavorites extends Fragment {
 
     private View view;
 
-    public FragmentNearby() {
+    public FragmentFavorites() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_nearby, container, false);
+        view = inflater.inflate(R.layout.fragment_favorites, container, false);
         return view;
     }
 }
