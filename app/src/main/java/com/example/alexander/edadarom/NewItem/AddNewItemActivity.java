@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -29,6 +30,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+import com.example.alexander.edadarom.MapsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -62,10 +64,12 @@ public class AddNewItemActivity extends AppCompatActivity {
     Long timeOfAction = 2592000000L; //millis, 30 дней - время до окончания действия объявления
     Long adEndTime;
     boolean complete = true;
+    public static final int GET_LOCATION = 1;
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView photoTextHide;
     private Uri photoUri, uploadPhotoUrl;
+    private ConstraintLayout locationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +92,20 @@ public class AddNewItemActivity extends AppCompatActivity {
         photoButton2 = (ImageButton)findViewById(R.id.imageButton1);
         photoButton3 = (ImageButton)findViewById(R.id.imageButton);
 
+        locationButton = (ConstraintLayout)findViewById(R.id.constraintLayout1);
+
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
+
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivityForResult(intent, GET_LOCATION);
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,9 +210,7 @@ public class AddNewItemActivity extends AppCompatActivity {
                 "Столярный инструмент",
                 uploadPhotoUrl.toString()
         );
-
         Map<String, Object> userValues = userAdsModel.toMap();
-
         db.collection("ads")
                 .add(userValues)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -256,7 +268,6 @@ public class AddNewItemActivity extends AppCompatActivity {
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
                 Log.d(TAG,"onPrepareLoad");
-
             }
         };
         Picasso.with(getApplicationContext()).load(file).resize(1000,1000).into(target);

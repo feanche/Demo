@@ -31,9 +31,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     FloatingActionButton mFab;
     private UserAdsAdapter adapter;
     public static final int NEW_ITEM = 1;
-    public static final int GET_LOCATION = 1;
     private ArrayList<UserAdsModel> arUserAds;
-    private Button mapButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,15 +52,6 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), AddNewItemActivity.class);
                  startActivityForResult(intent, NEW_ITEM);
-            }
-        });
-
-        mapButton = (Button)view.findViewById(R.id.button3);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), MapsActivity.class);
-                startActivityForResult(intent, GET_LOCATION);
             }
         });
     }
