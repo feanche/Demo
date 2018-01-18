@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -300,6 +301,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    public void onClick (View v) {
+        switch (v.getId()) {
+            case R.id.imageView4: {
+                finish();
+            }
+            break;
+            case R.id.imageView6: {
+                find_location.setText("");
+            }
         }
     }
 
