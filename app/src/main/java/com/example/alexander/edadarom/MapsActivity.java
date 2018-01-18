@@ -316,4 +316,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+/*TODO: 1) добавить кнопку МояЛокация 2) пробросить название местоположения в предыдущую активити и в editText mapsActivity 3) записать latLng в firestore
+ */
 }
