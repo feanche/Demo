@@ -1,11 +1,16 @@
 package com.example.alexander.edadarom.fragments.Browse;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,4 +107,6 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         arUserAds.addAll(ar);
         adapter.notifyDataSetChanged();
     }
+
+
 }

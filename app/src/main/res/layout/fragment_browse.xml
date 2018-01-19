@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/text_no_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="60dp"
-        android:gravity="center"
-        android:text="Пока ничего нет"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15sp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -27,9 +14,12 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_add_black_24dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_anchor="@id/items"
+        app:layout_anchorGravity="bottom|right|end"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/items"
@@ -41,4 +31,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/fragment_browse_recycler_item" />
 
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

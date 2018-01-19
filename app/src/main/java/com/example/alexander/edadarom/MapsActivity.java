@@ -1,6 +1,9 @@
 package com.example.alexander.edadarom;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -58,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     double latitude, longitude;
     double end_latitude, end_longitude;
+    LatLng userLatLng;
 
     EditText find_location;
 
@@ -173,6 +177,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        userLatLng = latLng;
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.draggable(true);
@@ -209,7 +214,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMarkerDragEnd(Marker marker) {
         end_latitude = marker.getPosition().latitude;
         end_longitude = marker.getPosition().longitude;
-
     }
 
     @Override
@@ -225,6 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMarkerClickListener(this);
         setMapLongClick();
@@ -282,16 +287,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String locality = addressList.get(0).getAddressLine(0);
                         String country = addressList.get(0).getCountryName();
                         if (!locality.isEmpty() && !country.isEmpty())
+                            find_location.setText(locality);
 
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
                                 .title(locality + "  " + country)
-                                .snippet(snippet));
+                                .snippet(snippet))
+                                .setDraggable(true);
                     }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                LatLng position = marker.getPosition();
+                marker.setSnippet(position.toString());
+                Log.d(TAG, String.format("Drag from %f:%f",
+                        position.latitude,
+                        position.longitude));
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                LatLng position = marker.getPosition();
+                marker.setSnippet(position.toString());
+                Log.d(TAG, String.format("Dragging to %f:%f", position.latitude,
+                                position.longitude));
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                LatLng position=marker.getPosition();
+                marker.setSnippet(position.toString());
+                Log.d(TAG, String.format("Dragged to %f:%f",
+                        position.latitude,
+                        position.longitude));
             }
         });
     }
@@ -313,9 +347,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             case R.id.imageView6: {
                 find_location.setText("");
             }
+            case R.id.show_my_location: {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+            }
         }
     }
 
-/*TODO: 1) добавить кнопку МояЛокация 2) пробросить название местоположения в предыдущую активити и в editText mapsActivity 3) записать latLng в firestore
+/*TODO: 2) пробросить название местоположения в предыдущую активити и в editText mapsActivity 3) записать latLng в firestore
  */
 }
