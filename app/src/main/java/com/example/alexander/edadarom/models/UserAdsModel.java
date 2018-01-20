@@ -11,14 +11,15 @@ import java.util.Map;
 
 public class UserAdsModel {
 
-    public String description;
-    public long endTime;
-    public int location;
-    public int price;
-    public long publicTime;
-    public String title;
-    public String type;
-    public String photoUrl;
+    private String id;
+    private String description;
+    private long endTime;
+    private int location;
+    private int price;
+    private long publicTime;
+    private String title;
+    private String type;
+    private String photoUrl;
 
     public UserAdsModel() {
 
@@ -48,4 +49,75 @@ public class UserAdsModel {
         return result;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getLocation() {
+        return location;
+    }
+
+    public void setLocation(int location) {
+        this.location = location;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public long getPublicTime() {
+        return publicTime;
+    }
+
+    public void setPublicTime(long publicTime) {
+        this.publicTime = publicTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

@@ -36,9 +36,9 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
         UserAdsModel user = list.get(position);
-        holder.tvTitle.setText(user.title);
-        holder.tvDesc.setText(user.description);
-        Picasso.with(context).load(user.photoUrl).fit().into(holder.imageView);
+        holder.tvTitle.setText(user.getTitle());
+        holder.tvDesc.setText(user.getDescription());
+        Picasso.with(context).load(user.getPhotoUrl()).fit().into(holder.imageView);
     }
 
     @Override

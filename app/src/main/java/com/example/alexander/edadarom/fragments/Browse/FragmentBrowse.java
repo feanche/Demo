@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -40,11 +41,12 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private UserAdsAdapter adapter;
     public static final int NEW_ITEM = 1;
     private ArrayList<UserAdsModel> arUserAds;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
-
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);
@@ -79,10 +81,18 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Log.d("fd", "click");
-                startActivity(new Intent(getActivity(), FullInfoActivity.class));
+                Intent intent = new Intent(getActivity(), FullInfoActivity.class);
+                intent.putExtra("key", arUserAds.get(position).getId());
+                startActivity(intent);
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+                    // This method performs the actual data-refresh operation.
+                    // The method calls setRefreshing(false) when it's finished.
+                    presenter.getAds();
+                }
+        );
 
     }
 
@@ -93,12 +103,12 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
 
     @Override
     public void showLoading() {
-
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

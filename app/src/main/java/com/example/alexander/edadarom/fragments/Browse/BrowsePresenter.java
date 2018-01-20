@@ -31,6 +31,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
 
     @Override
     public void getAds() {
+        view.showLoading();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ads")
                 .get()
@@ -49,6 +50,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                userAdsModel.setId(document.getId());
                                 arAds.add(userAdsModel);
                             }
 
