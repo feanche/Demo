@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class UserAdsModel {
 
+    String id;
     public String description;
     public long endTime;
     public float locationLat;
@@ -51,4 +52,83 @@ public class UserAdsModel {
         return result;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public float getLocationLat() {
+        return locationLat;
+    }
+
+    public void setLocationLat(float locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public float getLocationLon() {
+        return locationLon;
+    }
+
+    public void setLocationLon(float locationLon) {
+        this.locationLon = locationLon;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public long getPublicTime() {
+        return publicTime;
+    }
+
+    public void setPublicTime(long publicTime) {
+        this.publicTime = publicTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }
