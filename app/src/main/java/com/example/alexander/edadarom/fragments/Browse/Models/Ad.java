@@ -7,16 +7,18 @@ package com.example.alexander.edadarom.fragments.Browse.Models;
 public class Ad {
     public String description;
     public String endTime;
-    public Float location;
+    public float locationLat;
+    public float locationLon;
     public float price;
     public String publicTime;
     public String title;
     public String type;
 
-    public Ad(String description, String endTime, Float location, float price, String publicTime, String title, String type) {
+    public Ad(String description, String endTime, float locationLat, float locationLon, float price, String publicTime, String title, String type) {
         this.description = description;
         this.endTime = endTime;
-        this.location = location;
+        this.locationLat = locationLat;
+        this.locationLon = locationLon;
         this.price = price;
         this.publicTime = publicTime;
         this.title = title;
@@ -39,12 +41,20 @@ public class Ad {
         this.endTime = endTime;
     }
 
-    public Float getLocation() {
-        return location;
+    public float getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation(Float location) {
-        this.location = location;
+    public void setLocationLat(float locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public float getLocationLon() {
+        return locationLon;
+    }
+
+    public void setLocationLon(float locationLon) {
+        this.locationLon = locationLon;
     }
 
     public float getPrice() {

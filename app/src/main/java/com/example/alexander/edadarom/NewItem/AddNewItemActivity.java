@@ -63,11 +63,13 @@ public class AddNewItemActivity extends AppCompatActivity {
     Long currentTime;
     Long timeOfAction = 2592000000L; //millis, 30 дней - время до окончания действия объявления
     Long adEndTime;
+    String locality;
+    float locationLat, locationLon;
     boolean complete = true;
     public static final int GET_LOCATION = 1;
 
     final static String TAG = "myLogs_AddNewItem";
-    private TextView photoTextHide;
+    private TextView localityText;
     private Uri photoUri, uploadPhotoUrl;
     private ConstraintLayout locationButton;
 
@@ -79,6 +81,8 @@ public class AddNewItemActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+        localityText = (TextView)findViewById(R.id.textView6);
 
         title = (EditText)findViewById(R.id.editText);
         description = (EditText)findViewById(R.id.editText2);
@@ -202,7 +206,8 @@ public class AddNewItemActivity extends AppCompatActivity {
         UserAdsModel userAdsModel = new UserAdsModel(
                 description.getText().toString(),
                 adEndTime,
-                2342,
+                locationLat,
+                locationLon,
                 Integer.parseInt(price.getText().toString()),
                 currentTime,
                 title.getText().toString(),
@@ -243,9 +248,17 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode ==100) {
+        if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
                 upload(file);
+            }
+        }
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                locality = data.getExtras().getString(MapsActivity.LOCALITY);
+                locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
+                locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
+                localityText.setText(locality);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
