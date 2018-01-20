@@ -1,9 +1,7 @@
 package com.example.alexander.edadarom;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -56,17 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-    Marker mCurrentLocationMarker;
+    private Marker mCurrentLocationMarker, marker;
     LocationRequest mLocationRequest;
     private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     double latitude, longitude;
     double end_latitude, end_longitude;
     LatLng userLatLng;
+    public static String LOCALITY = "locality";
+    public static String LOCATION_LAT = "location_lat";
+    public static String LOCATION_LON = "location_lon";
+    public String locality, country;
 
     EditText find_location;
 
     final static String TAG = "myLogs_MapsActivity";
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public float markerLocationLat, markerLocationLon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,18 +277,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                if (marker != null) {
+                    marker.remove();
+                }
                 String snippet = String.format(Locale.getDefault(),
                         "Lat: %1$.5f, Long: %2$.5f",
                         latLng.latitude,
                         latLng.longitude);
+                markerLocationLat = (float) latLng.latitude;
+                markerLocationLon = (float) latLng.longitude;
 
                 Geocoder geocoder = new Geocoder(MapsActivity.this);
 
                 try {
                     List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     if (addressList != null && addressList.size() > 0) {
-                        String locality = addressList.get(0).getAddressLine(0);
-                        String country = addressList.get(0).getCountryName();
+                        locality = addressList.get(0).getAddressLine(0);
+                        country = addressList.get(0).getCountryName();
                         if (!locality.isEmpty() && !country.isEmpty())
                             find_location.setText(locality);
 
@@ -295,7 +303,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .snippet(snippet))
                                 .setDraggable(true);
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -341,7 +348,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClick (View v) {
         switch (v.getId()) {
             case R.id.imageView4: {
-                finish();
+                executeDataSending();
             }
             break;
             case R.id.imageView6: {
@@ -349,11 +356,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             case R.id.show_my_location: {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                Toast.makeText(this, "Текущее местоположение", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-/*TODO: 2) пробросить название местоположения в предыдущую активити и в editText mapsActivity 3) записать latLng в firestore
- */
+    private void executeDataSending() {
+        // Fake data sending effect
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    Intent intent = getIntent();
+                    setResult(RESULT_OK, intent);
+                    intent.putExtra(LOCALITY, locality);
+                    intent.putExtra(LOCATION_LAT, markerLocationLat);
+                    intent.putExtra(LOCATION_LON, markerLocationLon);
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start(); // You should delete this code and add yours
+    }
 }

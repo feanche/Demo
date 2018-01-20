@@ -13,7 +13,8 @@ public class UserAdsModel {
 
     public String description;
     public long endTime;
-    public int location;
+    public float locationLat;
+    public float locationLon;
     public int price;
     public long publicTime;
     public String title;
@@ -24,10 +25,11 @@ public class UserAdsModel {
 
     }
 
-    public UserAdsModel(String description, long endTime, int location, int price, long publicTime, String title, String type, String photoUrl) {
+    public UserAdsModel(String description, long endTime, float locationLat, float locationLon, int price, long publicTime, String title, String type, String photoUrl) {
         this.description = description;
         this.endTime = endTime;
-        this.location = location;
+        this.locationLat = locationLat;
+        this.locationLon = locationLon;
         this.price = price;
         this.publicTime = publicTime;
         this.title = title;
@@ -39,7 +41,8 @@ public class UserAdsModel {
         HashMap<String, Object> result = new HashMap<>();
         result.put("description",description);
         result.put("endTime",endTime);
-        result.put("location",location);
+        result.put("locationLon",locationLon);
+        result.put("locationLat",locationLat);
         result.put("price",price);
         result.put("publicTime",publicTime);
         result.put("title",title);
