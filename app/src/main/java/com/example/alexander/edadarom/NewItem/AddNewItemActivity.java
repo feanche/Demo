@@ -16,7 +16,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -134,6 +136,7 @@ public class AddNewItemActivity extends AppCompatActivity {
         photoButton1.setOnClickListener(photoButtonClickListener);
         photoButton2.setOnClickListener(photoButtonClickListener);
         photoButton3.setOnClickListener(photoButtonClickListener);
+        onEditTextEnter();
     }
 
     public void completenessCheck() {
@@ -308,5 +311,9 @@ public class AddNewItemActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    public void onEditTextEnter() {
+
     }
 }

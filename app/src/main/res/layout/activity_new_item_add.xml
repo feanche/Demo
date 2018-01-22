@@ -139,7 +139,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/card_view1"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
@@ -153,7 +153,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvToolbarSubtitle"
@@ -176,10 +176,27 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="0dp"
+                android:inputType="textCapSentences"
                 android:textColor="@color/secondaryText"
                 android:textSize="16sp"
+                android:singleLine="true"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/tvToolbarSubtitle" />
+
+            <EditText
+                android:id="@+id/editText3"
+                android:inputType="number"
+                android:layout_width="320dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:backgroundTint="@color/secondaryText"
+                android:hint="@string/hint_price"
+                android:textColor="@color/secondaryText"
+                android:textSize="16sp"
+                android:singleLine="true"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/editText" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -191,12 +208,12 @@
                 android:text="@string/text_description"
                 android:textColor="@color/primaryText"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/editText" />
+                card_view:layout_constraintTop_toBottomOf="@+id/editText3" />
 
             <EditText
                 android:id="@+id/editText2"
                 android:layout_width="320dp"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:backgroundTint="@color/secondaryText"
@@ -205,21 +222,6 @@
                 android:textSize="16sp"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-            <EditText
-                android:id="@+id/editText3"
-                android:inputType="number"
-                android:layout_width="320dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/secondaryText"
-                android:hint="@string/hint_price"
-                android:textColor="@color/secondaryText"
-                android:textSize="16sp"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/editText2" />
 
         </android.support.constraint.ConstraintLayout>
 
