@@ -54,7 +54,7 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.ivToolbar);
         }
     }
 }

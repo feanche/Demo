@@ -1,5 +1,6 @@
 package com.example.alexander.edadarom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
 import com.example.alexander.edadarom.fragments.FragmentFavorites;
@@ -93,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(fragmentPersonal);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(4);
+    }
+
+
+    public void btnClick(View view) {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override

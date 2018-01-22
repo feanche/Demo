@@ -31,6 +31,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
 
     @Override
     public void getAds() {
+        arAds.clear();
         view.showLoading();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ads")

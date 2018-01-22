@@ -12,6 +12,7 @@ import java.util.Map;
 public class UserAdsModel {
 
     String id;
+    String userId;
     public String description;
     public long endTime;
     public float locationLat;
@@ -58,6 +59,14 @@ public class UserAdsModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getDescription() {

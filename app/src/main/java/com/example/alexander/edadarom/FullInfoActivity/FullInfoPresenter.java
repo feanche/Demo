@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.alexander.edadarom.fragments.Browse.BrowseFragmentContract;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,24 +35,48 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ads").document(key)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> snapshotTask) {
-                        if (snapshotTask.isSuccessful()) {
+                .addOnCompleteListener(snapshotTask -> {
+                    if (snapshotTask.isSuccessful()) {
 
-                            if (snapshotTask.getResult() == null) {
-                                //view.showToast("Нет данных");
-                                view.hideLoading();
-                                return;
-                            }
-
-                            Log.d(TAG, key + " => " + snapshotTask.getResult());
-                            UserAdsModel userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
+                        if (snapshotTask.getResult() == null) {
+                            //view.showToast("Нет данных");
                             view.hideLoading();
-                            view.addDate(userAdsModel);
-
+                            return;
                         }
+
+                        Log.d(TAG, key + " => " + snapshotTask.getResult());
+                        UserAdsModel userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
+                        //view.hideLoading();
+
+                        //Информация о пользователи или магазине
+                        getUserInfo(userAdsModel.getUserId());
+
+                        view.addDate(userAdsModel);
+
                     }
                 });
     }
+
+    private void getUserInfo(String id) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(id)
+                .get()
+                .addOnCompleteListener(snapshotTask -> {
+                    if (snapshotTask.isSuccessful()) {
+
+                        if (snapshotTask.getResult() == null) {
+                            //view.showToast("Нет данных");
+                            view.hideLoading();
+                            return;
+                        }
+
+                        //Log.d(TAG, id + " => " + snapshotTask.getResult());
+                        Users user = snapshotTask.getResult().toObject(Users.class);
+                       view.showUserInfo(user);
+                       view.hideLoading();
+
+                    }
+                });
+    }
+
     }
