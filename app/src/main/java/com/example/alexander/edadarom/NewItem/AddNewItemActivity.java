@@ -1,10 +1,12 @@
 package com.example.alexander.edadarom.NewItem;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,11 +16,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,8 +29,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -69,11 +77,15 @@ public class AddNewItemActivity extends AppCompatActivity {
     float locationLat, locationLon;
     boolean complete = true;
     public static final int GET_LOCATION = 1;
+    public static final int GALLERY = 2;
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
     private Uri photoUri, uploadPhotoUrl;
     private ConstraintLayout locationButton;
+
+    RecyclerView recyclerView;
+    ArrayList<UploadImage> arUploadImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,14 +141,16 @@ public class AddNewItemActivity extends AppCompatActivity {
         View.OnClickListener photoButtonClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePicture();
+                //takePicture();
+                showPictureDialog();
             }
         };
 
         photoButton1.setOnClickListener(photoButtonClickListener);
         photoButton2.setOnClickListener(photoButtonClickListener);
         photoButton3.setOnClickListener(photoButtonClickListener);
-        onEditTextEnter();
+
+        initRecyclerView();
     }
 
     public void completenessCheck() {
@@ -251,7 +265,18 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                Uri contentURI = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    //String path = saveImage(bitmap);
+                    photoButton1.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
                 upload(file);
             }
@@ -271,18 +296,17 @@ public class AddNewItemActivity extends AppCompatActivity {
         target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Log.d(TAG, "onBitmapLoaded");
                 uploadImage(bitmap);
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                Log.d(TAG,"onBitmapFailed");
+
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Log.d(TAG,"onPrepareLoad");
+
             }
         };
         Picasso.with(getApplicationContext()).load(file).resize(1000,1000).into(target);
@@ -313,7 +337,38 @@ public class AddNewItemActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void onEditTextEnter() {
+    private void showPictureDialog() {
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        //pictureDialog.setTitle("Select Action");
+        String[] pictureDialogItems = {"Выбрать из галереи","Сделать фото на камеру"};
+        pictureDialog.setItems(pictureDialogItems, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        choosePhotoFromGallery();
+                        break;
+                    case 1:
+                        takePicture();
+                        break;
+                }
+            }
+        });
+        pictureDialog.show();
+    }
+
+    public void choosePhotoFromGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, GALLERY);
+    }
+
+    private void initRecyclerView() {
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setHasFixedSize(true);
+        arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
+
 
     }
+
 }
