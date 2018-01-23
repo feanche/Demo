@@ -1,4 +1,4 @@
-package com.example.alexander.edadarom;
+package com.example.alexander.edadarom.Authorization;
 
 // Importing Google GMS Auth API Libraries.
 import android.content.Intent;
@@ -10,16 +10,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alexander.edadarom.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -50,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     // TextView to Show Login User Email and Name.
     TextView LoginUserName, LoginUserEmail;
 
+    Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.sign_in_button);
 
         SignOutButton = findViewById(R.id.sign_out);
+
+        btn = findViewById(R.id.btnPhoneAuth);
 
         LoginUserName = findViewById(R.id.textViewName);
 
@@ -112,8 +114,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, PhoneAuthActivity.class));
+            }
+        });
     }
-
 
     // Sign In function Starts From Here.
     public void UserSignInMethod(){

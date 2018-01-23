@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.alexander.edadarom.Authorization.LoginActivity;
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
 import com.example.alexander.edadarom.fragments.FragmentFavorites;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     public void btnClick(View view) {
         startActivity(new Intent(this, LoginActivity.class));
     }
+
 
     @Override
     protected void onDestroy() {

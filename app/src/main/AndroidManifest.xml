@@ -58,9 +58,11 @@
             android:label="@string/title_activity_full_info"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Authorization.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Authorization.PhoneAuthActivity" />
+        <activity android:name=".Authorization.ProfileCreateActivity"></activity>
     </application>
 
 </manifest>

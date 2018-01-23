@@ -93,10 +93,12 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
 
     @Override
     public void showUserInfo(Users users) {
-        tvSellerTitle.setText(users.getFirstName());
-        tvSellerSubtitle.setText(users.getSecondName());
-        tvSellerRating.setText(String.valueOf(users.getRating()));
+        if(users!=null) {
+            tvSellerTitle.setText(users.getFirstName());
+            tvSellerSubtitle.setText(users.getSecondName());
+            tvSellerRating.setText(String.valueOf(users.getRating()));
 
-        Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
+            Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
+        }
     }
 }

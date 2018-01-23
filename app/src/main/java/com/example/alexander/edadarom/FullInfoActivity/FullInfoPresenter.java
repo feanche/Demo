@@ -50,7 +50,6 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
 
                         //Информация о пользователи или магазине
                         getUserInfo(userAdsModel.getUserId());
-
                         view.addDate(userAdsModel);
 
                     }
@@ -58,25 +57,28 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     }
 
     private void getUserInfo(String id) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(id)
-                .get()
-                .addOnCompleteListener(snapshotTask -> {
-                    if (snapshotTask.isSuccessful()) {
+        if (id != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(id)
+                    .get()
+                    .addOnCompleteListener(snapshotTask -> {
+                        if (snapshotTask.isSuccessful()) {
 
-                        if (snapshotTask.getResult() == null) {
-                            //view.showToast("Нет данных");
+                            if (snapshotTask.getResult() == null) {
+                                //view.showToast("Нет данных");
+                                view.hideLoading();
+                                return;
+                            }
+
+                            //Log.d(TAG, id + " => " + snapshotTask.getResult());
+                            Users user = snapshotTask.getResult().toObject(Users.class);
+                            view.showUserInfo(user);
                             view.hideLoading();
-                            return;
+
                         }
-
-                        //Log.d(TAG, id + " => " + snapshotTask.getResult());
-                        Users user = snapshotTask.getResult().toObject(Users.class);
-                       view.showUserInfo(user);
-                       view.hideLoading();
-
-                    }
-                });
+                    });
+        } {
+            view.hideLoading();
+        }
     }
-
     }
