@@ -70,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     final static String TAG = "myLogs_MapsActivity";
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public float markerLocationLat, markerLocationLon;
+    private double userLat, userLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +182,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         userLatLng = latLng;
+        userLat = latLng.latitude;
+        userLng = latLng.longitude;
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.draggable(true);
@@ -370,14 +373,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Thread.sleep(1000);
                     Intent intent = getIntent();
                     setResult(RESULT_OK, intent);
-                    intent.putExtra(LOCALITY, locality);
-                    intent.putExtra(LOCATION_LAT, markerLocationLat);
-                    intent.putExtra(LOCATION_LON, markerLocationLon);
+                    if (locality != null) {
+                        intent.putExtra(LOCALITY, locality);
+                        intent.putExtra(LOCATION_LAT, markerLocationLat);
+                        intent.putExtra(LOCATION_LON, markerLocationLon);
+                    } else if (locality == null) {
+                        ifLocalityEmpty();
+                        intent.putExtra(LOCALITY, locality);
+                        intent.putExtra(LOCATION_LAT, userLat);
+                        intent.putExtra(LOCATION_LON, userLng);
+                    }
                     finish();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start(); // You should delete this code and add yours
+    }
+
+    private void ifLocalityEmpty() {
+        Geocoder geocoder = new Geocoder(MapsActivity.this);
+        try {
+            List<Address> addressList = geocoder.getFromLocation(userLat, userLng, 1);
+            if (addressList != null && addressList.size() > 0) {
+                locality = addressList.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

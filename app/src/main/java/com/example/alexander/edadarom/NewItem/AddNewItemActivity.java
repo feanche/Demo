@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,16 +30,15 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
+import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -59,12 +57,12 @@ import com.example.alexander.edadarom.models.UserAdsModel;
  * Created by Alexander on 10.01.2018.
  */
 
-public class AddNewItemActivity extends AppCompatActivity {
+public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyclerAdapter.BtnClickListener{
 
     private EditText title, description, price;
     private Button button;
-    private ImageView backButton;
-    Uri file;
+    private ImageView backButton, ivPhoto;
+    Uri fileUri;
     private ImageButton photoButton1, photoButton2, photoButton3;
     Target target;
     FirebaseFirestore db;
@@ -82,10 +80,14 @@ public class AddNewItemActivity extends AppCompatActivity {
     final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
     private Uri photoUri, uploadPhotoUrl;
+    private byte[] photo;
     private ConstraintLayout locationButton;
 
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
+    ImagesRecyclerAdapter imagesRecyclerAdapter;
+
+    ArrayList<String> arReportUrl = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +107,9 @@ public class AddNewItemActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button2);
         backButton = (ImageView)findViewById(R.id.iv_close);
 
-        photoButton1 = (ImageButton)findViewById(R.id.imageButton2);
-        photoButton2 = (ImageButton)findViewById(R.id.imageButton1);
-        photoButton3 = (ImageButton)findViewById(R.id.imageButton);
-
         locationButton = (ConstraintLayout)findViewById(R.id.constraintLayout1);
+
+        ivPhoto = (ImageView)findViewById(R.id.ivPhoto);
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -138,18 +138,6 @@ public class AddNewItemActivity extends AppCompatActivity {
             }
         });
 
-        View.OnClickListener photoButtonClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //takePicture();
-                showPictureDialog();
-            }
-        };
-
-        photoButton1.setOnClickListener(photoButtonClickListener);
-        photoButton2.setOnClickListener(photoButtonClickListener);
-        photoButton3.setOnClickListener(photoButtonClickListener);
-
         initRecyclerView();
     }
 
@@ -166,7 +154,10 @@ public class AddNewItemActivity extends AppCompatActivity {
         if(mPrice.matches("")) {
             price.setHintTextColor(getResources().getColor(R.color.red));
         }
-        if(mTitle.matches("")|mDescription.matches("")|mPrice.matches("")){
+        if(locationLat==0 && locationLon==0){
+            localityText.setTextColor(getResources().getColor(R.color.red));
+        }
+        if(mTitle.matches("")|mDescription.matches("")|mPrice.matches("")|locationLat==0|locationLon==0){
             complete = false;
         } else {
             complete = true;
@@ -175,8 +166,8 @@ public class AddNewItemActivity extends AppCompatActivity {
 
     public void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        file = getOutputMediaFile();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
+        fileUri = getOutputMediaFile();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, 100);
     }
@@ -185,12 +176,14 @@ public class AddNewItemActivity extends AppCompatActivity {
         completenessCheck();
         if(complete) {
             StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
-            ref.putFile(photoUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            UploadTask uploadTask = ref.putBytes(photo);
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                             uploadPhotoUrl = taskSnapshot.getDownloadUrl();
+                            arReportUrl.add(uploadPhotoUrl.toString());
                             sendDataToFirestore();
                             finish();
                         }
@@ -271,14 +264,16 @@ public class AddNewItemActivity extends AppCompatActivity {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     //String path = saveImage(bitmap);
-                    photoButton1.setImageBitmap(bitmap);
+                    //photoButton1.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         } else if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
-                upload(file);
+                Log.d(TAG,"requestCode = 100");
+                imagesRecyclerAdapter.add(fileUri);
+                upload(fileUri);
             }
         }
         if (requestCode == 1) {
@@ -313,8 +308,12 @@ public class AddNewItemActivity extends AppCompatActivity {
     }
 
     public void uploadImage(Bitmap bitmap) {
-            photoButton1.setImageBitmap(bitmap);
-            photoButton1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+            final byte[] data = byteArrayOutputStream.toByteArray();
+            if (data.length > 0) {
+                photo = data;
+            }
     }
 
     @Override
@@ -367,8 +366,29 @@ public class AddNewItemActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setHasFixedSize(true);
         arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
+        imagesRecyclerAdapter = new ImagesRecyclerAdapter(getApplicationContext(), arUploadImages, this);
+        recyclerView.setAdapter(imagesRecyclerAdapter);
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
+            }
+        });
+    }
+
+    private void btnListeners() {
 
     }
+
+    @Override
+    public void ivAddClick() {
+        showPictureDialog();
+    }
+
+    @Override
+    public void ivDelClick() {
+
+    }
+
 
 }
