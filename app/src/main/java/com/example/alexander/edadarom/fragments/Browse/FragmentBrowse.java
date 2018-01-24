@@ -56,13 +56,10 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     }
 
     private void initButtons() {
-        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddNewItemActivity.class);
-                 startActivityForResult(intent, NEW_ITEM);
-            }
+        mFab = view.findViewById(R.id.fab);
+        mFab.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddNewItemActivity.class);
+             startActivityForResult(intent, NEW_ITEM);
         });
     }
 
@@ -71,7 +68,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
 
         adapter = new UserAdsAdapter(getContext(), arUserAds);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.items);
+        recyclerView = view.findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

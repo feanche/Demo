@@ -5,6 +5,7 @@ package com.example.alexander.edadarom.models;
  */
 
 public class Users {
+    String uId;
     String userType;
     String firstName;
     String secondName;
@@ -13,6 +14,16 @@ public class Users {
     float rating;
 
     public Users() {
+    }
+
+    public Users(String uId, String userType, String firstName, String secondName, String email, String photo, float rating) {
+        this.uId = uId;
+        this.userType = userType;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.email = email;
+        this.photo = photo;
+        this.rating = rating;
     }
 
     public Users(String userType, String firstName, String secondName, String email, String photo, float rating) {
