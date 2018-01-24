@@ -1,5 +1,6 @@
 package com.example.alexander.edadarom.Authorization;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.fragments.FragmentPersonal;
+import com.example.alexander.edadarom.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -23,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
@@ -247,6 +251,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                             // [START_EXCLUDE]
                             updateUI(STATE_SIGNIN_SUCCESS, user);
                             // [END_EXCLUDE]
+
+                            checkUserInFirestore(user);
+
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -265,6 +272,32 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                 });
     }
     // [END sign_in_with_phone]
+
+    private void checkUserInFirestore (FirebaseUser firebaseUser) {
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(firebaseUser.getUid())
+                    .get()
+                    .addOnCompleteListener(snapshotTask -> {
+                        if (snapshotTask.isSuccessful()) {
+
+                            if (!snapshotTask.getResult().exists()) {
+                                //Создание  пользователя после аутентификации
+                                startActivity(new Intent(PhoneAuthActivity.this, ProfileCreateActivity.class));
+                                finish();
+                            } else {
+                                setResult(FragmentPersonal.REQUEST_CODE);
+                                finish();
+                                //Log.d(TAG, id + " => " + snapshotTask.getResult());
+//                                Users user = snapshotTask.getResult().toObject(Users.class);
+                            }
+
+                        }
+                    });
+
+
+    }
+
 
     private void signOut() {
         mAuth.signOut();

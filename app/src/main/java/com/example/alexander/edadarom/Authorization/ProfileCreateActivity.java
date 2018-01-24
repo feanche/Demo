@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.fragments.FragmentPersonal;
 import com.example.alexander.edadarom.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +37,8 @@ public class ProfileCreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_create);
+
+        ivProfile = findViewById(R.id.ivProfile);
 
         edName = findViewById(R.id.edName);
         edSubName = findViewById(R.id.edSubName);
@@ -61,13 +65,13 @@ public class ProfileCreateActivity extends AppCompatActivity {
 
         if(edName.getText().toString().isEmpty()) {
             edName.setError("Вы должны ввести имя");
+            return;
         }
 
         if(edSubName.getText().toString().isEmpty()) {
             edSubName.setError("Вы должны ввести фамилию");
+            return;
         }
-
-
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(edName.getText() + " " + edSubName.getText())
@@ -84,21 +88,23 @@ public class ProfileCreateActivity extends AppCompatActivity {
                     }
                 });
 
-        Users user = new Users(firebaseUser.getUid(),"none", edName.getText().toString(), edSubName.getText().toString(), edEmail.getText().toString(), "", 0);
+        Users user = new Users(firebaseUser.getUid(),"", edName.getText().toString(), edSubName.getText().toString(), edEmail.getText().toString(), "", 0);
 
-       db.collection("ads")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+       db.collection("users").document(firebaseUser.getUid())
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Document snapshot written by ID: "+documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error adding document ", e);
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document snapshot setted");
+                        Toast.makeText(getApplicationContext(), "Профиль успешно создан!", Toast.LENGTH_LONG).show();
+                        setResult(FragmentPersonal.REQUEST_CODE);
+                        finish();
                     }
                 });
+
+
+
+
+
     }
 }
