@@ -98,7 +98,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
             tvSellerSubtitle.setText(users.getSecondName());
             tvSellerRating.setText(String.valueOf(users.getRating()));
 
-            Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
+            if(!users.getPhoto().isEmpty()) Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
         }
     }
 }

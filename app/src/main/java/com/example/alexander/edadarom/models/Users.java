@@ -11,18 +11,20 @@ public class Users {
     String secondName;
     String email;
     String photo;
+    String phoneNumber;
     float rating;
 
     public Users() {
     }
 
-    public Users(String uId, String userType, String firstName, String secondName, String email, String photo, float rating) {
+    public Users(String uId, String userType, String firstName, String secondName, String email, String photo, String phoneNumber, float rating) {
         this.uId = uId;
         this.userType = userType;
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
         this.photo = photo;
+        this.phoneNumber = phoneNumber;
         this.rating = rating;
     }
 
@@ -33,6 +35,22 @@ public class Users {
         this.email = email;
         this.photo = photo;
         this.rating = rating;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getUserType() {

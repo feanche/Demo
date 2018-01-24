@@ -10,16 +10,17 @@
         android:id="@+id/sign_in_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignEnd="@+id/textViewEmail"
+        android:layout_alignRight="@+id/textViewEmail"
+        android:layout_centerVertical="true" />
 
     <Button
         android:id="@+id/btnPhoneAuth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sign_in_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/sign_in_button"
         android:text="Войти по номеру" />
 
     <Button

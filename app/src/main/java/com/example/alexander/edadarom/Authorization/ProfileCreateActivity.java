@@ -54,7 +54,6 @@ public class ProfileCreateActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser!=null) {
             edName.setText(firebaseUser.getDisplayName());
-            edSubName.setText(firebaseUser.getDisplayName());
             edPhone.setText(firebaseUser.getPhoneNumber());
             edEmail.setText(firebaseUser.getEmail());
             if(firebaseUser.getPhotoUrl()!=null) Picasso.with(getApplicationContext()).load(firebaseUser.getPhotoUrl().toString()).into(ivProfile);
@@ -68,14 +67,13 @@ public class ProfileCreateActivity extends AppCompatActivity {
             return;
         }
 
-        if(edSubName.getText().toString().isEmpty()) {
-            edSubName.setError("Вы должны ввести фамилию");
+        if(edPhone.getText().toString().isEmpty()) {
+            edPhone.setError("Вы должны ввести номер");
             return;
         }
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(edName.getText() + " " + edSubName.getText())
-                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
                 .build();
 
         firebaseUser.updateProfile(profileUpdates)
@@ -88,7 +86,9 @@ public class ProfileCreateActivity extends AppCompatActivity {
                     }
                 });
 
-        Users user = new Users(firebaseUser.getUid(),"", edName.getText().toString(), edSubName.getText().toString(), edEmail.getText().toString(), "", 0);
+        Users user = new Users(firebaseUser.getUid(),"", edName.getText().toString(), edSubName.getText().toString(), edEmail.getText().toString(), "", edPhone.getText().toString(), 0);
+
+        if(firebaseUser.getPhoneNumber()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
 
        db.collection("users").document(firebaseUser.getUid())
                 .set(user)

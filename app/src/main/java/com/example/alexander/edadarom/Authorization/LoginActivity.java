@@ -1,6 +1,7 @@
 package com.example.alexander.edadarom.Authorization;
 
 // Importing Google GMS Auth API Libraries.
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.fragments.FragmentPersonal;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -19,12 +21,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -84,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Creating and Configuring Google Api Client.
         googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this , new GoogleApiClient.OnConnectionFailedListener() {
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -124,11 +129,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Sign In function Starts From Here.
-    public void UserSignInMethod(){
+    public void UserSignInMethod() {
 
         // Passing Google Api Client into Intent.
         Intent authIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-
         startActivityForResult(authIntent, RequestSignInCode);
     }
 
@@ -137,11 +141,11 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RequestSignInCode){
+        if (requestCode == RequestSignInCode) {
 
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
-            if (googleSignInResult.isSuccess()){
+            if (googleSignInResult.isSuccess()) {
 
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
 
@@ -155,19 +159,18 @@ public class LoginActivity extends AppCompatActivity {
 
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
 
-        Toast.makeText(getApplicationContext(),""+ authCredential.getProvider(),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "" + authCredential.getProvider(), Toast.LENGTH_LONG).show();
 
         firebaseAuth.signInWithCredential(authCredential)
-                .addOnCompleteListener(this, new OnCompleteListener() {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task AuthResultTask) {
-
-                        if (AuthResultTask.isSuccessful()){
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
                             // Getting Current Login user details.
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                            // Showing Log out button.
+                            /*// Showing Log out button.
                             SignOutButton.setVisibility(View.VISIBLE);
 
                             // Hiding Login in button.
@@ -181,13 +184,40 @@ public class LoginActivity extends AppCompatActivity {
                             LoginUserName.setText("NAME =  "+ firebaseUser.getDisplayName().toString());
 
                             // Setting up Email into TextView.
-                            LoginUserEmail.setText("Email =  "+ firebaseUser.getEmail().toString());
+                            LoginUserEmail.setText("Email =  "+ firebaseUser.getEmail().toString());*/
+
+                            checkUserInFirestore(firebaseUser);
 
                         } else {
-                            Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    private void checkUserInFirestore(FirebaseUser firebaseUser) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(firebaseUser.getUid())
+                .get()
+                .addOnCompleteListener(snapshotTask -> {
+                    if (snapshotTask.isSuccessful()) {
+
+                        if (!snapshotTask.getResult().exists()) {
+                            //Создание  пользователя после аутентификации
+                            startActivity(new Intent(LoginActivity.this, ProfileCreateActivity.class));
+                            finish();
+                        } else {
+                            setResult(FragmentPersonal.REQUEST_CODE);
+                            finish();
+                            //Log.d(TAG, id + " => " + snapshotTask.getResult());
+//                                Users user = snapshotTask.getResult().toObject(Users.class);
+                        }
+
+                    }
+                });
+
+
     }
 
     public void UserSignOutFunction() {
@@ -195,16 +225,14 @@ public class LoginActivity extends AppCompatActivity {
         // Sing Out the User.
         firebaseAuth.signOut();
 
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-                new ResultCallback() {
-                    @Override
-                    public void onResult(@NonNull Result result) {
-                        // Write down your any code here which you want to execute After Sign Out.
-
-                        // Printing Logout toast message on screen.
-                        Toast.makeText(getApplicationContext(), "Logout Successfully", Toast.LENGTH_LONG).show();
-                    }
-                });
+        Auth.GoogleSignInApi.signOut(googleApiClient
+        ).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                // Printing Logout toast message on screen.
+                Toast.makeText(getApplicationContext(), "Logout Successfully", Toast.LENGTH_LONG).show();
+            }
+        });
 
         // After logout Hiding sign out button.
         SignOutButton.setVisibility(View.GONE);
