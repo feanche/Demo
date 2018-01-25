@@ -2,6 +2,7 @@ package com.example.alexander.edadarom.FullInfoActivity;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,14 +18,15 @@ import com.squareup.picasso.Picasso;
 
 public class FullInfoActivity extends AppCompatActivity implements FullInfoContract.View {
 
-    private TextView tvToolbarTitle, tvToolbarSubtitle, tvPrice, tvDesc, tvRating;
+    private TextView tvToolbarTitle, tvToolbarSubtitle, tvPrice, tvDesc, tvRating, tvCount;
     private TextView tvSellerTitle, tvSellerSubtitle, tvSellerRating;
     private ImageView imgSeller;
     private ImageView imgToolbar;
     private AppBarLayout appBarLayout;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
-
+    private ViewPager viewPager;
+    private AppbarImagesAdapter appbarImagesAdapter;
     private FullInfoContract.Presenter presenter;
 
     @Override
@@ -37,7 +39,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         nestedScrollView = findViewById(R.id.content);
         nestedScrollView.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.progressBar);
-
+        viewPager = findViewById(R.id.viewpager);
 
         imgToolbar = findViewById(R.id.expandedImage);
         tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
@@ -46,6 +48,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         tvPrice = findViewById(R.id.tvPrice);
         tvDesc = findViewById(R.id.tvDesc);
         tvRating = findViewById(R.id.tvRating);
+        tvCount = findViewById(R.id.tvCount);
 
         tvSellerTitle = findViewById(R.id.tvSellerTitle);
         tvSellerSubtitle = findViewById(R.id.tvSellerDesr);
@@ -88,7 +91,30 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         tvPrice.setText(String.valueOf(userAdsModel.getPrice()));
         tvDesc.setText(userAdsModel.getDescription());
 
-        Picasso.with(getApplicationContext()).load(userAdsModel.getPhotoUrl().get(0)).fit().into(imgToolbar);
+        initViewPager(userAdsModel);
+    }
+
+    private void initViewPager(UserAdsModel userAdsModel) {
+        appbarImagesAdapter = new AppbarImagesAdapter(getApplicationContext(), userAdsModel.getPhotoUrl());
+        viewPager.setAdapter(appbarImagesAdapter);
+        tvCount.setText(1 + "/" + userAdsModel.getPhotoUrl().size());
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tvCount.setText(position + 1 + "/" + userAdsModel.getPhotoUrl().size());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -97,8 +123,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
             tvSellerTitle.setText(users.getFirstName());
             tvSellerSubtitle.setText(users.getSecondName());
             tvSellerRating.setText(String.valueOf(users.getRating()));
-
-            if(!users.getPhoto().isEmpty()) Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
+            if(users.getPhoto()!=null) Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
         }
     }
 }

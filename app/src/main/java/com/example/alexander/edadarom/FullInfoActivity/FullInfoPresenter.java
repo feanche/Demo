@@ -70,12 +70,14 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
                                 return;
                             }
 
-                            //Log.d(TAG, id + " => " + snapshotTask.getResult());
-                            Users user = snapshotTask.getResult().toObject(Users.class);
-                            view.showUserInfo(user);
-                            view.hideLoading();
-
-                        }
+                            //Если пользователь есть в бд
+                            if (snapshotTask.getResult().exists()) {
+                                //Log.d(TAG, id + " => " + snapshotTask.getResult());
+                                Users user = snapshotTask.getResult().toObject(Users.class);
+                                view.showUserInfo(user);
+                                view.hideLoading();
+                            }
+                        } else view.hideLoading();
                     });
         } {
             view.hideLoading();

@@ -38,6 +38,7 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
+        if(user.getPhotoUrl().size() != 0)
         Picasso.with(context).load(user.getPhotoUrl().get(0)).fit().into(holder.imageView);
     }
 

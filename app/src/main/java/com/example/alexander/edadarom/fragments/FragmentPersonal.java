@@ -60,6 +60,13 @@ public class FragmentPersonal extends Fragment {
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
+    CheckUserCallback checkUserCallback;
+
+    interface CheckUserCallback {
+        void onSuccess(Users user);
+        void onUserDoNotCreate();
+    }
+
     Users user;
 
     @Override
@@ -96,22 +103,18 @@ public class FragmentPersonal extends Fragment {
 
         switch (state) {
             case STATE_AUTH:
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("users").document(firebaseUser.getUid())
-                        .get()
-                        .addOnCompleteListener(snapshotTask -> {
-                            if (snapshotTask.isSuccessful()) {
 
-                                if (!snapshotTask.getResult().exists()) {
-                                    //Создание  пользователя после аутентификации
-                                    //startActivity(new Intent(getContext(), ProfileCreateActivity.class));
-                                } else {
-                                    user = snapshotTask.getResult().toObject(Users.class);
-                                    //tvToolbarSubtitle.setText(user.getPhoneNumber());
-                                }
+                checkUserInFirestore(new CheckUserCallback() {
+                    @Override
+                    public void onSuccess(Users _user) {
+                        user = _user;
+                    }
 
-                            }
-                        });
+                    @Override
+                    public void onUserDoNotCreate() {
+
+                    }
+                });
 
                 tvSignInOut.setText(R.string.title_personal_sign_out);
                 tvToolbarTitle.setText(firebaseUser.getDisplayName());
@@ -170,6 +173,29 @@ public class FragmentPersonal extends Fragment {
         });
     }
 
+    private void checkUserInFirestore(CheckUserCallback checkUserCallback) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser!=null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(firebaseUser.getUid())
+                    .get()
+                    .addOnCompleteListener(snapshotTask -> {
+                        if (snapshotTask.isSuccessful()) {
+
+                            if (!snapshotTask.getResult().exists()) {
+                                //Создание  пользователя после аутентификации
+                                //startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+                                checkUserCallback.onUserDoNotCreate();
+                            } else {
+                                user = snapshotTask.getResult().toObject(Users.class);
+                                checkUserCallback.onSuccess(user);
+                                //tvToolbarSubtitle.setText(user.getPhoneNumber());
+                            }
+
+                        }
+                    });
+        } else checkUserCallback.onUserDoNotCreate();
+    }
 
 
     @Override
@@ -184,7 +210,17 @@ public class FragmentPersonal extends Fragment {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 updateUI();
-                startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+                checkUserInFirestore(new CheckUserCallback() {
+                    @Override
+                    public void onSuccess(Users user) {
+
+                    }
+
+                    @Override
+                    public void onUserDoNotCreate() {
+                        startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+                    }
+                });
                 // ...
             } else {
                 // Sign in failed, check response for error code

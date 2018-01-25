@@ -24,13 +24,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:foregroundGravity="left"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="Название"
-            android:textSize="16sp"
-            card_view:layout_constraintEnd_toStartOf="@+id/ivToolbar"
-            card_view:layout_constraintStart_toStartOf="parent"
+            android:textSize="18sp"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/ivToolbar"
             card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -41,27 +42,23 @@
             android:layout_below="@+id/tvTitle"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="Описание"
-            android:textSize="12sp"
+            android:textColor="@color/secondaryText"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/ivToolbar"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintLeft_toLeftOf="parent"
-            card_view:layout_constraintRight_toRightOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/ivToolbar"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
         <ImageView
             android:id="@+id/ivToolbar"
-            android:layout_width="80dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintRight_toRightOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,11 +44,15 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     public static final int NEW_ITEM = 1;
     private ArrayList<UserAdsModel> arUserAds;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        toolbar = view.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Редактирование");
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);
