@@ -96,18 +96,11 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     ArrayList<String> arReportUrl = new ArrayList<>();
 
     ImagesRecyclerAdapter imagesRecyclerAdapter;
-    ReportView reportView;
-    ProgressListener progressListener;
-
-    private ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item_add);
-
-        registerDataUpdateListener(progressListener);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -125,7 +118,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         locationButton = (ConstraintLayout) findViewById(R.id.constraintLayout1);
 
         ivPhoto = (ImageView) findViewById(R.id.ivPhoto);
-        progressBar = (ProgressBar) findViewById(R.id.photoAddProgressBar);
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -135,6 +127,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                localityText.setTextColor(getResources().getColor(R.color.secondaryText));
                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                 startActivityForResult(intent, GET_LOCATION);
             }
@@ -143,7 +136,28 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataToFirestore();
+                AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
+                yesOrNoDialog.setTitle("Подтверждаете размещение объявления?");
+                yesOrNoDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        completenessCheck();
+                        if (!complete) {
+                            Toast.makeText(getApplicationContext(), "Заполните красные поля!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            sendDataToFirestore();
+                            finish();
+                        }
+                    }
+                });
+
+                yesOrNoDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Тебе что-то не понравилось", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                yesOrNoDialog.show();
             }
         });
 
@@ -193,13 +207,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    //String path = saveImage(bitmap);
-                    //photoButton1.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                fileUri = contentURI;
+                imagesRecyclerAdapter.add(fileUri);
+                upload(fileUri);
             }
         } else if (requestCode == CAMERA) {
             if (resultCode == RESULT_OK) {
@@ -236,7 +246,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             }
         };
 
-        Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).into(target);
+        Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).centerInside().into(target);
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -265,7 +275,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-               imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
+                imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 arReportUrl.add(downloadUrl.toString());
             }
@@ -286,58 +296,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         return photoUri;
     }
 
-    public interface ProgressListener {
-        void onProgressUpdate(int position, int progress);
-
-        void onSuccess(int position);
-    }
-
-    public synchronized void registerDataUpdateListener(ProgressListener listener) {
-        progressListener = listener;
-    }
-
-
-
-    public void uploadPhotoToFirestore() {
-        completenessCheck();
-        if(complete) {
-            StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
-            UploadTask uploadTask = ref.putBytes(photo);
-
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                            uploadPhotoUrl = taskSnapshot.getDownloadUrl();
-                            arReportUrl.add(uploadPhotoUrl.toString());
-                            sendDataToFirestore();
-                            finish();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Ошибка загрузки изображения",Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-                        }
-                    });
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "Заполните все поля помеченные красным!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void getTimes(){
+    public void getTimes() {
         currentTime = System.currentTimeMillis();
         adEndTime = currentTime + timeOfAction;
     }
 
-    public void sendDataToFirestore(){
+    public void sendDataToFirestore() {
         getTimes();
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -354,7 +318,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 arReportUrl
         );
 
-        if(firebaseUser!=null) userAdsModel.setUserId(firebaseUser.getUid());
+        if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
 
         //Map<String, Object> userValues = userAdsModel.toMap();
         db.collection("ads")
@@ -362,7 +326,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Document snapshot written by ID: "+documentReference.getId());
+                        Log.d(TAG, "Document snapshot written by ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

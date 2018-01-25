@@ -25,11 +25,9 @@ import java.util.ArrayList;
 public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<UploadImage> mList;
-    private ArrayList<Boolean> isLoadedArray = new ArrayList<>();
     private Context context;
 
     BtnClickListener listener;
-    Target target;
 
     public interface BtnClickListener {
         void ivAddClick();
@@ -85,22 +83,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             Picasso.with(context).load(mList.get(position).getUri()).fit().centerCrop().into(((SecondViewHolder) holder).imageView);
 
-            /*target = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    if(!mList.get(position).isLoaded())
-                        uploadImage(bitmap, uploadCallBack);
-                }
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-                }
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-                }
-            };
-            Picasso.with(context).load(mList.get(position).getUri()).resize(500, 500).into(target);*/
-
-
             ((SecondViewHolder) holder).ivDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -109,10 +91,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
         }
 
-
-    }
-
-    private void initUploadCallback(final SecondViewHolder holder, final int position) {
 
     }
 
@@ -128,6 +106,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
+
     public void setIsLoaded(int position, boolean b) {
         mList.get(position).setLoaded(b);
         notifyDataSetChanged();
@@ -140,15 +119,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-
         return 0;
-    }
-
-    public static class DefaultViewHolder extends RecyclerView.ViewHolder {
-
-        public DefaultViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     public static class SecondViewHolder extends RecyclerView.ViewHolder {
