@@ -76,10 +76,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private void initUploadCallback(final SecondViewHolder holder, final int position) {
-
-    }
-
     @Override
     public int getItemCount() {
         if (mList == null)
@@ -95,13 +91,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public int getItemViewType(int position) {
         return 0;
-    }
-
-    public static class DefaultViewHolder extends RecyclerView.ViewHolder {
-
-        public DefaultViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     public static class SecondViewHolder extends RecyclerView.ViewHolder {

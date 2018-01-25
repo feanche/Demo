@@ -3,7 +3,7 @@ package com.example.alexander.edadarom.NewItem;
 import android.net.Uri;
 
 /**
- * Created by Alexander on 23.01.2018.
+ * Created by Alexander on 25.01.2018.
  */
 
 public class UploadImage {
