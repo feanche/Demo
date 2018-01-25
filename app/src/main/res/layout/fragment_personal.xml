@@ -47,28 +47,26 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:src="@mipmap/ic_launcher"
-                    app:civ_border_color="#FF000000"
+                    app:civ_border_color="@color/white"
                     app:civ_border_width="1dp"
                     app:layout_constraintBottom_toTopOf="@+id/tvToolbarTitle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.8" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
                     android:id="@+id/tvToolbarTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="16dp"
                     android:padding="5dp"
@@ -92,6 +90,7 @@
                     android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -160,14 +159,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="16dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:padding="5dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_email_black_24dp" />
+                            app:srcCompat="@drawable/login" />
                     </android.support.constraint.ConstraintLayout>
 
                 </LinearLayout>
@@ -216,9 +214,10 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:padding="5dp"
+                            android:tint="@color/blue_800"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_email_black_24dp" />
+                            app:srcCompat="@drawable/format_list_bulleted" />
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
@@ -248,17 +247,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="16dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:padding="5dp"
+                            android:tint="@color/cyan_700"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_email_black_24dp" />
+                            app:srcCompat="@drawable/bell" />
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/clProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
@@ -270,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="24dp"
-                            android:text="Мои адреса"
+                            android:text="Мой профиль"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -286,10 +286,11 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:padding="5dp"
+                            android:tint="@color/green_700"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_email_black_24dp" />
+                            app:srcCompat="@drawable/account" />
                     </android.support.constraint.ConstraintLayout>
 
                     <android.support.constraint.ConstraintLayout

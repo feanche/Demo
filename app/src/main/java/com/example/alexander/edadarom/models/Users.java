@@ -17,6 +17,13 @@ public class Users {
     public Users() {
     }
 
+    public Users(String uId, String firstName, String email, String phoneNumber) {
+        this.uId = uId;
+        this.firstName = firstName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Users(String uId, String userType, String firstName, String secondName, String email, String photo, String phoneNumber, float rating) {
         this.uId = uId;
         this.userType = userType;

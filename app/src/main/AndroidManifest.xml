@@ -62,7 +62,8 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Authorization.PhoneAuthActivity" />
-        <activity android:name=".Authorization.ProfileCreateActivity"></activity>
+        <activity android:name=".Authorization.ProfileCreateActivity" />
+        <activity android:name=".fragments.editProfileActivity"></activity>
     </application>
 
 </manifest>

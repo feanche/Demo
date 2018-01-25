@@ -56,7 +56,7 @@ public class FragmentPersonal extends Fragment {
     private TextView tvSignInOut;
     private CircleImageView ivToolbarProfile;
 
-    private ConstraintLayout clSignInOut;
+    private ConstraintLayout clSignInOut, clEditProfile;
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
@@ -72,6 +72,7 @@ public class FragmentPersonal extends Fragment {
         setStatusBarTranslucent(true);
         tvSignInOut = view.findViewById(R.id.tvSignInOut);
         clSignInOut = view.findViewById(R.id.clSignInOut);
+        clEditProfile = view.findViewById(R.id.clProfile);
 
         updateUI();
         btnClickListeners();
@@ -103,10 +104,10 @@ public class FragmentPersonal extends Fragment {
 
                                 if (!snapshotTask.getResult().exists()) {
                                     //Создание  пользователя после аутентификации
-                                    startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+                                    //startActivity(new Intent(getContext(), ProfileCreateActivity.class));
                                 } else {
                                     user = snapshotTask.getResult().toObject(Users.class);
-                                    tvToolbarSubtitle.setText(user.getPhoneNumber());
+                                    //tvToolbarSubtitle.setText(user.getPhoneNumber());
                                 }
 
                             }
@@ -119,8 +120,8 @@ public class FragmentPersonal extends Fragment {
                 break;
             case STATE_NOT_AUTH:
                 tvSignInOut.setText(R.string.title_personal_sign_in);
-                tvToolbarTitle.setText("");
-                tvToolbarSubtitle.setText("Вы не авторизованы");
+                tvToolbarTitle.setText("Вы не авторизованы");
+                //tvToolbarSubtitle.setText("");
                 Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(ivToolbarProfile);
                 break;
         }
@@ -160,6 +161,13 @@ public class FragmentPersonal extends Fragment {
                 }
             }
         });
+
+        clEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+            }
+        });
     }
 
 
@@ -175,8 +183,8 @@ public class FragmentPersonal extends Fragment {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 updateUI();
+                startActivity(new Intent(getContext(), ProfileCreateActivity.class));
                 // ...
             } else {
                 // Sign in failed, check response for error code

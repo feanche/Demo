@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toolbar;
 
 import com.example.alexander.edadarom.Authorization.LoginActivity;
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
@@ -32,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewPager=(ViewPager)findViewById(R.id.viewpager);
-        bottomNavigationView=(BottomNavigationView)findViewById(R.id.navigation);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_browse:
                         viewPager.setCurrentItem(0);
                         break;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -63,16 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(prevMenuItem!=null){
+                if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
-                }
-                else
-                {
+                } else {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
 
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem=bottomNavigationView.getMenu().getItem(position);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
             }
 
             @Override
@@ -107,6 +106,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy");
+        Log.d(TAG, "onDestroy");
     }
 }
