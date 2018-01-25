@@ -28,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,12 +36,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
+import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -55,7 +61,7 @@ import com.example.alexander.edadarom.R;
  * Created by Alexander on 10.01.2018.
  */
 
-public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyclerAdapter.BtnClickListener, ReportView{
+public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyclerAdapter.BtnClickListener {
 
     private EditText title, description, price;
     private Button publishButton;
@@ -85,8 +91,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
 
 
-
-
     Uri fileUri;
 
     ArrayList<String> arReportUrl = new ArrayList<>();
@@ -109,23 +113,23 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        localityText = (TextView)findViewById(R.id.textView6);
+        localityText = findViewById(R.id.textView6);
 
-        title = (EditText)findViewById(R.id.editText);
-        description = (EditText)findViewById(R.id.editText2);
-        price = (EditText)findViewById(R.id.editText3);
+        title = findViewById(R.id.editText);
+        description = (EditText) findViewById(R.id.editText2);
+        price = (EditText) findViewById(R.id.editText3);
 
-        publishButton = (Button)findViewById(R.id.button2);
-        backButton = (ImageView)findViewById(R.id.iv_close);
+        publishButton = (Button) findViewById(R.id.button2);
+        backButton = (ImageView) findViewById(R.id.iv_close);
 
-        locationButton = (ConstraintLayout)findViewById(R.id.constraintLayout1);
+        locationButton = (ConstraintLayout) findViewById(R.id.constraintLayout1);
 
-        ivPhoto = (ImageView)findViewById(R.id.ivPhoto);
-        progressBar = (ProgressBar)findViewById(R.id.photoAddProgressBar);
+        ivPhoto = (ImageView) findViewById(R.id.ivPhoto);
+        progressBar = (ProgressBar) findViewById(R.id.photoAddProgressBar);
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
 
         locationButton.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +143,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendDataToFirestore();
             }
         });
 
@@ -157,19 +161,19 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         String mTitle = title.getText().toString();
         String mDescription = description.getText().toString();
         String mPrice = price.getText().toString();
-        if(mTitle.matches("")) {
+        if (mTitle.matches("")) {
             title.setHintTextColor(getResources().getColor(R.color.red));
         }
-        if(mDescription.matches("")) {
+        if (mDescription.matches("")) {
             description.setHintTextColor(getResources().getColor(R.color.red));
         }
-        if(mPrice.matches("")) {
+        if (mPrice.matches("")) {
             price.setHintTextColor(getResources().getColor(R.color.red));
         }
-        if(locationLat==0 && locationLon==0){
+        if (locationLat == 0 && locationLon == 0) {
             localityText.setTextColor(getResources().getColor(R.color.red));
         }
-        if(mTitle.matches("")|mDescription.matches("")|mPrice.matches("")|locationLat==0|locationLon==0){
+        if (mTitle.matches("") | mDescription.matches("") | mPrice.matches("") | locationLat == 0 | locationLon == 0) {
             complete = false;
         } else {
             complete = true;
@@ -231,7 +235,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
             }
         };
-        Picasso.with(getApplicationContext()).load(file).resize(1000,1000).into(target);
+
+        Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).into(target);
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -244,7 +249,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void uploadImageToStorage(byte[] data) {
-        StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
+        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
         UploadTask uploadTask = ref.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -255,13 +260,13 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                reportView.onUploadImageProgress(arReportUrl.size(), (int) progress);
+                imagesRecyclerAdapter.setProgress(arReportUrl.size(), (int) progress);
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+               imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                reportView.onUploadImageSuccess(arReportUrl.size());
                 arReportUrl.add(downloadUrl.toString());
             }
         });
@@ -270,19 +275,20 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private Uri getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "CameraDemo");
-        if(!mediaStorageDir.exists()){
-            if(!mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 return null;
             }
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File path = new File(mediaStorageDir.getPath()+File.separator+"IMG_"+timeStamp+".jpg");
-        photoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName()+".com.example.alexander.edadarom.provider",path);
+        File path = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+        photoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".com.example.alexander.edadarom.provider", path);
         return photoUri;
     }
 
     public interface ProgressListener {
         void onProgressUpdate(int position, int progress);
+
         void onSuccess(int position);
     }
 
@@ -292,7 +298,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
 
 
-    /*public void uploadPhotoToFirestore() {
+    public void uploadPhotoToFirestore() {
         completenessCheck();
         if(complete) {
             StorageReference ref = storageReference.child("images/"+UUID.randomUUID().toString());
@@ -333,6 +339,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public void sendDataToFirestore(){
         getTimes();
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         UserAdsModel userAdsModel = new UserAdsModel(
                 description.getText().toString(),
                 adEndTime,
@@ -342,11 +351,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 currentTime,
                 title.getText().toString(),
                 "Столярный инструмент",
-                uploadPhotoUrl.toString()
+                arReportUrl
         );
-        Map<String, Object> userValues = userAdsModel.toMap();
+
+        if(firebaseUser!=null) userAdsModel.setUserId(firebaseUser.getUid());
+
+        //Map<String, Object> userValues = userAdsModel.toMap();
         db.collection("ads")
-                .add(userValues)
+                .add(userAdsModel)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -361,9 +373,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 });
     }
 
-
-    */
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 0) {
@@ -376,7 +385,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy");
+        Log.d(TAG, "onDestroy");
     }
 
     @Override
@@ -385,11 +394,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
 
-
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         //pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {"Выбрать из галереи","Сделать фото на камеру"};
+        String[] pictureDialogItems = {"Выбрать из галереи", "Сделать фото на камеру"};
         pictureDialog.setItems(pictureDialogItems, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -412,7 +420,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     private void initRecyclerView() {
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setHasFixedSize(true);
         arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
@@ -427,7 +435,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
 
-
     @Override
     public void ivAddClick() {
         showPictureDialog();
@@ -436,28 +443,5 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     @Override
     public void ivDelClick() {
 
-    }
-
-
-    @Override
-    public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoading() {
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onUploadImageSuccess(int position) {
-        if(progressListener != null)
-            progressListener.onSuccess(position);
-    }
-
-    @Override
-    public void onUploadImageProgress(int position, int progress) {
-        if(progressListener != null)
-            progressListener.onProgressUpdate(position, progress);
     }
 }

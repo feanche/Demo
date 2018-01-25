@@ -6,6 +6,7 @@ package com.example.alexander.edadarom.models;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,13 +22,13 @@ public class UserAdsModel {
     public long publicTime;
     public String title;
     public String type;
-    public String photoUrl;
+    public ArrayList<String> photoUrl;
 
     public UserAdsModel() {
 
     }
 
-    public UserAdsModel(String description, long endTime, float locationLat, float locationLon, int price, long publicTime, String title, String type, String photoUrl) {
+    public UserAdsModel(String description, long endTime, float locationLat, float locationLon, int price, long publicTime, String title, String type, ArrayList<String> photoUrl) {
         this.description = description;
         this.endTime = endTime;
         this.locationLat = locationLat;
@@ -133,11 +134,11 @@ public class UserAdsModel {
         this.type = type;
     }
 
-    public String getPhotoUrl() {
+    public ArrayList<String> getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
+    public void setPhotoUrl(ArrayList<String> photoUrl) {
         this.photoUrl = photoUrl;
     }
 }

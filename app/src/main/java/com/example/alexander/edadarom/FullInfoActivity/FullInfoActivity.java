@@ -88,7 +88,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         tvPrice.setText(String.valueOf(userAdsModel.getPrice()));
         tvDesc.setText(userAdsModel.getDescription());
 
-        Picasso.with(getApplicationContext()).load(userAdsModel.getPhotoUrl()).fit().into(imgToolbar);
+        Picasso.with(getApplicationContext()).load(userAdsModel.getPhotoUrl().get(0)).fit().into(imgToolbar);
     }
 
     @Override
