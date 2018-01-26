@@ -12,6 +12,7 @@ public class Users {
     String email;
     String photo;
     String phoneNumber;
+    String pustNotificationToken;
     float rating;
 
     public Users() {
@@ -42,6 +43,14 @@ public class Users {
         this.email = email;
         this.photo = photo;
         this.rating = rating;
+    }
+
+    public String getPustNotificationToken() {
+        return pustNotificationToken;
+    }
+
+    public void setPustNotificationToken(String pustNotificationToken) {
+        this.pustNotificationToken = pustNotificationToken;
     }
 
     public String getuId() {

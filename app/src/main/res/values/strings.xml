@@ -61,5 +61,6 @@
     <string name="instant_validation">(instant validation)</string>
     <string name="title_personal_sign_in">Авторизация</string>
     <string name="title_personal_sign_out">Выйти</string>
+    <string name="default_notification_channel_id">99</string>
 
 </resources>

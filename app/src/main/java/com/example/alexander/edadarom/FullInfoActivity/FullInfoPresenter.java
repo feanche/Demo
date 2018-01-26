@@ -2,12 +2,20 @@ package com.example.alexander.edadarom.FullInfoActivity;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.fragments.Browse.BrowseFragmentContract;
+import com.example.alexander.edadarom.fragments.FragmentPersonal;
+import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,6 +62,22 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
 
                     }
                 });
+    }
+
+    @Override
+    public void rezervation() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), "dfd", "fdfd");
+        db.collection("reservationQuery")
+                .add(reservationQuery)
+               .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                   @Override
+                   public void onSuccess(DocumentReference documentReference) {
+                       Log.d(TAG, "Document snapshot added");
+                   }
+               });
     }
 
     private void getUserInfo(String id) {

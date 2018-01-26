@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 public class ProfileCreateActivity extends AppCompatActivity {
@@ -139,6 +140,7 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             //создаем/обновляем профиль в Firestore
                             Users user = new Users(firebaseUser.getUid(), edName.getText().toString(), edEmail.getText().toString(), edPhone.getText().toString());
                             if(firebaseUser.getPhotoUrl()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
+                            user.setPustNotificationToken(FirebaseInstanceId.getInstance().getToken());
                             db.collection("users").document(firebaseUser.getUid())
                                     .set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

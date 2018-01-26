@@ -126,4 +126,8 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
             if(users.getPhoto()!=null) Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
         }
     }
+
+    public void reservationClick(View view) {
+        presenter.rezervation();
+    }
 }
