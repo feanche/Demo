@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     public static String TAG = "BrowsePresenter";
 
      private FullInfoContract.View view;
-
+     private UserAdsModel userAdsModel;
 
     public FullInfoPresenter(FullInfoContract.View view) {
         this.view = view;
@@ -53,7 +54,8 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
                         }
 
                         Log.d(TAG, key + " => " + snapshotTask.getResult());
-                        UserAdsModel userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
+                        userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
+                        userAdsModel.setId(snapshotTask.getResult().getId());
                         //view.hideLoading();
 
                         //Информация о пользователи или магазине
@@ -65,14 +67,14 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     }
 
     @Override
-    public void rezervation() {
+    public void reservationAd() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), "dfd", "fdfd");
+        String token = FirebaseInstanceId.getInstance().getToken();
+        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), token);
         db.collection("reservationQuery")
                 .add(reservationQuery)
-               .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                    @Override
                    public void onSuccess(DocumentReference documentReference) {
                        Log.d(TAG, "Document snapshot added");

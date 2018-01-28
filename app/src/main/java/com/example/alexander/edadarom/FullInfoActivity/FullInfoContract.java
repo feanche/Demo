@@ -19,6 +19,6 @@ public interface FullInfoContract {
 
     interface Presenter {
         void getAd(String key);
-        void rezervation();
+        void reservationAd();
     }
 }

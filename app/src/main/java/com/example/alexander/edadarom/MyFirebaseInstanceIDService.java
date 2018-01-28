@@ -17,10 +17,19 @@ package com.example.alexander.edadarom;
  */
 
 
+        import android.support.annotation.NonNull;
         import android.util.Log;
 
+        import com.example.alexander.edadarom.utils.FirebaseMethods;
+        import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.android.gms.tasks.Task;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.firestore.FirebaseFirestore;
         import com.google.firebase.iid.FirebaseInstanceId;
         import com.google.firebase.iid.FirebaseInstanceIdService;
+
+        import java.util.HashMap;
+        import java.util.Map;
 
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -54,7 +63,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      *
      * @param token The new token.
      */
-    private void sendRegistrationToServer(String token) {
+    public void sendRegistrationToServer(String token) {
+        FirebaseMethods.updateToken();
         // TODO: Implement this method to send token to your app server.
     }
 }

@@ -29,7 +29,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -53,7 +56,7 @@ public class FragmentPersonal extends Fragment {
 
     private View view;
     private TextView tvToolbarTitle, tvToolbarSubtitle;
-    private TextView tvSignInOut;
+    private TextView tvSignInOut, tv3;
     private CircleImageView ivToolbarProfile;
 
     private ConstraintLayout clSignInOut, clEditProfile;
@@ -81,8 +84,11 @@ public class FragmentPersonal extends Fragment {
         clSignInOut = view.findViewById(R.id.clSignInOut);
         clEditProfile = view.findViewById(R.id.clProfile);
 
+        tv3 = view.findViewById(R.id.tv3);
+
         updateUI();
         btnClickListeners();
+        getUserNotifications();
         return view;
     }
 
@@ -195,6 +201,20 @@ public class FragmentPersonal extends Fragment {
                         }
                     });
         } else checkUserCallback.onUserDoNotCreate();
+    }
+
+    private void getUserNotifications() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser!=null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(firebaseUser.getUid()).collection("notifications")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                            tv3.setText("Уведомления " + documentSnapshots.getDocuments().size());
+                        }
+                    });
+        }
     }
 
 

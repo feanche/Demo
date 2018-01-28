@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.alexander.edadarom.MyFirebaseInstanceIDService;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.FirebaseMethods;
 import com.firebase.ui.auth.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -140,7 +142,8 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             //создаем/обновляем профиль в Firestore
                             Users user = new Users(firebaseUser.getUid(), edName.getText().toString(), edEmail.getText().toString(), edPhone.getText().toString());
                             if(firebaseUser.getPhotoUrl()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
-                            user.setPustNotificationToken(FirebaseInstanceId.getInstance().getToken());
+                            //user.setPustNotificationToken(FirebaseInstanceId.getInstance().getToken());
+                            FirebaseMethods.updateToken();
                             db.collection("users").document(firebaseUser.getUid())
                                     .set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

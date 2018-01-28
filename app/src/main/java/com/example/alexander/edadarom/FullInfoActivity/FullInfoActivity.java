@@ -128,6 +128,6 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     }
 
     public void reservationClick(View view) {
-        presenter.rezervation();
+        presenter.reservationAd();
     }
 }

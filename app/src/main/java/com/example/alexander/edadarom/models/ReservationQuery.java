@@ -7,11 +7,13 @@ package com.example.alexander.edadarom.models;
 public class ReservationQuery {
     String senderId;
     String receiverId;
-    String AdId;
+    String adId;
+    String senderPushToken;
 
-    public ReservationQuery(String senderId, String receiverId, String adId) {
+    public ReservationQuery(String senderId, String receiverId, String adId, String senderPushToken) {
         this.senderId = senderId;
         this.receiverId = receiverId;
-        AdId = adId;
+        this.adId = adId;
+        this.senderPushToken = senderPushToken;
     }
 }
