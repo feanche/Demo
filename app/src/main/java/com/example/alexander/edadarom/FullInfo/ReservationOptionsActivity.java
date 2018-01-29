@@ -5,11 +5,14 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.models.UserAdsModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ReservationOptionsActivity extends AppCompatActivity {
 
@@ -26,12 +29,14 @@ public class ReservationOptionsActivity extends AppCompatActivity {
     protected RadioButton radioButton;
     protected RadioButton radioButton2;
     protected TextView tvTitle;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_reservation_options);
         initView();
+        getIntent().getStringExtra("key");
     }
 
     private void initView() {
@@ -48,4 +53,5 @@ public class ReservationOptionsActivity extends AppCompatActivity {
         radioButton2 = (RadioButton) findViewById(R.id.radioButton2);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
     }
+
 }

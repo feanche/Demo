@@ -21,7 +21,8 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     public static String TAG = "BrowsePresenter";
 
      private FullInfoContract.View view;
-     private UserAdsModel userAdsModel;
+     public UserAdsModel userAdsModel;
+     public Users user;
 
     public FullInfoPresenter(FullInfoContract.View view) {
         this.view = view;
@@ -70,6 +71,21 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
                });*/
     }
 
+    @Override
+    public void showReservationFragment() {
+        view.showReservationFragment();
+    }
+
+    @Override
+    public void hideReservationFragment() {
+        view.hideReservationFragment();
+    }
+
+    @Override
+    public void showDateInFragment() {
+        view.showDateInFragment(userAdsModel, user);
+    }
+
     private void getUserInfo(String id) {
         if (id != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -87,7 +103,7 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
                             //Если пользователь есть в бд
                             if (snapshotTask.getResult().exists()) {
                                 //Log.d(TAG, id + " => " + snapshotTask.getResult());
-                                Users user = snapshotTask.getResult().toObject(Users.class);
+                                user = snapshotTask.getResult().toObject(Users.class);
                                 view.showUserInfo(user);
                                 view.hideLoading();
                             }

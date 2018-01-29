@@ -13,11 +13,16 @@ public interface FullInfoContract {
     interface View extends BaseView{
         void addDate(UserAdsModel userAdsModel);
         void showUserInfo(Users users);
-        void openActivity(UserAdsModel userAdsModel);
+        void showReservationFragment();
+        void hideReservationFragment();
+        void showDateInFragment(UserAdsModel userAdsModel, Users users);
     }
 
     interface Presenter {
         void getAd(String key);
         void reservationAd();
+        void showReservationFragment();
+        void hideReservationFragment();
+        void showDateInFragment();
     }
 }

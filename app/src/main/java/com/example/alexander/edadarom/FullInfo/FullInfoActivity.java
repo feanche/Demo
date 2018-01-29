@@ -1,6 +1,5 @@
 package com.example.alexander.edadarom.FullInfo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
@@ -32,7 +31,17 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     private ProgressBar progressBar;
     private ViewPager viewPager;
     private AppbarImagesAdapter appbarImagesAdapter;
-    private FullInfoContract.Presenter presenter;
+    public FullInfoContract.Presenter presenter;
+
+    ReservationOptionFragmentListener fgReservListener;
+
+    public interface ReservationOptionFragmentListener {
+        void addDate(UserAdsModel userAdModel, Users users);
+    }
+
+    public synchronized void registerFgReservListener(ReservationOptionFragmentListener listener) {
+        fgReservListener = listener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +142,50 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         }
     }
 
+    @Override
+    public void showReservationFragment() {
+        FragmentReservationOptions fragment = new FragmentReservationOptions();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.topView, fragment)
+                .addToBackStack("reservation")
+                .commit();
+
+        setTheme(R.style.AppTheme);
+        setStatusBarTranslucent(false);
+
+    }
+
+
+    @Override
+    public void hideReservationFragment() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() != 0) {
+            manager.popBackStack();
+        }
+        setStatusBarTranslucent(true);
+    }
+
+    @Override
+    public void showDateInFragment(UserAdsModel userAdsModel, Users users) {
+        if(fgReservListener!=null) {
+            fgReservListener.addDate(userAdsModel, users);
+        }
+    }
+
     public void reservationClick(View view) {
-        startActivity(new Intent(this, ReservationOptionsActivity.class));
+        presenter.showReservationFragment();
         //presenter.reservationAd();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() != 0) {
+            manager.popBackStack();
+            setStatusBarTranslucent(true);
+            setTheme(R.style.AppTheme_ActionBar_Transparent);
+        } else super.onBackPressed();
     }
 }
