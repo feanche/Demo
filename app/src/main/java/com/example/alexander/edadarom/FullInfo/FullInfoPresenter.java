@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,19 +57,21 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     }
 
     @Override
-    public void reservationAd() {
-        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void reservationAd(String reservationDate, String reservationTime, Boolean isDelivery, String deliveryAddress) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String token = FirebaseInstanceId.getInstance().getToken();
-        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), token);
-        db.collection("reservationQuery")
+        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, reservationTime ,isDelivery, deliveryAddress);
+        db.collection(FirebaseConst.RESERVATION_QUERY)
                 .add(reservationQuery)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                    @Override
                    public void onSuccess(DocumentReference documentReference) {
                        Log.d(TAG, "Document snapshot added");
+                       view.showToast("Товар забронирован!");
+                       view.hideReservationFragment();
                    }
-               });*/
+               });
     }
 
     @Override

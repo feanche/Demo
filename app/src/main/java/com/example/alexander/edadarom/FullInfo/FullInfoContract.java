@@ -16,11 +16,12 @@ public interface FullInfoContract {
         void showReservationFragment();
         void hideReservationFragment();
         void showDateInFragment(UserAdsModel userAdsModel, Users users);
+        void showToast(String message);
     }
 
     interface Presenter {
         void getAd(String key);
-        void reservationAd();
+        void reservationAd(String reservationDate, String reservationTime, Boolean isDeleviry, String deleviryAddress);
         void showReservationFragment();
         void hideReservationFragment();
         void showDateInFragment();

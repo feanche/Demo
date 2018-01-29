@@ -5,7 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:fitsSystemWindows="true">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/btnReservation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="reservationClick"
+        android:orientation="horizontal"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Забронировать"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -56,7 +83,7 @@
                 android:text="Title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivAd"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -65,14 +92,15 @@
                 android:layout_height="96dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_location_on_black_24dp"
-                android:tint="@color/secondaryText"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                app:layout_constraintTop_toTopOf="@+id/tvTitle"
+                app:srcCompat="@drawable/bg_personal" />
 
             <TextView
                 android:id="@+id/tvCoastTitle"
@@ -82,7 +110,7 @@
                 android:text="Стоимость:"
                 android:textColor="@color/light_bg_dark_primary_text"
                 app:layout_constraintStart_toEndOf="@+id/ivAd"
-                app:layout_constraintTop_toTopOf="@+id/ivAd" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
             <TextView
                 android:id="@+id/tvCoastPrice"
@@ -111,7 +139,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Итого:"
                 android:textColor="@color/light_bg_dark_primary_text"
                 app:layout_constraintStart_toEndOf="@+id/ivAd"
@@ -234,15 +262,19 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:focusableInTouchMode="false"
         app:layout_constraintEnd_toStartOf="@+id/edTime"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_view1">
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/tiDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Дата" />
+            android:focusableInTouchMode="false"
+            android:hint="Дата"
+            android:inputType="none" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -257,9 +289,12 @@
         app:layout_constraintTop_toTopOf="@+id/edDate">
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/tiTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Время" />
+            android:focusableInTouchMode="false"
+            android:hint="Время"
+            android:inputType="none" />
     </android.support.design.widget.TextInputLayout>
 
     <RadioButton
@@ -289,5 +324,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioButton" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
