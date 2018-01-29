@@ -1,5 +1,7 @@
 package com.example.alexander.edadarom.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by GabdrakhmanovII on 22.01.2018.
  */
@@ -14,6 +16,8 @@ public class Users {
     String phoneNumber;
     String pustNotificationToken;
     float rating;
+    ArrayList<String> address;
+
 
     public Users() {
     }
@@ -43,6 +47,14 @@ public class Users {
         this.email = email;
         this.photo = photo;
         this.rating = rating;
+    }
+
+    public ArrayList<String> getAddress() {
+        return address;
+    }
+
+    public void setAddress(ArrayList<String> address) {
+        this.address = address;
     }
 
     public String getPustNotificationToken() {

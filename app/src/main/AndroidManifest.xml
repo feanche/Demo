@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewItem.AddNewItemActivity"
+            android:name=".NewItemActivity.AddNewItemActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -82,6 +82,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Authorization.PhoneAuthActivity" />
         <activity android:name=".Authorization.ProfileCreateActivity" />
+        <activity android:name=".UserAddressesActivity.AddressesActivity"/>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>

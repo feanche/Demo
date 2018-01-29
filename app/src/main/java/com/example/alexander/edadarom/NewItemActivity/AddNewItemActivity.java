@@ -1,4 +1,4 @@
-package com.example.alexander.edadarom.NewItem;
+package com.example.alexander.edadarom.NewItemActivity;
 
 import android.Manifest;
 import android.content.DialogInterface;
