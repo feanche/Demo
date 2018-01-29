@@ -18,7 +18,12 @@
     <string name="text_second_activity">Создать объявление</string>
     <string name="text_location">Местоположение</string>
     <string name="text_addresses">Мои адреса</string>
+    <string name="text_new_address">Новый адрес</string>
 
+    <string name="hint_region">Регион</string>
+    <string name="hint_city">Город</string>
+    <string name="hint_address">Адрес</string>
+    <string name="hint_index">Индекс</string>
     <string name="hint_title_sample">Например: Дрель, ударная 1200 rpm</string>
     <string name="hint_description_sample">Описание (до 300 символов)</string>
     <string name="hint_price">Стоимость, ₽</string>

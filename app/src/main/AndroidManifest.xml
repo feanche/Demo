@@ -83,6 +83,7 @@
         <activity android:name=".Authorization.PhoneAuthActivity" />
         <activity android:name=".Authorization.ProfileCreateActivity" />
         <activity android:name=".UserAddressesActivity.AddressesActivity"/>
+        <activity android:name=".UserAddressesActivity.AddNewAddress"/>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>

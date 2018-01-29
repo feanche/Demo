@@ -101,7 +101,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        localityText = findViewById(R.id.tvShipTitle);
+        localityText = findViewById(R.id.textView6);
 
         title = findViewById(R.id.editText);
         description = (EditText) findViewById(R.id.editText2);
