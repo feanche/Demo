@@ -1,7 +1,6 @@
 package com.example.alexander.edadarom.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -10,22 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.alexander.edadarom.Authorization.LoginActivity;
-import com.example.alexander.edadarom.Authorization.PhoneAuthActivity;
+import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
 import com.example.alexander.edadarom.Notifications.NotificationsActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.Users;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +53,11 @@ public class FragmentPersonal extends Fragment {
     private TextView tvSignInOut, tv3;
     private CircleImageView ivToolbarProfile;
 
+<<<<<<< Updated upstream
     private ConstraintLayout clSignInOut, clEditProfile, clNotifications;
+=======
+    private ConstraintLayout clSignInOut, clEditProfile, clAddresses;
+>>>>>>> Stashed changes
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
@@ -84,7 +81,11 @@ public class FragmentPersonal extends Fragment {
         tvSignInOut = view.findViewById(R.id.tvSignInOut);
         clSignInOut = view.findViewById(R.id.clSignInOut);
         clEditProfile = view.findViewById(R.id.clProfile);
+<<<<<<< Updated upstream
         clNotifications = view.findViewById(R.id.clNotifications);
+=======
+        clAddresses = view.findViewById(R.id.clAddresses);
+>>>>>>> Stashed changes
 
         tv3 = view.findViewById(R.id.tv3);
 
@@ -180,10 +181,17 @@ public class FragmentPersonal extends Fragment {
             }
         });
 
+<<<<<<< Updated upstream
         clNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), NotificationsActivity.class));
+=======
+        clAddresses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AddressesActivity.class));
+>>>>>>> Stashed changes
             }
         });
     }

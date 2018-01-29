@@ -1,8 +1,6 @@
-package com.example.alexander.edadarom.NewItem;
+package com.example.alexander.edadarom.NewItemActivity;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +11,7 @@ import android.widget.ProgressBar;
 
 import com.example.alexander.edadarom.R;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
