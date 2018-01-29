@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
-import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
+import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
