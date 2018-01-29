@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -165,6 +166,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
             manager.popBackStack();
         }
         setStatusBarTranslucent(true);
+        setTheme(R.style.AppTheme_ActionBar_Transparent);
     }
 
     @Override
@@ -172,6 +174,11 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         if(fgReservListener!=null) {
             fgReservListener.addDate(userAdsModel, users);
         }
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     public void reservationClick(View view) {
@@ -183,9 +190,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
         if (manager.getBackStackEntryCount() != 0) {
-            manager.popBackStack();
-            setStatusBarTranslucent(true);
-            setTheme(R.style.AppTheme_ActionBar_Transparent);
+            hideReservationFragment();
         } else super.onBackPressed();
     }
 }
