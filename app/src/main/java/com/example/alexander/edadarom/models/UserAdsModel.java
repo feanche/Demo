@@ -42,7 +42,7 @@ public class UserAdsModel {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("description",description);
+        result.put("message",description);
         result.put("endTime",endTime);
         result.put("locationLon",locationLon);
         result.put("locationLat",locationLat);

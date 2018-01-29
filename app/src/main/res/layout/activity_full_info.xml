@@ -472,13 +472,14 @@
     <android.support.v7.widget.CardView
         android:id="@+id/btnReservation"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:onClick="reservationClick"
         android:orientation="horizontal"
-        app:cardBackgroundColor="@color/amber_600">
+        app:cardBackgroundColor="@color/amber_600"
+        app:cardElevation="0dp">
 
         <TextView
             android:id="@+id/textView"
@@ -490,5 +491,12 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
     </android.support.v7.widget.CardView>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/topView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>

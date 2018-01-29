@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.Authorization.LoginActivity;
 import com.example.alexander.edadarom.Authorization.PhoneAuthActivity;
 import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
+import com.example.alexander.edadarom.Notifications.NotificationsActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.Users;
 import com.firebase.ui.auth.AuthUI;
@@ -59,7 +60,7 @@ public class FragmentPersonal extends Fragment {
     private TextView tvSignInOut, tv3;
     private CircleImageView ivToolbarProfile;
 
-    private ConstraintLayout clSignInOut, clEditProfile;
+    private ConstraintLayout clSignInOut, clEditProfile, clNotifications;
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
@@ -83,6 +84,7 @@ public class FragmentPersonal extends Fragment {
         tvSignInOut = view.findViewById(R.id.tvSignInOut);
         clSignInOut = view.findViewById(R.id.clSignInOut);
         clEditProfile = view.findViewById(R.id.clProfile);
+        clNotifications = view.findViewById(R.id.clNotifications);
 
         tv3 = view.findViewById(R.id.tv3);
 
@@ -175,6 +177,13 @@ public class FragmentPersonal extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ProfileCreateActivity.class));
+            }
+        });
+
+        clNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), NotificationsActivity.class));
             }
         });
     }

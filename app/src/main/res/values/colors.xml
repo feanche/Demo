@@ -14,7 +14,13 @@
     <color name="card_background">#e7e7e7</color>
     <color name="red">#ff0000</color>
 
-
+    <array name="swipe_refresh_colors">
+        <item>@color/red_500</item>
+        <item>@color/blue_500</item>
+        <item>@color/yellow_500</item>
+        <item>@color/cyan_500</item>
+        <item>@color/green_500</item>
+    </array>
 
 
 
@@ -180,7 +186,7 @@
         <color name="light_green_A700">#64DD17</color>
 
         <color name="amber_50">#FFF8E1</color>
-        <color name="amber_100">#FFECB3</color>
+        <color name="amber_100">#ffecb3</color>
         <color name="amber_200">#FFE082</color>
         <color name="amber_300">#FFD54F</color>
         <color name="amber_400">#FFCA28</color>
@@ -188,7 +194,7 @@
         <color name="amber_600">#ffb300</color>
         <color name="amber_700">#ffa000</color>
         <color name="amber_800">#FF8F00</color>
-        <color name="amber_900">#FF6F00</color>
+        <color name="amber_900">#ff6f00</color>
         <color name="amber_A100">#FFE57F</color>
         <color name="amber_A200">#FFD740</color>
         <color name="amber_A400">#FFC400</color>
@@ -229,7 +235,7 @@
         <color name="blue_600">#1E88E5</color>
         <color name="blue_700">#1976d2</color>
         <color name="blue_800">#1565c0</color>
-        <color name="blue_900">#0D47A1</color>
+        <color name="blue_900">#0d47a1</color>
         <color name="blue_A100">#82B1FF</color>
         <color name="blue_A200">#448AFF</color>
         <color name="blue_A400">#2979FF</color>
@@ -295,7 +301,7 @@
         <color name="white">#ffffff</color>
 
         <!--Light Background Dark Text-->
-        <color name="light_bg_dark_primary_text">#DE000000</color>
+        <color name="light_bg_dark_primary_text">#de000000</color>
         <color name="light_bg_dark_secondary_text">#8A000000</color>
         <color name="light_bg_dark_disabled_text">#61000000</color>
         <color name="light_bg_dark_hint_text">#61000000</color>

@@ -1,7 +1,6 @@
 package com.example.alexander.edadarom.NewItem;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,19 +23,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
@@ -106,7 +101,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        localityText = findViewById(R.id.textView6);
+        localityText = findViewById(R.id.tvShipTitle);
 
         title = findViewById(R.id.editText);
         description = (EditText) findViewById(R.id.editText2);

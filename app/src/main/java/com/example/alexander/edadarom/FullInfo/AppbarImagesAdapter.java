@@ -1,11 +1,9 @@
-package com.example.alexander.edadarom.FullInfoActivity;
+package com.example.alexander.edadarom.FullInfo;
 
 /**
  * Created by lAntimat on 03.12.2017.
  */
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;

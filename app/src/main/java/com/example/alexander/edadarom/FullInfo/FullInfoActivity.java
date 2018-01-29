@@ -1,7 +1,11 @@
-package com.example.alexander.edadarom.FullInfoActivity;
+package com.example.alexander.edadarom.FullInfo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 public class FullInfoActivity extends AppCompatActivity implements FullInfoContract.View {
 
+    private ConstraintLayout topView;
     private TextView tvToolbarTitle, tvToolbarSubtitle, tvPrice, tvDesc, tvRating, tvCount;
     private TextView tvSellerTitle, tvSellerSubtitle, tvSellerRating;
     private ImageView imgSeller;
@@ -34,6 +39,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_info);
 
+        topView = findViewById(R.id.topView);
         appBarLayout = findViewById(R.id.app_bar);
         appBarLayout.setVisibility(View.INVISIBLE);
         nestedScrollView = findViewById(R.id.content);
@@ -128,6 +134,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     }
 
     public void reservationClick(View view) {
-        presenter.reservationAd();
+        startActivity(new Intent(this, ReservationOptionsActivity.class));
+        //presenter.reservationAd();
     }
 }

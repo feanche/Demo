@@ -1,27 +1,19 @@
 package com.example.alexander.edadarom.fragments.Browse;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.example.alexander.edadarom.FullInfoActivity.FullInfoActivity;
-import com.example.alexander.edadarom.MapsActivity;
+import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.NewItem.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
@@ -50,6 +42,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setColorSchemeColors(R.array.swipe_refresh_colors);
         toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Редактирование");
