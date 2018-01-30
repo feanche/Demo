@@ -12,6 +12,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.alexander.edadarom.FullInfo.FragmentReservationOptions;
 import com.example.alexander.edadarom.Notifications.Notification;
@@ -31,6 +35,8 @@ public class AddressesActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     String region, city, address, index;
 
+    FirebaseFirestore db;
+
     ConstraintLayout topViewAddress;
 
     private ArrayList<Users> arAddress = new ArrayList<>();
@@ -43,7 +49,7 @@ public class AddressesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_addresses);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
-
+        db = FirebaseFirestore.getInstance();
         btnClickListeners();
     }
 
@@ -77,15 +83,7 @@ public class AddressesActivity extends AppCompatActivity {
         }
     }
 
-    public void initRecyclerView() {
-
-        adapter = new AddressesRecyclerAdapter(getApplicationContext(), arAddress);
-        recyclerView = findViewById(R.id.items);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(adapter);
+    public void sendToFirestore() {
 
     }
 
