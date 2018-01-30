@@ -32,7 +32,7 @@ public class AddressesActivity extends AppCompatActivity{
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),AddNewAddress.class));
+
             }
         });
     }
