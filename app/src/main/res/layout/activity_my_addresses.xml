@@ -79,4 +79,10 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/topViewAddress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>
