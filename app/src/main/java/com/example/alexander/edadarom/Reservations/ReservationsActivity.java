@@ -2,6 +2,7 @@ package com.example.alexander.edadarom.Reservations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.Notifications.Notification;
 import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
+import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,8 +32,8 @@ import java.util.ArrayList;
 public class ReservationsActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ArrayList<Notification> arNotificatons = new ArrayList<>();
-    private NotificationsAdapter adapter;
+    private ArrayList<UserAdsModel> ar = new ArrayList<>();
+    private ReservationAdapter adapter;
     private RecyclerView recyclerView;
 
     //Toolbar back button click
@@ -47,9 +50,13 @@ public class ReservationsActivity extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
+
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.my_reservations);
+        getSupportActionBar().setTitle("Мои бронирования");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -59,7 +66,7 @@ public class ReservationsActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
 
-        adapter = new NotificationsAdapter(getApplicationContext(), arNotificatons);
+        adapter = new ReservationAdapter(getApplicationContext(), ar);
         recyclerView = findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
@@ -77,18 +84,19 @@ public class ReservationsActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
-            getDate();
+                    getDate();
                 }
         );
 
     }
 
     private void getDate() {
-        arNotificatons.clear();
+        ar.clear();
+        swipeRefreshLayout.setRefreshing(true);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser!=null) {
+        if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.NOTIFICATIONS)
+            db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -102,8 +110,8 @@ public class ReservationsActivity extends AppCompatActivity {
                                 }
 
                                 for (DocumentSnapshot document : task.getResult()) {
-                                    Notification notification = document.toObject(Notification.class);
-                                    arNotificatons.add(notification);
+                                    UserAdsModel notification = document.toObject(UserAdsModel.class);
+                                    ar.add(notification);
                                 }
                                 adapter.notifyDataSetChanged();
                                 swipeRefreshLayout.setRefreshing(false);

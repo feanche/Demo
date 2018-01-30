@@ -43,14 +43,20 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
                             return;
                         }
 
-                        Log.d(TAG, key + " => " + snapshotTask.getResult());
-                        userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
-                        userAdsModel.setId(snapshotTask.getResult().getId());
-                        //view.hideLoading();
+                        if(snapshotTask.getResult().exists()) {
+                            Log.d(TAG, key + " => " + snapshotTask.getResult());
+                            userAdsModel = snapshotTask.getResult().toObject(UserAdsModel.class);
+                            userAdsModel.setId(snapshotTask.getResult().getId());
+                            if (userAdsModel.isReserved()) {
+                                view.reservationBtnEnable(false);
+                            } else view.reservationBtnEnable(true);
 
-                        //Информация о пользователи или магазине
-                        getUserInfo(userAdsModel.getUserId());
-                        view.addDate(userAdsModel);
+                            //Информация о пользователи или магазине
+                            getUserInfo(userAdsModel.getUserId());
+                            view.addDate(userAdsModel);
+                        } else {
+                            view.showToast("Документа не существует!");
+                        }
 
                     }
                 });

@@ -8,4 +8,5 @@ public class FirebaseConst {
     public static final String USERS = "users";
     public static final String NOTIFICATIONS = "notifications";
     public static final String RESERVATION_QUERY = "reservationQuery";
+    public static final String MY_RESERVATIONS = "myReservations";
 }

@@ -1,6 +1,7 @@
 package com.example.alexander.edadarom.fragments.Browse;
 
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private ArrayList<UserAdsModel> arUserAds;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +46,9 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Редактирование");
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+        collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);

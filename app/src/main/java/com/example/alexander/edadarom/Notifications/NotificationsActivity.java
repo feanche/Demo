@@ -37,6 +37,14 @@ public class NotificationsActivity extends AppCompatActivity {
     private NotificationsAdapter adapter;
     private RecyclerView recyclerView;
 
+    //Toolbar back button click
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +54,9 @@ public class NotificationsActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Редактирование");
+        getSupportActionBar().setTitle("Уведомления");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         initRecyclerView();
         getDate();
     }

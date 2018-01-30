@@ -20,6 +20,7 @@ public class UserAdsModel {
     public float locationLon;
     public int price;
     public long publicTime;
+    public boolean reserved;
     public String title;
     public String type;
     public ArrayList<String> photoUrl;
@@ -140,5 +141,13 @@ public class UserAdsModel {
 
     public void setPhotoUrl(ArrayList<String> photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
     }
 }

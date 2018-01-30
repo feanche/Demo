@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     private ConstraintLayout topView;
     private TextView tvToolbarTitle, tvToolbarSubtitle, tvPrice, tvDesc, tvRating, tvCount;
     private TextView tvSellerTitle, tvSellerSubtitle, tvSellerRating;
+    private TextView tvReserv;
     private ImageView imgSeller;
     private ImageView imgToolbar;
     private AppBarLayout appBarLayout;
@@ -33,6 +35,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     private ViewPager viewPager;
     private AppbarImagesAdapter appbarImagesAdapter;
     public FullInfoContract.Presenter presenter;
+    private CardView btnReservation;
 
     ReservationOptionFragmentListener fgReservListener;
 
@@ -57,10 +60,13 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         progressBar = findViewById(R.id.progressBar);
         viewPager = findViewById(R.id.viewpager);
 
+        btnReservation = findViewById(R.id.btnReservation);
+        btnReservation.setVisibility(View.INVISIBLE);
         imgToolbar = findViewById(R.id.expandedImage);
         tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
         tvToolbarSubtitle = findViewById(R.id.tvToolbarSubtitle);
 
+        tvReserv = findViewById(R.id.tvReserv);
         tvPrice = findViewById(R.id.tvPrice);
         tvDesc = findViewById(R.id.tvDesc);
         tvRating = findViewById(R.id.tvRating);
@@ -96,6 +102,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     public void hideLoading() {
         appBarLayout.setVisibility(View.VISIBLE);
         nestedScrollView.setVisibility(View.VISIBLE);
+        btnReservation.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -179,6 +186,13 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
     @Override
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void reservationBtnEnable(boolean isEnable) {
+        btnReservation.setEnabled(isEnable);
+        if(!isEnable) tvReserv.setText("Товар забронирован");
+        else tvReserv.setText("Забронировать");
     }
 
     public void reservationClick(View view) {

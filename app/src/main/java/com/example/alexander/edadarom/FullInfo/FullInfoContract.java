@@ -17,6 +17,7 @@ public interface FullInfoContract {
         void hideReservationFragment();
         void showDateInFragment(UserAdsModel userAdsModel, Users users);
         void showToast(String message);
+        void reservationBtnEnable(boolean isEnable);
     }
 
     interface Presenter {
