@@ -1,26 +1,22 @@
-package com.example.alexander.edadarom.Notifications;
+package com.example.alexander.edadarom.Reservations;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
+import com.example.alexander.edadarom.Notifications.Notification;
+import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.adapters.*;
-import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,12 +26,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class NotificationsActivity extends AppCompatActivity {
+public class ReservationsActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<Notification> arNotificatons = new ArrayList<>();
     private NotificationsAdapter adapter;
     private RecyclerView recyclerView;
+
+    //Toolbar back button click
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,10 @@ public class NotificationsActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Редактирование");
+        getSupportActionBar().setTitle(R.string.my_reservations);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         initRecyclerView();
         getDate();
     }

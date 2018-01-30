@@ -42,7 +42,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
-        swipeRefreshLayout.setColorSchemeColors(R.array.swipe_refresh_colors);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Редактирование");

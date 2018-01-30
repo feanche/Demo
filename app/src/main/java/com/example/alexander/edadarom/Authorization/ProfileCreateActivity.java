@@ -65,9 +65,7 @@ public class ProfileCreateActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-
         ivProfile = findViewById(R.id.ivProfile);
-
         edName = findViewById(R.id.edName);
         edSubName = findViewById(R.id.edSubName);
         edPhone = findViewById(R.id.edPhone);
