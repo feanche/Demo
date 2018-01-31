@@ -3,6 +3,7 @@ package com.example.alexander.edadarom.UserAddressesActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,11 +11,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.example.alexander.edadarom.models.Address;
+import com.example.alexander.edadarom.models.UserAdsModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.alexander.edadarom.FullInfo.FragmentReservationOptions;
@@ -23,8 +33,12 @@ import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Alexander on 29.01.2018.
@@ -33,15 +47,16 @@ import java.util.ArrayList;
 public class AddressesActivity extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
-    String region, city, address, index;
+
+    String uId;
 
     FirebaseFirestore db;
 
     ConstraintLayout topViewAddress;
 
-    private ArrayList<Users> arAddress = new ArrayList<>();
     private AddressesRecyclerAdapter adapter;
     private RecyclerView recyclerView;
+    ArrayList<Address> arAddress = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +65,10 @@ public class AddressesActivity extends AppCompatActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
         db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        uId = firebaseUser.getUid();
         btnClickListeners();
+        initRecyclerView();
     }
 
     private void btnClickListeners() {
@@ -73,6 +91,8 @@ public class AddressesActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setStatusBarTranslucent(false);
         floatingActionButton.setVisibility(View.GONE);
+        recyclerView = findViewById(R.id.items);
+        recyclerView.setVisibility(View.GONE);
     }
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
@@ -83,8 +103,69 @@ public class AddressesActivity extends AppCompatActivity {
         }
     }
 
-    public void sendToFirestore() {
+    public void sendToFirestore(Address address) {
+        db.collection("users").document(uId).collection("address")
+                .add(address)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("mylogs", "Success");
+                        initRecyclerView();
 
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("mylogs", "Error");
+                    }
+                });
     }
 
+
+    public void initRecyclerView() {
+        arAddress = new ArrayList<>();
+        adapter = new AddressesRecyclerAdapter(getApplicationContext(), arAddress);
+        recyclerView = findViewById(R.id.items);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(adapter);
+        //arAddress.clear();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uId).collection("address")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
+                                //view.showToast("Нет данных");
+                                return;
+                            }
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d("mylogs", document.getId() + " => " + document.getData());
+                                Address address = document.toObject(Address.class);
+                                address.setAddress(document.get("address").toString());
+                                arAddress.add(address);
+                            }
+
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("mylogs","onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("mylogs","onPause");
+    }
 }

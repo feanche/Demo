@@ -54,22 +54,20 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/items"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/activity_addresses_item" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/items"
+        android:layout_width="match_parent"
+        android:layout_height="502dp"
+        app:layout_anchor="@+id/topViewAddress"
+        app:layout_anchorGravity="bottom|center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="65dp"
+        tools:listitem="@layout/activity_addresses_item" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

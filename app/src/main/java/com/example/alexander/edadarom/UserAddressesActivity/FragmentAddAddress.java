@@ -1,26 +1,15 @@
 package com.example.alexander.edadarom.UserAddressesActivity;
 
-import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
-import com.example.alexander.edadarom.models.Users;
-import com.example.alexander.edadarom.utils.ItemClickSupport;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.example.alexander.edadarom.models.Address;
 
 /**
  * Created by Alexander on 30.01.2018.
@@ -31,12 +20,7 @@ public class FragmentAddAddress extends Fragment {
     private View view;
 
     CardView btnSave;
-    AddressesRecyclerAdapter adapter;
-    RecyclerView recyclerView;
-    TextInputEditText txtRegion, txtCity, txtAddress, txtIndex;
-
-
-
+    TextInputEditText txtRegion, txtCity, txtAddress, txtIndex, txtTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +30,7 @@ public class FragmentAddAddress extends Fragment {
         txtCity = (TextInputEditText)view.findViewById(R.id.txtCity);
         txtAddress = (TextInputEditText)view.findViewById(R.id.txtAddress);
         txtIndex = (TextInputEditText)view.findViewById(R.id.txtIndex);
+        txtTitle = (TextInputEditText)view.findViewById(R.id.txtTitle);
         btnClickListeners();
         return view;
     }
@@ -55,9 +40,20 @@ public class FragmentAddAddress extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Address address = new Address();
+                address.setIndex(txtIndex.getText().toString());
+                address.setCity(txtCity.getText().toString());
+                address.setAddress(txtAddress.getText().toString());
+                address.setRegion(txtRegion.getText().toString());
+                address.setTitle(txtTitle.getText().toString());
 
+                ((AddressesActivity)getActivity()).sendToFirestore(address);
+                ((AddressesActivity)getActivity()).floatingActionButton.setVisibility(View.VISIBLE);
+                ((AddressesActivity)getActivity()).initRecyclerView();
             }
         });
     }
+
+
 
 }
