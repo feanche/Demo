@@ -92,6 +92,7 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
             // Update the Ads
             DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(userAdsModel.getId());
             DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(userAdsModel.getId());
+
             //Информацию о бронировании
             ReservationInfo reservationInfo = new ReservationInfo(firebaseUser.getUid(), 2000, reservationDate, isDelivery, deliveryAddress);
             //Добавляем её к модели пользователя
@@ -101,6 +102,29 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
 
             batch.set(adsRef, userAdsModel);
             batch.set(myReservationRef, userAdsModel);
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.d(TAG, "batch success");
+                    view.showToast("Товар забронирован!");
+                }
+            });
+        }
+    }
+
+    public void testBatch() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(firebaseUser!=null) {
+            // Get a new write batch
+            WriteBatch batch = db.batch();
+
+            // Set the value of reservationsQuery
+            DocumentReference reservationRef = db.collection("Test").document("Test").collection("Test").document("Test");
+            batch.set(reservationRef, new UserAdsModel());
 
             // Commit the batch
             batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -126,6 +150,11 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     @Override
     public void showDateInFragment() {
         view.showDateInFragment(userAdsModel, user);
+    }
+
+    @Override
+    public void test() {
+        testBatch();
     }
 
     private void getUserInfo(String id) {

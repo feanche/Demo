@@ -26,5 +26,6 @@ public interface FullInfoContract {
         void showReservationFragment();
         void hideReservationFragment();
         void showDateInFragment();
+        void test();
     }
 }
