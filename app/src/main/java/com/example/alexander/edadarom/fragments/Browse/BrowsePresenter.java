@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
         view.showLoading();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ads")
+                .orderBy("publicTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -56,7 +58,6 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                             }
 
                             view.hideLoading();
-                            Collections.reverse(arAds);
                             view.addDate(arAds);
                         }
                     }

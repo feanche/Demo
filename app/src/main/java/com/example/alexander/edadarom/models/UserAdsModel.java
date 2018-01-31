@@ -6,7 +6,9 @@ package com.example.alexander.edadarom.models;
 
 import android.graphics.Bitmap;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class UserAdsModel {
     public String title;
     public String type;
     public ArrayList<String> photoUrl;
+    ReservationInfo reservationInfo;
 
     public UserAdsModel() {
 
@@ -150,4 +153,13 @@ public class UserAdsModel {
     public void setReserved(boolean reserved) {
         this.reserved = reserved;
     }
+
+    public ReservationInfo getReservationInfo() {
+        return reservationInfo;
+    }
+
+    public void setReservationInfo(ReservationInfo reservationInfo) {
+        this.reservationInfo = reservationInfo;
+    }
+
 }

@@ -1,16 +1,22 @@
 package com.example.alexander.edadarom.FullInfo;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.FirebaseConst;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
@@ -63,21 +69,48 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     }
 
     @Override
-    public void reservationAd(String reservationDate, String reservationTime, Boolean isDelivery, String deliveryAddress) {
+    public void reservationAd(long reservationDate, Boolean isDelivery, String deliveryAddress) {
+        reservationWithBatch(reservationDate, isDelivery, deliveryAddress);
+        view.hideReservationFragment();
+
+    }
+
+    private void reservationWithBatch(long reservationDate, Boolean isDelivery, String deliveryAddress) {
+        //Бронирование при помощи Batch
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String token = FirebaseInstanceId.getInstance().getToken();
-        ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, reservationTime ,isDelivery, deliveryAddress);
-        db.collection(FirebaseConst.RESERVATION_QUERY)
-                .add(reservationQuery)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                   @Override
-                   public void onSuccess(DocumentReference documentReference) {
-                       Log.d(TAG, "Document snapshot added");
-                       view.showToast("Товар забронирован!");
-                       view.hideReservationFragment();
-                   }
-               });
+
+        if(firebaseUser!=null) {
+            // Get a new write batch
+            WriteBatch batch = db.batch();
+
+            // Set the value of reservationsQuery
+            DocumentReference reservationRef = db.collection(FirebaseConst.RESERVATION_QUERY).document();
+            ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, isDelivery, deliveryAddress);
+            batch.set(reservationRef, reservationQuery);
+
+            // Update the Ads
+            DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(userAdsModel.getId());
+            DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(userAdsModel.getId());
+            //Информацию о бронировании
+            ReservationInfo reservationInfo = new ReservationInfo(firebaseUser.getUid(), 2000, reservationDate, isDelivery, deliveryAddress);
+            //Добавляем её к модели пользователя
+            userAdsModel.setReservationInfo(reservationInfo);
+            //добавляем информацию о статусе бронирование
+            userAdsModel.setReserved(true);
+
+            batch.set(adsRef, userAdsModel);
+            batch.set(myReservationRef, userAdsModel);
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.d(TAG, "batch success");
+                    view.showToast("Товар забронирован!");
+                }
+            });
+        }
     }
 
     @Override
