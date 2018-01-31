@@ -18,7 +18,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="108dp"
@@ -28,40 +28,51 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/txtRegion"
+            android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_region" />
+            android:hint="@string/hint_title" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/txtCity"
+                android:id="@+id/txtRegion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_city" />
+                android:hint="@string/hint_region" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/txtAddress"
+                    android:id="@+id/txtCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_address" />
+                    android:hint="@string/hint_city" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/txtIndex"
+                        android:id="@+id/txtAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_index" />
+                        android:hint="@string/hint_address" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/txtIndex"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_index" />
+                    </android.support.design.widget.TextInputLayout>
                 </android.support.design.widget.TextInputLayout>
             </android.support.design.widget.TextInputLayout>
         </android.support.design.widget.TextInputLayout>

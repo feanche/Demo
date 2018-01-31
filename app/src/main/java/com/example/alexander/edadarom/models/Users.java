@@ -16,7 +16,6 @@ public class Users {
     String phoneNumber;
     String pustNotificationToken;
     float rating;
-    ArrayList<String> address;
 
 
     public Users() {
@@ -47,14 +46,6 @@ public class Users {
         this.email = email;
         this.photo = photo;
         this.rating = rating;
-    }
-
-    public ArrayList<String> getAddress() {
-        return address;
-    }
-
-    public void setAddress(ArrayList<String> address) {
-        this.address = address;
     }
 
     public String getPustNotificationToken() {

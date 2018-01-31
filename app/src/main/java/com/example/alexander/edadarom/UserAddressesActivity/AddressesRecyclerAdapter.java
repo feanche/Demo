@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.models.Address;
 import com.example.alexander.edadarom.models.Users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +21,11 @@ import java.util.List;
 public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecyclerAdapter.UserAddressViewHolder> {
 
     Context context;
-    private List<Users> list;
+    private ArrayList<Address> arrayList;
 
-    public AddressesRecyclerAdapter(Context context, List<Users> list) {
+    public AddressesRecyclerAdapter(Context context, ArrayList<Address> arrayList) {
         this.context = context;
-        this.list = list;
+        this.arrayList = arrayList;
     }
 
     @Override
@@ -33,21 +35,32 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
 
     @Override
     public void onBindViewHolder(UserAddressViewHolder holder, int position) {
-        Users user = list.get(position);
-        holder.tvTitle.setText(user.getAddress().size());
+
+        //holder.tvTitle.setText(user.getAddress().size());
+
+        Address address = arrayList.get(position);
+        holder.tvTitle.setText(address.getTitle());
+        holder.tvAddress.setText(address.getAddress()
+                +", "
+                +address.getCity()
+                +", "
+                +address.getRegion()
+                +", "
+                +address.getIndex());
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return arrayList.size();
     }
 
     class UserAddressViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle;
+        TextView tvTitle, tvAddress;
 
         public UserAddressViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvAddress = itemView.findViewById(R.id.tvAddress);
         }
     }
 }
