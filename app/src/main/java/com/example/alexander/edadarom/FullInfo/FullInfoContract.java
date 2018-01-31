@@ -22,7 +22,7 @@ public interface FullInfoContract {
 
     interface Presenter {
         void getAd(String key);
-        void reservationAd(String reservationDate, String reservationTime, Boolean isDeleviry, String deleviryAddress);
+        void reservationAd(long reservationDate, Boolean isDeleviry, String deleviryAddress);
         void showReservationFragment();
         void hideReservationFragment();
         void showDateInFragment();

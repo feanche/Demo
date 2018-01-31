@@ -109,7 +109,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                presenter.reservationAd(tiDate.getText().toString(), tiTime.getText().toString(), radioButton2.isChecked(), "");
+                presenter.reservationAd(dateAndTime.getTimeInMillis(), radioButton2.isChecked(), "");
             }
         });
     }

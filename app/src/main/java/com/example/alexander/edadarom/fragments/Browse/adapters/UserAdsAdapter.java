@@ -12,6 +12,8 @@ import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +40,11 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
+
+        SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+
+        String date = sf.format(new Date(user.getPublicTime()));
+        holder.tvDate.setText("Время публикации: \n" +  date);
         if(user.getPhotoUrl().size() != 0)
         Picasso.with(context).load(user.getPhotoUrl().get(0)).fit().into(holder.imageView);
     }
@@ -50,11 +57,13 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
     class UserViewHolder extends RecyclerView.ViewHolder  {
         TextView tvTitle;
         TextView tvDesc;
+        TextView tvDate;
         ImageView imageView;
         public UserViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
+            tvDate = itemView.findViewById(R.id.tvDate);
             imageView = itemView.findViewById(R.id.ivToolbar);
         }
     }

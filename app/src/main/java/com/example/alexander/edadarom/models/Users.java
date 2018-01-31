@@ -119,4 +119,5 @@ public class Users {
     public void setRating(float rating) {
         this.rating = rating;
     }
+
 }
