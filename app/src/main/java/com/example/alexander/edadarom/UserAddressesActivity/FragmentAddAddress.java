@@ -3,6 +3,7 @@ package com.example.alexander.edadarom.UserAddressesActivity;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,10 @@ public class FragmentAddAddress extends Fragment {
                 ((AddressesActivity)getActivity()).sendToFirestore(address);
                 ((AddressesActivity)getActivity()).floatingActionButton.setVisibility(View.VISIBLE);
                 ((AddressesActivity)getActivity()).initRecyclerView();
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                if (manager.getBackStackEntryCount() != 0) {
+                    manager.popBackStack();
+                }
             }
         });
     }

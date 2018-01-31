@@ -86,13 +86,13 @@ public class AddressesActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
                 .add(R.id.topViewAddress, fragment)
-                .addToBackStack("reservation")
+                .addToBackStack("address")
                 .commit();
         setTheme(R.style.AppTheme);
         setStatusBarTranslucent(false);
         floatingActionButton.setVisibility(View.GONE);
         recyclerView = findViewById(R.id.items);
-        recyclerView.setVisibility(View.GONE);
+        //recyclerView.setVisibility(View.GONE);
     }
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
