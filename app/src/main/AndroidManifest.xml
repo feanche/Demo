@@ -98,6 +98,7 @@
         <activity android:name=".Notifications.NotificationsActivity" />
         <activity android:name=".Reservations.ReservationsActivity" />
         <activity android:name=".FullInfo.ReservationOptionsActivity"></activity>
+        <activity android:name=".MyAds.MyAdsActivity"></activity>
     </application>
 
 </manifest>

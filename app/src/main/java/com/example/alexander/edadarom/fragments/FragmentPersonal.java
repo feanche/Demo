@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
+import com.example.alexander.edadarom.MyAds.MyAdsActivity;
 import com.example.alexander.edadarom.Notifications.NotificationsActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.Reservations.ReservationsActivity;
@@ -54,7 +55,7 @@ public class FragmentPersonal extends Fragment {
     private TextView tvSignInOut, tv3;
     private CircleImageView ivToolbarProfile;
 
-    private ConstraintLayout clSignInOut, clEditProfile, clNotifications, clAddresses, clReservations;
+    private ConstraintLayout clSignInOut, clEditProfile, clNotifications, clAddresses, clReservations, clMyAds;
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
@@ -81,6 +82,7 @@ public class FragmentPersonal extends Fragment {
         clNotifications = view.findViewById(R.id.clNotifications);
         clAddresses = view.findViewById(R.id.clAddresses);
         clReservations = view.findViewById(R.id.clReservations);
+        clMyAds = view.findViewById(R.id.clMyAds);
 
         tv3 = view.findViewById(R.id.tv3);
 
@@ -194,6 +196,13 @@ public class FragmentPersonal extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ReservationsActivity.class));
+            }
+        });
+
+        clMyAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), MyAdsActivity.class));
             }
         });
     }

@@ -10,4 +10,5 @@ public class FirebaseConst {
     public static final String RESERVATION_QUERY = "reservationQuery";
     public static final String MY_RESERVATIONS = "myReservations";
     public static final String ADS = "ads";
+    public static final String MY_ADS = "myAds";
 }
