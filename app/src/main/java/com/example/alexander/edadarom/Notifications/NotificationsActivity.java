@@ -117,9 +117,12 @@ public class NotificationsActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            swipeRefreshLayout.setRefreshing(false);
                             Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

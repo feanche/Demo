@@ -1,4 +1,4 @@
-package com.example.alexander.edadarom.Reservations;
+package com.example.alexander.edadarom.MyAds;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.alexander.edadarom.Notifications.Notification;
-import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
+import com.example.alexander.edadarom.Reservations.ReservationAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -29,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ReservationsActivity extends AppCompatActivity {
+public class MyAdsActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
@@ -56,7 +54,7 @@ public class ReservationsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Мои бронирования");
+        getSupportActionBar().setTitle("Мои объявления");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -96,7 +94,7 @@ public class ReservationsActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS)
+            db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
