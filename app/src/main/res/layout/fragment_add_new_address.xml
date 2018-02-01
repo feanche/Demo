@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/cardview_light_background"
+    android:clickable="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -31,7 +33,9 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_title" />
+            android:hint="@string/hint_title"
+            android:inputType="textCapSentences"
+            android:singleLine="true"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -41,7 +45,9 @@
                 android:id="@+id/txtRegion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_region" />
+                android:hint="@string/hint_region"
+                android:inputType="textCapSentences"
+                android:singleLine="true"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -51,7 +57,9 @@
                     android:id="@+id/txtCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_city" />
+                    android:hint="@string/hint_city"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -61,7 +69,9 @@
                         android:id="@+id/txtAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_address" />
+                        android:hint="@string/hint_address"
+                        android:inputType="text"
+                        android:singleLine="true"/>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -71,7 +81,9 @@
                             android:id="@+id/txtIndex"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/hint_index" />
+                            android:hint="@string/hint_index"
+                            android:inputType="number"
+                            android:singleLine="true"/>
                     </android.support.design.widget.TextInputLayout>
                 </android.support.design.widget.TextInputLayout>
             </android.support.design.widget.TextInputLayout>

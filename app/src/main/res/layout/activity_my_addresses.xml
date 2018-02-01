@@ -58,14 +58,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/items"
         android:layout_width="match_parent"
-        android:layout_height="502dp"
+        android:layout_height="511dp"
         app:layout_anchor="@+id/topViewAddress"
         app:layout_anchorGravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="65dp"
+        tools:layout_editor_absoluteY="56dp"
         tools:listitem="@layout/activity_addresses_item" />
 
 

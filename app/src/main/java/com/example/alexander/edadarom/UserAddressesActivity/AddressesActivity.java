@@ -62,6 +62,7 @@ public class AddressesActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_addresses);
+        topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
         db = FirebaseFirestore.getInstance();
@@ -90,9 +91,7 @@ public class AddressesActivity extends AppCompatActivity {
                 .commit();
         setTheme(R.style.AppTheme);
         setStatusBarTranslucent(false);
-        floatingActionButton.setVisibility(View.GONE);
-        recyclerView = findViewById(R.id.items);
-        //recyclerView.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(View.INVISIBLE);
     }
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
@@ -111,7 +110,6 @@ public class AddressesActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("mylogs", "Success");
                         initRecyclerView();
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -141,16 +139,13 @@ public class AddressesActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0) {
-                                //view.showToast("Нет данных");
                                 return;
                             }
                             for (DocumentSnapshot document : task.getResult()) {
-                                Log.d("mylogs", document.getId() + " => " + document.getData());
                                 Address address = document.toObject(Address.class);
                                 address.setAddress(document.get("address").toString());
                                 arAddress.add(address);
                             }
-
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -160,12 +155,21 @@ public class AddressesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("mylogs","onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("mylogs","onPause");
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (count == 0) {
+            super.onBackPressed();
+            floatingActionButton.setVisibility(View.VISIBLE);
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 }
