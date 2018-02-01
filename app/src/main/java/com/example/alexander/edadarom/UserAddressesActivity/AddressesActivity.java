@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.example.alexander.edadarom.models.Address;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -53,6 +54,7 @@ public class AddressesActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     ConstraintLayout topViewAddress;
+    ImageView ivClose;
 
     private AddressesRecyclerAdapter adapter;
     private RecyclerView recyclerView;
@@ -62,9 +64,10 @@ public class AddressesActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_addresses);
-        topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        topViewAddress = (ConstraintLayout) findViewById(R.id.topViewAddress);
+        topViewAddress = findViewById(R.id.topViewAddress);
+        floatingActionButton = findViewById(R.id.fab);
+        topViewAddress = findViewById(R.id.topViewAddress);
+        ivClose = findViewById(R.id.iv_close);
         db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uId = firebaseUser.getUid();
@@ -80,6 +83,14 @@ public class AddressesActivity extends AppCompatActivity {
                 showAddAddressFragment();
             }
         });
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     public void showAddAddressFragment() {
