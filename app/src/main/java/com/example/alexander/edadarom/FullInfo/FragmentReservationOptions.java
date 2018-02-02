@@ -38,6 +38,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     protected TextInputEditText tiTime;
     protected CardView btnReservation;
     protected ProgressBar progressBar;
+    protected View rootView;
+    protected TextView tvCoastPrice;
     private View view;
     protected Toolbar toolbar;
     protected ImageView ivAd;
@@ -86,6 +88,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         tiTime = (TextInputEditText) view.findViewById(R.id.tiTime);
         btnReservation = (CardView) view.findViewById(R.id.btnReservation);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        tvCoastPrice = (TextView) view.findViewById(R.id.tvCoastPrice);
 
         btnReservationClick();
 
@@ -171,7 +174,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
 
     @Override
     public void addDate(UserAdsModel userAdModel, Users users) {
-        tvTitle.setText(userAdModel.getDescription());
+        tvTitle.setText(userAdModel.getTitle());
+//        tvCoastPrice.setText(userAdModel.getPrice());
         Picasso.with(getContext()).load(userAdModel.getPhotoUrl().get(0)).into(ivAd);
     }
 }

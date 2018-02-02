@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.example.alexander.edadarom.Notifications.Notification;
 import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
+import com.example.alexander.edadarom.models.ReservationInfo;
+import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -23,14 +26,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ReservationsActivity extends AppCompatActivity {
 
+    public static final String TAG = "ReservationActivity";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
     private ReservationAdapter adapter;
@@ -74,6 +81,13 @@ public class ReservationsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
+        adapter.setClickListener(new ReservationAdapter.DotsClickListener() {
+            @Override
+            public void onClick(int position) {
+                cancelReservation(position);
+            }
+        });
+
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -111,8 +125,8 @@ public class ReservationsActivity extends AppCompatActivity {
                                 }
 
                                 for (DocumentSnapshot document : task.getResult()) {
-                                    UserAdsModel notification = document.toObject(UserAdsModel.class);
-                                    ar.add(notification);
+                                    UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                    ar.add(userAdsModel);
                                 }
                                 adapter.notifyDataSetChanged();
                                 swipeRefreshLayout.setRefreshing(false);
@@ -131,4 +145,42 @@ public class ReservationsActivity extends AppCompatActivity {
         }
     }
 
+    public void cancelReservation(int position) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserAdsModel ads = ar.get(position);
+
+        if (firebaseUser != null) {
+            // Get a new write batch
+            WriteBatch batch = db.batch();
+
+            // Set the value of reservationsQuery
+            DocumentReference reservationRef = db.collection(FirebaseConst.RESERVATION_QUERY).document();
+            ReservationQuery reservationQuery = new ReservationQuery(1, firebaseUser.getUid(), ads.getUserId(), ads.getId());
+            batch.set(reservationRef, reservationQuery);
+
+            // Update the Ads
+            DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(ads.getId());
+            DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(ads.getId());
+
+
+            //Добавляем её к модели пользователя
+            ads.setReservationInfo(null);
+            //добавляем информацию о статусе бронирование
+            ads.setReserved(false);
+
+            batch.set(adsRef, ads);
+            batch.set(myReservationRef, ads);
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.d(TAG, "batch success");
+                }
+            });
+        }
+
+    }
 }

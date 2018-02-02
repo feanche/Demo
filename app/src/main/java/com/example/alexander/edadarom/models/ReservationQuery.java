@@ -5,6 +5,9 @@ package com.example.alexander.edadarom.models;
  */
 
 public class ReservationQuery {
+    //1 - забронировал
+    //2 - отмена бронирования
+    int type;
     String senderId;
     String receiverId;
     String adId;
@@ -15,14 +18,26 @@ public class ReservationQuery {
     String deliveryAddress;
 
 
-    public ReservationQuery(String senderId, String receiverId, String adId, long reservationDate) {
+    public ReservationQuery() {
+    }
+
+    public ReservationQuery(int type, String senderId, String receiverId, String adId) {
+        this.type = type;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.adId = adId;
+    }
+
+    public ReservationQuery(int type, String senderId, String receiverId, String adId, long reservationDate) {
+        this.type = type;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.adId = adId;
         this.reservationDate = reservationDate;
     }
 
-    public ReservationQuery(String senderId, String receiverId, String adId, long reservationDate, boolean isDelivery, String deliveryAddress) {
+    public ReservationQuery(int type, String senderId, String receiverId, String adId, long reservationDate, boolean isDelivery, String deliveryAddress) {
+        this.type = type;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.adId = adId;

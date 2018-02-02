@@ -8,18 +8,28 @@ public class ReservationInfo {
     String reservedUser;
     long reservationDate;
     long reservationPeriod;
+    long timestamp;
     boolean delivery;
     String deliveryAddress;
 
     public ReservationInfo() {
     }
 
-    public ReservationInfo(String reservedUser, long reservationDate, long reservationPeriod, boolean delivery, String deliveryAddress) {
+    public ReservationInfo(String reservedUser, long reservationDate, long reservationPeriod, long timestamp, boolean delivery, String deliveryAddress) {
         this.reservedUser = reservedUser;
-        this.reservationPeriod = reservationPeriod;
         this.reservationDate = reservationDate;
+        this.reservationPeriod = reservationPeriod;
+        this.timestamp = timestamp;
         this.delivery = delivery;
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getReservedUser() {

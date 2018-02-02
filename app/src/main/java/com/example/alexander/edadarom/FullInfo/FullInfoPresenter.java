@@ -19,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.Date;
+
 /**
  * Created by lAntimat on 15.01.2018.
  */
@@ -86,7 +88,7 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
 
             // Set the value of reservationsQuery
             DocumentReference reservationRef = db.collection(FirebaseConst.RESERVATION_QUERY).document();
-            ReservationQuery reservationQuery = new ReservationQuery(firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, isDelivery, deliveryAddress);
+            ReservationQuery reservationQuery = new ReservationQuery(0, firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, isDelivery, deliveryAddress);
             batch.set(reservationRef, reservationQuery);
 
             // Update the Ads
@@ -94,7 +96,7 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
             DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(userAdsModel.getId());
 
             //Информацию о бронировании
-            ReservationInfo reservationInfo = new ReservationInfo(firebaseUser.getUid(), 2000, reservationDate, isDelivery, deliveryAddress);
+            ReservationInfo reservationInfo = new ReservationInfo(firebaseUser.getUid(), reservationDate, 2000, new Date().getTime(), isDelivery, deliveryAddress);
             //Добавляем её к модели пользователя
             userAdsModel.setReservationInfo(reservationInfo);
             //добавляем информацию о статусе бронирование
