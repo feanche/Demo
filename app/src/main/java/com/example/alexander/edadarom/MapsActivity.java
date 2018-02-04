@@ -31,6 +31,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -54,11 +55,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-    private Marker mCurrentLocationMarker, marker;
+    private Marker mCurrentLocationMarker;
     LocationRequest mLocationRequest;
-    private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     double latitude, longitude;
-    double end_latitude, end_longitude;
     LatLng userLatLng;
     public static String LOCALITY = "locality";
     public static String LOCATION_LAT = "location_lat";
@@ -74,11 +73,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT < 22)
-            setStatusBarTranslucent(false);
-        else
-            setStatusBarTranslucent(true);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -144,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.setMyLocationEnabled(true);
                     }
                 } else {
-                    Toast.makeText(this, "Не предоставлены разрешения", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Нет доступа к местоположению", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -187,18 +181,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.draggable(true);
-        markerOptions.title("Текущее местоположение");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
         mCurrentLocationMarker = mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        Toast.makeText(this, "Текущее местоположение", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Выберите маркер долгим нажатием на него и перенесите", Toast.LENGTH_LONG).show();
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
-
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -208,18 +199,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-
+        LatLng position = marker.getPosition();
+        marker.setSnippet(position.toString());
+        Log.d(TAG, String.format("Drag from %f:%f",
+                position.latitude,
+                position.longitude));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_shadow_on));
     }
 
     @Override
     public void onMarkerDrag(Marker marker) {
-
+        LatLng position = marker.getPosition();
+        marker.setSnippet(position.toString());
+        Log.d(TAG, String.format("Dragging to %f:%f", position.latitude,
+                position.longitude));
     }
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        end_latitude = marker.getPosition().latitude;
-        end_longitude = marker.getPosition().longitude;
+        LatLng position=marker.getPosition();
+        marker.setSnippet(position.toString());
+        Log.d(TAG, String.format("Dragged to %f:%f",
+                position.latitude,
+                position.longitude));
+        Geocoder geocoder = new Geocoder(MapsActivity.this);
+        try {
+            List<Address> addressList = geocoder.getFromLocation(position.latitude, position.longitude, 1);
+            if (addressList != null && addressList.size() > 0) {
+                locality = addressList.get(0).getAddressLine(0);
+                country = addressList.get(0).getCountryName();
+                if (!locality.isEmpty() && !country.isEmpty())
+                    find_location.setText(locality);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
     }
 
     @Override
@@ -234,11 +249,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMarkerClickListener(this);
-        setMapLongClick();
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -276,70 +292,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void setMapLongClick() {
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                if (marker != null) {
-                    marker.remove();
-                }
-                String snippet = String.format(Locale.getDefault(),
-                        "Lat: %1$.5f, Long: %2$.5f",
-                        latLng.latitude,
-                        latLng.longitude);
-                markerLocationLat = (float) latLng.latitude;
-                markerLocationLon = (float) latLng.longitude;
-
-                Geocoder geocoder = new Geocoder(MapsActivity.this);
-
-                try {
-                    List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                    if (addressList != null && addressList.size() > 0) {
-                        locality = addressList.get(0).getAddressLine(0);
-                        country = addressList.get(0).getCountryName();
-                        if (!locality.isEmpty() && !country.isEmpty())
-                            find_location.setText(locality);
-
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(locality + "  " + country)
-                                .snippet(snippet))
-                                .setDraggable(true);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                LatLng position = marker.getPosition();
-                marker.setSnippet(position.toString());
-                Log.d(TAG, String.format("Drag from %f:%f",
-                        position.latitude,
-                        position.longitude));
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                LatLng position = marker.getPosition();
-                marker.setSnippet(position.toString());
-                Log.d(TAG, String.format("Dragging to %f:%f", position.latitude,
-                                position.longitude));
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                LatLng position=marker.getPosition();
-                marker.setSnippet(position.toString());
-                Log.d(TAG, String.format("Dragged to %f:%f",
-                        position.latitude,
-                        position.longitude));
-            }
-        });
-    }
-
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -351,16 +303,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClick (View v) {
         switch (v.getId()) {
             case R.id.imageView4: {
+                finish();
+            }
+            break;
+            case R.id.btn_pinmarker: {
                 executeDataSending();
             }
             break;
             case R.id.imageView6: {
                 find_location.setText("");
             }
+            break;
             case R.id.show_my_location: {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
                 Toast.makeText(this, "Текущее местоположение", Toast.LENGTH_SHORT).show();
             }
+            break;
         }
     }
 

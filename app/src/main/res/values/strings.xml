@@ -71,4 +71,6 @@
     <string name="default_notification_channel_id">99</string>
     <string name="my_reservations">Мои бронирования</string>
 
+    <string name="button_pin">Закрепить позицию</string>
+
 </resources>
