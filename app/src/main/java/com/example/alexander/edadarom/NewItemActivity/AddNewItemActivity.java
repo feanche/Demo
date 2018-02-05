@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -59,7 +60,7 @@ import com.example.alexander.edadarom.R;
 public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyclerAdapter.BtnClickListener {
 
     private EditText title, description, price;
-    private Button publishButton;
+    private CardView publishButton;
     private ImageView backButton, ivPhoto;
     Target target;
     FirebaseFirestore db;
@@ -104,15 +105,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         localityText = findViewById(R.id.textView6);
 
         title = findViewById(R.id.editText);
-        description = (EditText) findViewById(R.id.editText2);
-        price = (EditText) findViewById(R.id.editText3);
+        description = findViewById(R.id.editText2);
+        price = findViewById(R.id.editText3);
 
-        publishButton = (Button) findViewById(R.id.button2);
-        backButton = (ImageView) findViewById(R.id.iv_close);
+        publishButton = findViewById(R.id.button2);
+        backButton = findViewById(R.id.iv_close);
 
-        locationButton = (ConstraintLayout) findViewById(R.id.constraintLayout1);
+        locationButton = findViewById(R.id.constraintLayout1);
 
-        ivPhoto = (ImageView) findViewById(R.id.ivPhoto);
+        ivPhoto = findViewById(R.id.ivPhoto);
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

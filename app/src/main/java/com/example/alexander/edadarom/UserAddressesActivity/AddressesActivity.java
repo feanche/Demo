@@ -1,10 +1,7 @@
 package com.example.alexander.edadarom.UserAddressesActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.alexander.edadarom.models.Address;
-import com.example.alexander.edadarom.models.UserAdsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,18 +24,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.example.alexander.edadarom.FullInfo.FragmentReservationOptions;
-import com.example.alexander.edadarom.Notifications.Notification;
-import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.models.Users;
-import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Alexander on 29.01.2018.

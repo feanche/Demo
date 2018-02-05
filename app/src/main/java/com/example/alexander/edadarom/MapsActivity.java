@@ -31,7 +31,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -39,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Alexander on 16.01.2018.
@@ -55,7 +53,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-    private Marker mCurrentLocationMarker;
     LocationRequest mLocationRequest;
     double latitude, longitude;
     LatLng userLatLng;
@@ -69,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     final static String TAG = "myLogs_MapsActivity";
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public float markerLocationLat, markerLocationLon;
+    private Marker marker;
     private double userLat, userLng;
 
     @Override
@@ -169,23 +167,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if (mCurrentLocationMarker != null) {
-            mCurrentLocationMarker.remove();
-        }
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         userLatLng = latLng;
         userLat = latLng.latitude;
         userLng = latLng.longitude;
-        MarkerOptions markerOptions = new MarkerOptions();
+        /*MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
-        mCurrentLocationMarker = mMap.addMarker(markerOptions);
+        mCurrentLocationMarker = mMap.addMarker(markerOptions);*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        Toast.makeText(this, "Выберите маркер долгим нажатием на него и перенесите", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Выберите маркер долгим нажатием на него и перенесите", Toast.LENGTH_LONG).show();
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
@@ -222,6 +217,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, String.format("Dragged to %f:%f",
                 position.latitude,
                 position.longitude));
+        getGeocoder(position);
+
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
+    }
+
+    private void getGeocoder(LatLng position) {
         Geocoder geocoder = new Geocoder(MapsActivity.this);
         try {
             List<Address> addressList = geocoder.getFromLocation(position.latitude, position.longitude, 1);
@@ -234,7 +235,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (IOException e) {
             e.printStackTrace();
         }
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
     }
 
     @Override
@@ -254,6 +254,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMarkerClickListener(this);
+        onMapClick();
 
     }
 
@@ -292,14 +293,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected void setStatusBarTranslucent(boolean makeTranslucent) {
-        if (makeTranslucent) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-    }
-
     public void onClick (View v) {
         switch (v.getId()) {
             case R.id.imageView4: {
@@ -320,6 +313,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             break;
         }
+    }
+
+
+    public void onMapClick() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (marker != null){
+                    marker.setPosition(latLng);
+                } else {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.draggable(true);
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
+                    marker = mMap.addMarker(markerOptions);
+                }
+                getGeocoder(latLng);
+                markerLocationLat = (float) latLng.latitude;
+                markerLocationLon = (float) latLng.longitude;
+            }
+        });
     }
 
     private void executeDataSending() {
