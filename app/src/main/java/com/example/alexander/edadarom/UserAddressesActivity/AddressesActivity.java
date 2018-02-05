@@ -44,7 +44,7 @@ public class AddressesActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
     ConstraintLayout topViewAddress;
-    ImageView ivClose;
+    ImageView ivClose, delete_button;
 
     private AddressesRecyclerAdapter adapter;
     private RecyclerView recyclerView;
@@ -60,6 +60,7 @@ public class AddressesActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.fab);
         topViewAddress = findViewById(R.id.topViewAddress);
         ivClose = findViewById(R.id.iv_close);
+        delete_button = findViewById(R.id.delete_button);
         db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uId = firebaseUser.getUid();
@@ -68,7 +69,6 @@ public class AddressesActivity extends AppCompatActivity {
     }
 
     private void btnClickListeners() {
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +84,16 @@ public class AddressesActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        delete_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void deleteAddress() {
 
     }
 
@@ -142,6 +152,8 @@ public class AddressesActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        
     }
 
     @Override
