@@ -12,12 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.alexander.edadarom.Notifications.Notification;
-import com.example.alexander.edadarom.Notifications.NotificationsAdapter;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
-import com.example.alexander.edadarom.models.ReservationInfo;
-import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -36,6 +32,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class ReservationsActivity extends AppCompatActivity {
 
     public static final String TAG = "ReservationActivity";
@@ -43,6 +40,7 @@ public class ReservationsActivity extends AppCompatActivity {
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
     private ReservationAdapter adapter;
     private RecyclerView recyclerView;
+    private MaterialDialog dialog;
 
     //Toolbar back button click
     @Override
@@ -73,7 +71,6 @@ public class ReservationsActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-
         adapter = new ReservationAdapter(getApplicationContext(), ar);
         recyclerView = findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
@@ -85,7 +82,7 @@ public class ReservationsActivity extends AppCompatActivity {
         adapter.setClickListener(new ReservationAdapter.DotsClickListener() {
             @Override
             public void onClick(int position) {
-                cancelReservation(position);
+                createListDialog(position);
             }
         });
 
@@ -148,6 +145,9 @@ public class ReservationsActivity extends AppCompatActivity {
     }
 
     public void cancelReservation(int position) {
+        dialog = createDialog();
+        dialog.show();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -156,11 +156,6 @@ public class ReservationsActivity extends AppCompatActivity {
         if (firebaseUser != null) {
             // Get a new write batch
             WriteBatch batch = db.batch();
-
-            // Set the value of reservationsQuery
-            DocumentReference reservationRef = db.collection(FirebaseConst.RESERVATION_QUERY).document();
-            ReservationQuery reservationQuery = new ReservationQuery(1, firebaseUser.getUid(), ads.getUserId(), ads.getId());
-            batch.set(reservationRef, reservationQuery);
 
             // Update the Ads
             DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(ads.getId());
@@ -179,10 +174,36 @@ public class ReservationsActivity extends AppCompatActivity {
             batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    ar.remove(position);
+                    adapter.notifyDataSetChanged();
                     Log.d(TAG, "batch success");
+                   dialog.dismiss();
                 }
             });
         }
 
+    }
+
+    public MaterialDialog createDialog() {
+        return new MaterialDialog.Builder(this)
+                .content("Пожалуйста, подождите!")
+                .progress(true, 0)
+                .show();
+    }
+
+    public MaterialDialog createListDialog(int position) {
+       return new MaterialDialog.Builder(this)
+               .items(R.array.dialog_reservation_activity)
+               .itemsCallback(new MaterialDialog.ListCallback() {
+                   @Override
+                   public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                       switch (which) {
+                           case 0:
+                               cancelReservation(position);
+                               break;
+                       }
+                   }
+               })
+               .show();
     }
 }

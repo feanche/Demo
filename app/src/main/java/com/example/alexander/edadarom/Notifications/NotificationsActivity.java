@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.*;
+import com.example.alexander.edadarom.models.ReservationQuery;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -24,15 +26,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
 public class NotificationsActivity extends AppCompatActivity {
 
+    public static final String TAG = "NotificationActivity";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<Notification> arNotificatons = new ArrayList<>();
     private NotificationsAdapter adapter;
@@ -79,6 +84,38 @@ public class NotificationsActivity extends AppCompatActivity {
             }
         });
 
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                WriteBatch batch = db.batch();
+                // Set the value of reservationsQuery
+                DocumentReference reservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.NOTIFICATIONS).document(arNotificatons.get(viewHolder.getAdapterPosition()).getId());
+                batch.delete(reservationRef);
+                // Commit the batch
+                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "batch success");
+                    }
+                });
+                arNotificatons.remove(viewHolder.getAdapterPosition());
+                adapter.notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
@@ -109,6 +146,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
                                 for (DocumentSnapshot document : task.getResult()) {
                                     Notification notification = document.toObject(Notification.class);
+                                    notification.setId(document.getId());
                                     arNotificatons.add(notification);
                                 }
                                 adapter.notifyDataSetChanged();

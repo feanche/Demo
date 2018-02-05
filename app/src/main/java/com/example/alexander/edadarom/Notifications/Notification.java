@@ -10,6 +10,7 @@ import java.util.Date;
  */
 
 public class Notification {
+    public String id;
     public String title;
     public String body;
     @ServerTimestamp
@@ -18,10 +19,19 @@ public class Notification {
     public Notification() {
     }
 
-    public Notification(String title, String message, Date time) {
+    public Notification(String id, String title, String body, Date timestamp) {
+        this.id = id;
         this.title = title;
-        this.body = message;
-        this.timestamp = time;
+        this.body = body;
+        this.timestamp = timestamp;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
