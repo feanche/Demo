@@ -1,5 +1,6 @@
 package com.example.alexander.edadarom.UserAddressesActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.models.Address;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +40,8 @@ public class AddressesActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
 
     String uId;
+    String locality;
+    float locationLat, locationLon;
 
     FirebaseFirestore db;
 
@@ -47,6 +51,8 @@ public class AddressesActivity extends AppCompatActivity {
     private AddressesRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     ArrayList<Address> arAddress = new ArrayList<>();
+
+    public static final int GET_MAP = 1000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,9 @@ public class AddressesActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddAddressFragment();
+                //showAddAddressFragment();
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivityForResult(intent, GET_MAP);
             }
         });
 
@@ -81,7 +89,7 @@ public class AddressesActivity extends AppCompatActivity {
 
     }
 
-    public void showAddAddressFragment() {
+    /*public void showAddAddressFragment() {
         FragmentAddAddress fragment = new FragmentAddAddress();
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
@@ -91,7 +99,7 @@ public class AddressesActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setStatusBarTranslucent(false);
         floatingActionButton.setVisibility(View.INVISIBLE);
-    }
+    }*/
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
@@ -142,7 +150,7 @@ public class AddressesActivity extends AppCompatActivity {
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Address address = document.toObject(Address.class);
-                                address.setAddress(document.get("address").toString());
+                                address.setCommentToAddress(document.get("address").toString());
                                 arAddress.add(address);
                             }
                             adapter.notifyDataSetChanged();
@@ -170,5 +178,19 @@ public class AddressesActivity extends AppCompatActivity {
         } else {
             getFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GET_MAP) {
+            if (resultCode == RESULT_OK) {
+                locality = data.getExtras().getString(MapsActivity.LOCALITY);
+                locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
+                locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
+                Log.d("myLogs",locality.toString()+ " "+locationLat+ " "+locationLon);
+                //localityText.setText(locality);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

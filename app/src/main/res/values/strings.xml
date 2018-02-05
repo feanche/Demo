@@ -19,6 +19,7 @@
     <string name="text_location">Местоположение</string>
     <string name="text_addresses">Мои адреса</string>
     <string name="text_new_address">Новый адрес</string>
+    <string name="text_complete">готово</string>
 
     <string name="hint_title">Название</string>
     <string name="hint_region">Регион</string>
@@ -28,8 +29,9 @@
     <string name="hint_title_sample">Например: Дрель, ударная 1200 rpm</string>
     <string name="hint_description_sample">Описание (до 300 символов)</string>
     <string name="hint_price">Стоимость, ₽</string>
+    <string name="hint_comment">добавьте комментарий</string>
 
-    <string name="test">Набережные Челны, Набережночелнинский проспект, 32А</string>
+    <string name="test">Указать новый адрес или выбрать из списка</string>
 
 
     <string name="button_submit">Разместить</string>
@@ -71,6 +73,6 @@
     <string name="default_notification_channel_id">99</string>
     <string name="my_reservations">Мои бронирования</string>
 
-    <string name="button_pin">Закрепить позицию</string>
+    <string name="button_pin">Добавить адрес</string>
 
 </resources>

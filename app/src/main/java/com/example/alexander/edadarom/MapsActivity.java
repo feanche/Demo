@@ -1,6 +1,8 @@
 package com.example.alexander.edadarom;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -11,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -62,6 +65,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public String locality, country;
 
     EditText find_location;
+    CardView btn_pinMarker, comment;
+    TextView comment_complete;
 
     final static String TAG = "myLogs_MapsActivity";
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -86,6 +91,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         find_location = (EditText)findViewById(R.id.TF_location);
+        btn_pinMarker = findViewById(R.id.btn_pinmarker);
+        comment = findViewById(R.id.comment);
+        comment_complete = findViewById(R.id.comment_complete);
         find_location.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -300,9 +308,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             break;
             case R.id.btn_pinmarker: {
-                executeDataSending();
+                animateView(comment);
             }
             break;
+            case R.id.comment_complete:
+                executeDataSending();
+                break;
             case R.id.imageView6: {
                 find_location.setText("");
             }
@@ -313,6 +324,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             break;
         }
+    }
+
+    private void animateView(View view) {
+        comment.animate().translationY(comment.getHeight())
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        comment.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
 

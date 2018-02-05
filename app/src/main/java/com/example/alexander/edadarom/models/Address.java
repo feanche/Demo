@@ -5,61 +5,41 @@ package com.example.alexander.edadarom.models;
  */
 
 public class Address {
-    String index;
-    String city;
-    String address;
-    String region;
-    String title;
+    public float locationLat;
+    public float locationLon;
+    String commentToAddress;
 
     public Address() {
 
     }
 
-    public Address(String index, String city, String address, String region, String title) {
-        this.index = index;
-        this.city = city;
-        this.address = address;
-        this.region = region;
-        this.title = title;
+    public Address(float locationLat, float locationLon, String commentToAddress) {
+        this.locationLat = locationLat;
+        this.locationLon = locationLon;
+        this.commentToAddress = commentToAddress;
     }
 
-    public String getIndex() {
-        return index;
+    public float getLocationLat() {
+        return locationLat;
     }
 
-    public void setIndex(String index) {
-        this.index = index;
+    public void setLocationLat(float locationLat) {
+        this.locationLat = locationLat;
     }
 
-    public String getCity() {
-        return city;
+    public float getLocationLon() {
+        return locationLon;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocationLon(float locationLon) {
+        this.locationLon = locationLon;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCommentToAddress() {
+        return commentToAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCommentToAddress(String commentToAddress) {
+        this.commentToAddress = commentToAddress;
     }
 }

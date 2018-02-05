@@ -39,14 +39,10 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
         //holder.tvTitle.setText(user.getAddress().size());
 
         Address address = arrayList.get(position);
-        holder.tvTitle.setText(address.getTitle());
-        holder.tvAddress.setText(address.getAddress()
+        holder.tvTitle.setText(address.getCommentToAddress());
+        holder.tvAddress.setText(address.getLocationLat()
                 +", "
-                +address.getCity()
-                +", "
-                +address.getRegion()
-                +", "
-                +address.getIndex());
+                +address.getLocationLon());
     }
 
     @Override
