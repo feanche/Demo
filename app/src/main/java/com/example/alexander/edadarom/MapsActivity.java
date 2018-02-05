@@ -17,7 +17,6 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -62,10 +61,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static String LOCALITY = "locality";
     public static String LOCATION_LAT = "location_lat";
     public static String LOCATION_LON = "location_lon";
-    public String locality, country;
+    public static String COMMENT = "cv_comment";
+    public String locality, country, comment;
 
-    EditText find_location;
-    CardView btn_pinMarker, comment;
+    EditText find_location, text_comment;
+    CardView btn_pinMarker, cv_comment;
     TextView comment_complete;
 
     final static String TAG = "myLogs_MapsActivity";
@@ -90,10 +90,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        find_location = (EditText)findViewById(R.id.TF_location);
+        find_location = findViewById(R.id.TF_location);
         btn_pinMarker = findViewById(R.id.btn_pinmarker);
-        comment = findViewById(R.id.comment);
+        cv_comment = findViewById(R.id.comment);
         comment_complete = findViewById(R.id.comment_complete);
+        text_comment = findViewById(R.id.text_comment);
         find_location.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -181,14 +182,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userLatLng = latLng;
         userLat = latLng.latitude;
         userLng = latLng.longitude;
-        /*MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
-        mCurrentLocationMarker = mMap.addMarker(markerOptions);*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        //Toast.makeText(this, "Выберите маркер долгим нажатием на него и перенесите", Toast.LENGTH_LONG).show();
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
@@ -308,10 +303,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             break;
             case R.id.btn_pinmarker: {
-                animateView(comment);
+                animateView(cv_comment);
             }
             break;
             case R.id.comment_complete:
+                if(text_comment.getText().toString() == null){
+                    comment="";
+                } else {
+                    comment = text_comment.getText().toString();
+                }
                 executeDataSending();
                 break;
             case R.id.imageView6: {
@@ -327,14 +327,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void animateView(View view) {
-        comment.animate().translationY(comment.getHeight())
+        cv_comment.animate().translationY(cv_comment.getHeight())
                 .alpha(0.0f)
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        comment.setVisibility(View.VISIBLE);
+                        cv_comment.setVisibility(View.VISIBLE);
                     }
                 });
     }
@@ -370,11 +370,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Intent intent = getIntent();
                     setResult(RESULT_OK, intent);
                     if (locality != null) {
+                        intent.putExtra(COMMENT, comment);
                         intent.putExtra(LOCALITY, locality);
                         intent.putExtra(LOCATION_LAT, markerLocationLat);
                         intent.putExtra(LOCATION_LON, markerLocationLon);
                     } else if (locality == null) {
                         ifLocalityEmpty();
+                        intent.putExtra(COMMENT, comment);
                         intent.putExtra(LOCALITY, locality);
                         intent.putExtra(LOCATION_LAT, userLat);
                         intent.putExtra(LOCATION_LON, userLng);
@@ -384,7 +386,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     e.printStackTrace();
                 }
             }
-        }).start(); // You should delete this code and add yours
+        }).start();
     }
 
     private void ifLocalityEmpty() {

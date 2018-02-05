@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.alexander.edadarom.MapsActivity;
@@ -40,7 +38,7 @@ public class AddressesActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
 
     String uId;
-    String locality;
+    String locality, comment;
     float locationLat, locationLon;
 
     FirebaseFirestore db;
@@ -89,24 +87,13 @@ public class AddressesActivity extends AppCompatActivity {
 
     }
 
-    /*public void showAddAddressFragment() {
-        FragmentAddAddress fragment = new FragmentAddAddress();
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .add(R.id.topViewAddress, fragment)
-                .addToBackStack("address")
-                .commit();
-        setTheme(R.style.AppTheme);
-        setStatusBarTranslucent(false);
-        floatingActionButton.setVisibility(View.INVISIBLE);
-    }*/
-
-    protected void setStatusBarTranslucent(boolean makeTranslucent) {
-        if (makeTranslucent) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+    private void getData() {
+        Address address = new Address();
+        address.setCommentToAddress(comment);
+        address.setLocationLat(locationLat);
+        address.setLocationLon(locationLon);
+        address.setLocality(locality);
+        sendToFirestore(address);
     }
 
     public void sendToFirestore(Address address) {
@@ -137,7 +124,6 @@ public class AddressesActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
-        //arAddress.clear();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(uId).collection("address")
                 .get()
@@ -150,7 +136,6 @@ public class AddressesActivity extends AppCompatActivity {
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Address address = document.toObject(Address.class);
-                                address.setCommentToAddress(document.get("address").toString());
                                 arAddress.add(address);
                             }
                             adapter.notifyDataSetChanged();
@@ -184,11 +169,11 @@ public class AddressesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GET_MAP) {
             if (resultCode == RESULT_OK) {
+                comment = data.getExtras().getString(MapsActivity.COMMENT);
                 locality = data.getExtras().getString(MapsActivity.LOCALITY);
                 locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
                 locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
-                Log.d("myLogs",locality.toString()+ " "+locationLat+ " "+locationLon);
-                //localityText.setText(locality);
+                getData();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
