@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
@@ -54,6 +55,7 @@ public class FragmentPersonal extends Fragment {
     private TextView tvToolbarTitle, tvToolbarSubtitle;
     private TextView tvSignInOut, tv3;
     private CircleImageView ivToolbarProfile;
+    ImageView iv7;
 
     private ConstraintLayout clSignInOut, clEditProfile, clNotifications, clAddresses, clReservations, clMyAds;
     private FirebaseAuth mAuth;
@@ -83,6 +85,7 @@ public class FragmentPersonal extends Fragment {
         clAddresses = view.findViewById(R.id.clAddresses);
         clReservations = view.findViewById(R.id.clReservations);
         clMyAds = view.findViewById(R.id.clMyAds);
+        iv7 = view.findViewById(R.id.iv7);
 
         tv3 = view.findViewById(R.id.tv3);
 
@@ -101,7 +104,19 @@ public class FragmentPersonal extends Fragment {
     private void updateUI () {
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             updateUI(STATE_AUTH);
-        } else updateUI(STATE_NOT_AUTH);
+        } else {
+            updateUI(STATE_NOT_AUTH);
+        }
+    }
+
+    private void addressButtonActive() {
+        clAddresses.setClickable(true);
+        iv7.setColorFilter(getResources().getColor(R.color.black));
+    }
+
+    private void addressButtonNonActive() {
+        clAddresses.setClickable(false);
+        iv7.setColorFilter(getResources().getColor(R.color.secondaryText));
     }
 
     private void updateUI(int state) {
@@ -126,12 +141,16 @@ public class FragmentPersonal extends Fragment {
                 tvToolbarTitle.setText(firebaseUser.getDisplayName());
                 if (firebaseUser.getPhotoUrl() != null)
                     Picasso.with(getContext()).load(firebaseUser.getPhotoUrl().toString()).placeholder(R.mipmap.ic_launcher).into(ivToolbarProfile);
+
+                addressButtonActive();
                 break;
             case STATE_NOT_AUTH:
                 tvSignInOut.setText(R.string.title_personal_sign_in);
                 tvToolbarTitle.setText("Вы не авторизованы");
                 //tvToolbarSubtitle.setText("");
                 Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(ivToolbarProfile);
+
+                addressButtonNonActive();
                 break;
         }
 
