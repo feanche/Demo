@@ -31,8 +31,24 @@
             android:paddingRight="10dp"
             android:text="Название"
             android:textSize="18sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/tvTimestamp"
             card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTimestamp"
+            style="@style/Base.TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:foregroundGravity="left"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="13:15"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView

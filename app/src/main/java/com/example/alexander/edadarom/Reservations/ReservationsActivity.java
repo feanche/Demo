@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -111,6 +112,7 @@ public class ReservationsActivity extends AppCompatActivity {
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS)
+                    .orderBy("publicTime", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -171,7 +173,7 @@ public class ReservationsActivity extends AppCompatActivity {
             ads.setReserved(false);
 
             batch.set(adsRef, ads);
-            batch.set(myReservationRef, ads);
+            batch.delete(myReservationRef);
 
             // Commit the batch
             batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {

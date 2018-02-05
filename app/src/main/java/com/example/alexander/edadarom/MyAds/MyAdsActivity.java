@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public class MyAdsActivity extends AppCompatActivity {
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
