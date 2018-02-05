@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 public class ProfileCreateActivity extends AppCompatActivity {
@@ -124,6 +125,8 @@ public class ProfileCreateActivity extends AppCompatActivity {
             edPhone.setError("Вы должны ввести номер");
             return;
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("notification_" + firebaseUser.getUid());
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(edName.getText() + " " + edSubName.getText())

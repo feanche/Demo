@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         // Getting Firebase Auth Instance into firebaseAuth object.
         firebaseAuth = FirebaseAuth.getInstance();
 
-        // Hiding the TextView on activity start up time.
+        // Hiding the TextView on activity start up timestamp.
         LoginUserEmail.setVisibility(View.GONE);
         LoginUserName.setVisibility(View.GONE);
 
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
         ).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                // Printing Logout toast message on screen.
+                // Printing Logout toast body on screen.
                 Toast.makeText(getApplicationContext(), "Logout Successfully", Toast.LENGTH_LONG).show();
             }
         });

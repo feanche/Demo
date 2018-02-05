@@ -41,9 +41,9 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
 
-        SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+        /*SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
         String date = sf.format(new Date(user.getPublicTime()));
-        holder.tvDate.setText("Время публикации: \n" +  date);
+        holder.tvDate.setText("Время публикации: \n" +  date);*/
 
         if(user.getPhotoUrl().size() != 0)
         Picasso.with(context).load(user.getPhotoUrl().get(0)).fit().into(holder.imageView);

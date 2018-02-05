@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -33,9 +34,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
-        Notification user = list.get(position);
-        holder.tvTitle.setText(user.getTitle());
-        holder.tvDesc.setText(user.getMessage());
+        Notification notif = list.get(position);
+        holder.tvTitle.setText(notif.getTitle());
+        holder.tvDesc.setText(notif.getBody());
+        SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+        String date = sf.format(notif.getTimestamp());
+        holder.tvTimestamp.setText(date);
     }
 
     @Override
@@ -46,11 +50,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     class UserViewHolder extends RecyclerView.ViewHolder  {
         TextView tvTitle;
         TextView tvDesc;
+        TextView tvTimestamp;
         ImageView imageView;
         public UserViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             imageView = itemView.findViewById(R.id.ivToolbar);
         }
     }

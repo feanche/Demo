@@ -148,7 +148,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                     // [END_EXCLUDE]
                 }
 
-                // Show a message and update the UI
+                // Show a body and update the UI
                 // [START_EXCLUDE]
                 updateUI(STATE_VERIFY_FAILED);
                 // [END_EXCLUDE]
@@ -255,7 +255,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                             checkUserInFirestore(user);
 
                         } else {
-                            // Sign in failed, display a message and update the UI
+                            // Sign in failed, display a body and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid

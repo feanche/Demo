@@ -152,7 +152,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                 dateAndTime.set(Calendar.DAY_OF_MONTH, i2);
                 Date date = new Date(dateAndTime.getTimeInMillis());
                 //mapPresenter.loadTrack(date);
-                //mapPresenter.getTrack("", dateAndTime.getTimeInMillis(), new Date().getTime());
+                //mapPresenter.getTrack("", dateAndTime.getTimeInMillis(), new Date().getTimestamp());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 String formattedDate = simpleDateFormat.format(date);
                 tiDate.setText(formattedDate);
