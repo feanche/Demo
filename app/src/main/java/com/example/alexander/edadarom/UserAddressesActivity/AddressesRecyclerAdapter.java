@@ -9,10 +9,8 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.Address;
-import com.example.alexander.edadarom.models.Users;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Alexander on 29.01.2018.
@@ -35,18 +33,9 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
 
     @Override
     public void onBindViewHolder(UserAddressViewHolder holder, int position) {
-
-        //holder.tvTitle.setText(user.getAddress().size());
-
         Address address = arrayList.get(position);
-        holder.tvTitle.setText(address.getTitle());
-        holder.tvAddress.setText(address.getAddress()
-                +", "
-                +address.getCity()
-                +", "
-                +address.getRegion()
-                +", "
-                +address.getIndex());
+        holder.tvTitle.setText(address.getCommentToAddress());
+        holder.tvAddress.setText(address.getLocality());
     }
 
     @Override

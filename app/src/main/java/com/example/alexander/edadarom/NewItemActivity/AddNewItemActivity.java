@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
+import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -124,7 +125,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             @Override
             public void onClick(View v) {
                 localityText.setTextColor(getResources().getColor(R.color.secondaryText));
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                /*Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivityForResult(intent, GET_LOCATION);*/
+                Intent intent = new Intent(getApplicationContext(), AddressesActivity.class);
                 startActivityForResult(intent, GET_LOCATION);
             }
         });
