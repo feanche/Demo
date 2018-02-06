@@ -13,4 +13,5 @@ public class FirebaseConst {
     public static final String MY_ADS = "myAds";
     public static final String CATEGORIES = "categories";
     public static final String CATEGORY_POSITION = "categoryPosition";
+    public static final String ADDRESS = "address";
 }

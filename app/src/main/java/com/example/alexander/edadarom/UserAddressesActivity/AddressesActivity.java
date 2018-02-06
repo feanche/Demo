@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.models.Address;
+import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.alexander.edadarom.R;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
@@ -51,6 +53,7 @@ public class AddressesActivity extends AppCompatActivity {
     ArrayList<Address> arAddress = new ArrayList<>();
 
     public static final int GET_MAP = 1000;
+    private String addressId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,17 +87,20 @@ public class AddressesActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        delete_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
-    private void deleteAddress() {
-
+    private void deleteAddress(int position) {
+        Address address = arAddress.get(position);
+        WriteBatch batch = db.batch();
+        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId);
+        batch.delete(myAddressRef);
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                arAddress.remove(position);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void getData() {
@@ -146,6 +152,7 @@ public class AddressesActivity extends AppCompatActivity {
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Address address = document.toObject(Address.class);
+                                addressId = document.getId();
                                 arAddress.add(address);
                             }
                             adapter.notifyDataSetChanged();
@@ -186,6 +193,7 @@ public class AddressesActivity extends AppCompatActivity {
                 locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
                 locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
                 getData();
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -38,6 +38,7 @@ import java.util.UUID;
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,9 +68,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageReference;
-    Long currentTime;
-    Long timeOfAction = 2592000000L; //millis, 30 дней - время до окончания действия объявления
-    Long adEndTime;
     String locality;
     float locationLat, locationLon;
     boolean complete = true;
@@ -80,8 +78,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
-    private Uri photoUri, uploadPhotoUrl;
-    private byte[] photo;
+    private Uri photoUri;
     private ConstraintLayout locationButton;
 
     RecyclerView recyclerView;
@@ -125,8 +122,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             @Override
             public void onClick(View v) {
                 localityText.setTextColor(getResources().getColor(R.color.secondaryText));
-                /*Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                startActivityForResult(intent, GET_LOCATION);*/
                 Intent intent = new Intent(getApplicationContext(), AddressesActivity.class);
                 startActivityForResult(intent, GET_LOCATION);
             }
@@ -295,32 +290,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         return photoUri;
     }
 
-    public void getTimes() {
-        currentTime = System.currentTimeMillis();
-        adEndTime = currentTime + timeOfAction;
-    }
-
     public void sendDataToFirestore() {
-        getTimes();
-
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         UserAdsModel userAdsModel = new UserAdsModel(
-                description.getText().toString(),
-                adEndTime,
                 locationLat,
                 locationLon,
                 Integer.parseInt(price.getText().toString()),
-                currentTime,
                 title.getText().toString(),
-                "Столярный инструмент",
-                arReportUrl
-        );
-
+                arReportUrl,
+                description.getText().toString());
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
-
-        //Map<String, Object> userValues = userAdsModel.toMap();
-        db.collection("ads")
+        db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -359,7 +339,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-        //pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {"Выбрать из галереи", "Сделать фото на камеру"};
         pictureDialog.setItems(pictureDialogItems, new DialogInterface.OnClickListener() {
             @Override

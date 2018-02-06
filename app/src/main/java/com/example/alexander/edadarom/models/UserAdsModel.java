@@ -14,80 +14,28 @@ import java.util.Map;
 
 public class UserAdsModel {
 
+    float locationLat;
+    float locationLon;
+    int price;
+    boolean reserved;
+    String title;
+    ArrayList<String> photoUrl;
+    ReservationInfo reservationInfo;
     String id;
     String userId;
-    public String description;
-    public long endTime;
-    public float locationLat;
-    public float locationLon;
-    public int price;
-    public long publicTime;
-    public boolean reserved;
-    public String title;
-    public String type;
-    public ArrayList<String> photoUrl;
-    ReservationInfo reservationInfo;
+    String description;
 
     public UserAdsModel() {
 
     }
 
-    public UserAdsModel(String description, long endTime, float locationLat, float locationLon, int price, long publicTime, String title, String type, ArrayList<String> photoUrl) {
-        this.description = description;
-        this.endTime = endTime;
+    public UserAdsModel(float locationLat, float locationLon, int price, String title, ArrayList<String> photoUrl, String description) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.price = price;
-        this.publicTime = publicTime;
         this.title = title;
-        this.type = type;
         this.photoUrl = photoUrl;
-    }
-
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("body",description);
-        result.put("endTime",endTime);
-        result.put("locationLon",locationLon);
-        result.put("locationLat",locationLat);
-        result.put("price",price);
-        result.put("publicTime",publicTime);
-        result.put("title",title);
-        result.put("type",type);
-        result.put("photoUrl",photoUrl);
-        return result;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
     }
 
     public float getLocationLat() {
@@ -114,12 +62,12 @@ public class UserAdsModel {
         this.price = price;
     }
 
-    public long getPublicTime() {
-        return publicTime;
+    public boolean isReserved() {
+        return reserved;
     }
 
-    public void setPublicTime(long publicTime) {
-        this.publicTime = publicTime;
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
     }
 
     public String getTitle() {
@@ -130,28 +78,12 @@ public class UserAdsModel {
         this.title = title;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public ArrayList<String> getPhotoUrl() {
         return photoUrl;
     }
 
     public void setPhotoUrl(ArrayList<String> photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    public boolean isReserved() {
-        return reserved;
-    }
-
-    public void setReserved(boolean reserved) {
-        this.reserved = reserved;
     }
 
     public ReservationInfo getReservationInfo() {
@@ -162,4 +94,27 @@ public class UserAdsModel {
         this.reservationInfo = reservationInfo;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

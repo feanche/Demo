@@ -5,8 +5,8 @@ package com.example.alexander.edadarom.models;
  */
 
 public class Address {
-    public float locationLat;
-    public float locationLon;
+    float locationLat;
+    float locationLon;
     String commentToAddress;
     String locality;
 
