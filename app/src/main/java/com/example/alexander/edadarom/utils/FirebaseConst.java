@@ -11,4 +11,5 @@ public class FirebaseConst {
     public static final String MY_RESERVATIONS = "myReservations";
     public static final String ADS = "ads";
     public static final String MY_ADS = "myAds";
+    public static final String ADDRESS = "address";
 }
