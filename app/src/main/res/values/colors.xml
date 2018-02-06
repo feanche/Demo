@@ -10,7 +10,7 @@
     <color name="hint">#a7a7a7</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
-    <color name="layout_background">#FFFFFF</color>
+    <color name="layout_background">#ffffff</color>
     <color name="card_background">#e7e7e7</color>
     <color name="red">#ff0000</color>
 
@@ -187,7 +187,7 @@
 
         <color name="amber_50">#FFF8E1</color>
         <color name="amber_100">#ffecb3</color>
-        <color name="amber_200">#FFE082</color>
+        <color name="amber_200">#ffe082</color>
         <color name="amber_300">#FFD54F</color>
         <color name="amber_400">#FFCA28</color>
         <color name="amber_500">#FFC107</color>

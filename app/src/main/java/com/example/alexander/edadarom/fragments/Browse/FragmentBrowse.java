@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
+import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
@@ -39,6 +39,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    int adId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +47,20 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.app_name));
+        String title = getActivity().getIntent().getStringExtra("name");
+        toolbar.setTitle(title);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
+
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);
-        presenter.getAds();
+        adId = getActivity().getIntent().getIntExtra("id", 1);
+        presenter.getAds(adId);
 
         return view;
     }
@@ -89,7 +97,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
-                    presenter.getAds();
+                    presenter.getAds(adId);
                 }
         );
 

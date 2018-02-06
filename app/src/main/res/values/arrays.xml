@@ -2,5 +2,7 @@
 <resources>
     <string-array name="dialog_reservation_activity">
         <item>Удалить</item>
+        <item>Открыть обьявление</item>
+        <item>Позвонить покупателю</item>
     </string-array>
 </resources>

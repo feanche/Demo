@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Toolbar;
 
 import com.example.alexander.edadarom.Authorization.LoginActivity;
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
+import com.example.alexander.edadarom.fragments.Category.FragmentCategory;
 import com.example.alexander.edadarom.fragments.FragmentFavorites;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.FragmentMessages;
@@ -21,7 +23,7 @@ import com.example.alexander.edadarom.fragments.FragmentPersonal;
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    FragmentBrowse fragmentBrowse;
+    FragmentCategory fragmentBrowse;
     FragmentFavorites fragmentFavorites;
     FragmentMessages fragmentMessages;
     FragmentPersonal fragmentPersonal;
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        fragmentBrowse = new FragmentBrowse();
+        fragmentBrowse = new FragmentCategory();
         fragmentFavorites = new FragmentFavorites();
         fragmentMessages = new FragmentMessages();
         fragmentPersonal = new FragmentPersonal();
@@ -107,5 +109,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager childFragmentManager = fragmentBrowse.getChildFragmentManager();
+        //Если сейчас viewPager в позиции 0, то проверяем количество дочерних фрагментов у нулевого фрагмента и нажимаем назад
+        if(viewPager.getCurrentItem() == 0 & childFragmentManager.getBackStackEntryCount() > 0) childFragmentManager.popBackStackImmediate();
+        else super.onBackPressed();
     }
 }
