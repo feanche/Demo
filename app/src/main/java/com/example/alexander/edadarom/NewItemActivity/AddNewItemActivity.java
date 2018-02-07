@@ -40,7 +40,7 @@ import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
-import com.example.alexander.edadarom.models.Categories;
+import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -86,7 +86,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private ConstraintLayout locationButton;
 
     Spinner spinner;
-    ArrayList<Categories> arCategories;
+    ArrayList<Category> arCategories;
     //TextView categoryName;
 
     RecyclerView recyclerView;
@@ -129,9 +129,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Categories categories;
+                Category categories;
                 if(spinner.getSelectedItem()!=null){
-                    categories = (Categories)spinner.getSelectedItem();
+                    categories = (Category)spinner.getSelectedItem();
                     //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
                    // categoryName.setText(String.format(categories.getName()));
 
@@ -197,12 +197,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         initRecyclerView();
     }
 
-    public ArrayList<Categories> categoriesList() {
-        ArrayList<Categories> categories = new ArrayList<Categories>();
-        categories.add(new Categories("Desc_1","Item_1"));
-        categories.add(new Categories("Desc_2","Item_2"));
-        categories.add(new Categories("Desc_3","Item_3"));
-        return categories;
+    public ArrayList<Category> categoriesList() {
+        ArrayList<Category> category = new ArrayList<Category>();
+        category.add(new Category("Desc_1"));
+        category.add(new Category("Desc_2"));
+        category.add(new Category("Desc_3"));
+        return category;
     }
 
     public void completenessCheck() {

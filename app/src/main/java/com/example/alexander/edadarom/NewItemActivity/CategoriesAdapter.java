@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.alexander.edadarom.models.Categories;
+import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.R;
 
 import java.util.ArrayList;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
  * Created by Alexander on 07.02.2018.
  */
 
-public class CategoriesAdapter extends ArrayAdapter<Categories> {
+public class CategoriesAdapter extends ArrayAdapter<Category> {
     private Activity context;
-    ArrayList<Categories> data = null;
+    ArrayList<Category> data = null;
 
-    public CategoriesAdapter(Activity context, int resource, ArrayList<Categories> data) {
+    public CategoriesAdapter(Activity context, int resource, ArrayList<Category> data) {
         super(context, resource, data);
         this.context = context;
         this.data = data;
@@ -35,7 +35,7 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
             row = inflater.inflate(R.layout.spinner_layout, parent, false);
         }
 
-        Categories item = data.get(position);
+        Category item = data.get(position);
 
         if (item != null) { // парсим данные с каждого объекта
             TextView myCountry = (TextView) row.findViewById(R.id.countryName);
@@ -54,7 +54,7 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
             row = inflater.inflate(R.layout.spinner_dropdown_layout, parent, false);
         }
 
-        Categories item = data.get(position);
+        Category item = data.get(position);
 
         if (item != null) { // парсим данные с каждого объекта
             TextView myCountry = (TextView) row.findViewById(R.id.countryName);
