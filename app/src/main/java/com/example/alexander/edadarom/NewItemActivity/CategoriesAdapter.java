@@ -2,6 +2,7 @@ package com.example.alexander.edadarom.NewItemActivity;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class CategoriesAdapter extends ArrayAdapter<Category> {
     private Activity context;
+    public String categoryId;
     ArrayList<Category> data = null;
 
     public CategoriesAdapter(Activity context, int resource, ArrayList<Category> data) {
@@ -38,9 +40,9 @@ public class CategoriesAdapter extends ArrayAdapter<Category> {
         Category item = data.get(position);
 
         if (item != null) { // парсим данные с каждого объекта
-            TextView myCountry = (TextView) row.findViewById(R.id.countryName);
+            TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_layout);
             if (myCountry != null)
-                myCountry.setText(item.getName());
+                myCountry.setText(item.getDescription());
         }
 
         return row;
@@ -57,7 +59,7 @@ public class CategoriesAdapter extends ArrayAdapter<Category> {
         Category item = data.get(position);
 
         if (item != null) { // парсим данные с каждого объекта
-            TextView myCountry = (TextView) row.findViewById(R.id.countryName);
+            TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_dropdown);
             if (myCountry != null)
                 myCountry.setText(item.getName());
         }
