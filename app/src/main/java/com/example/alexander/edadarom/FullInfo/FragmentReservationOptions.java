@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.ReservationInfo;
@@ -54,6 +56,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     protected CardView cardView2;
     protected TextInputLayout edDate;
     protected TextInputLayout edTime;
+    protected TextInputLayout edDateEnd;
+    protected TextInputLayout edTimeEnd;
     protected RadioButton radioButton;
     protected RadioButton radioButton2;
     protected TextView tvTitle;
@@ -101,6 +105,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         cardView2 = (CardView) view.findViewById(R.id.card_view2);
         edDate = (TextInputLayout) view.findViewById(R.id.edDate);
         edTime = (TextInputLayout) view.findViewById(R.id.edTime);
+        edDateEnd = (TextInputLayout) view.findViewById(R.id.edDateEnd);
+        edTimeEnd = (TextInputLayout) view.findViewById(R.id.edTimeEnd);
         radioButton = (RadioButton) view.findViewById(R.id.radioButton);
         radioButton2 = (RadioButton) view.findViewById(R.id.radioButton2);
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
@@ -133,8 +139,33 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         btnReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
 
+                if(TextUtils.isEmpty(tiDate.getText())) {
+                    edDate.setError("Поле не может быть пустым!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(tiTime.getText())) {
+                    edTime.setError("Поле не может быть пустым!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(tiDateEnd.getText())) {
+                    edDateEnd.setError("Поле не может быть пустым!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(tiTimeEnd.getText())) {
+                    edDateEnd.setError("Поле не может быть пустым!");
+                    return;
+                }
+
+                if(!radioButton.isChecked() | !radioButton2.isChecked()) {
+                    Toast.makeText(getContext(), "Выберите способ доставки!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
                 ReservationInfo info = new ReservationInfo(new Date(), new Date(dateAndTime.getTimeInMillis()), new Date(dateAndTimeEnd.getTimeInMillis()), radioButton2.isChecked(), "");
                 presenter.reservationAd(info);
                 //presenter.test();
@@ -169,9 +200,9 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getActivity(), d2,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        dateAndTimeEnd.get(Calendar.YEAR),
+                        dateAndTimeEnd.get(Calendar.MONTH),
+                        dateAndTimeEnd.get(Calendar.DAY_OF_MONTH))
                         .show();
             }
         });
@@ -180,8 +211,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(getActivity(), t2,
-                        dateAndTime.get(Calendar.HOUR_OF_DAY),
-                        dateAndTime.get(Calendar.MINUTE),
+                        dateAndTimeEnd.get(Calendar.HOUR_OF_DAY),
+                        dateAndTimeEnd.get(Calendar.MINUTE),
                         true)
                         .show();
             }
