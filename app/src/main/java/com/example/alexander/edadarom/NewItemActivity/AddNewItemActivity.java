@@ -44,12 +44,16 @@ import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -98,16 +102,24 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     ArrayList<String> arReportUrl = new ArrayList<>();
 
     ImagesRecyclerAdapter imagesRecyclerAdapter;
+    CategoriesAdapter categoriesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        arCategories = categoriesList();
+        //arCategories = categoriesList();
+
+        arCategories = new ArrayList<>();
+
+
+
         setContentView(R.layout.activity_new_item_add);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+
 
         localityText = findViewById(R.id.textView6);
 
@@ -122,9 +134,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
         ivPhoto = findViewById(R.id.ivPhoto);
 
+
         spinner = findViewById(R.id.SpinnerCustom);
         //categoryName = findViewById(R.id.myTextView);
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
+        categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -132,9 +145,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 Category categories;
                 if(spinner.getSelectedItem()!=null){
                     categories = (Category)spinner.getSelectedItem();
-                    //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
-                   // categoryName.setText(String.format(categories.getName()));
 
+                    //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
+                     //categoryName.setText(String.format(categories.getName()));
                 }
             }
 
@@ -143,8 +156,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
             }
         });
-
-
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -195,6 +206,31 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
 
         initRecyclerView();
+        getData();
+    }
+
+    private void getData() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(FirebaseConst.CATEGORIES)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
+                                return;
+                            }
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Category category = document.toObject(Category.class);
+
+                                //Log.d(TAG," "+document.getId());
+
+                                arCategories.add(category);
+                                categoriesAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
     }
 
     public ArrayList<Category> categoriesList() {
