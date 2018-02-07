@@ -22,9 +22,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
+import com.example.alexander.edadarom.models.Categories;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -81,6 +84,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private Uri photoUri;
     private ConstraintLayout locationButton;
 
+    Spinner spinner;
+    ArrayList<Categories> arCategories;
+    TextView categoryName;
+
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
 
@@ -112,6 +119,28 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         locationButton = findViewById(R.id.constraintLayout1);
 
         ivPhoto = findViewById(R.id.ivPhoto);
+
+        spinner = findViewById(R.id.spinner);
+        arCategories = categoriesList();
+        categoryName = findViewById(R.id.category_name);
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this, android.R.layout.simple_spinner_item, arCategories);
+        spinner.setAdapter(categoriesAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Categories categories;
+                if(spinner.getSelectedItem()!=null){
+                    categories = (Categories)spinner.getSelectedItem();
+                    categoryName.setText(String.format(categories.getName()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -163,6 +192,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
 
         initRecyclerView();
+    }
+
+    public ArrayList<Categories> categoriesList() {
+        ArrayList<Categories> categories = new ArrayList<Categories>();
+        categories.add(new Categories("sdfsd","dsfsd"));
+        return categories;
     }
 
     public void completenessCheck() {
