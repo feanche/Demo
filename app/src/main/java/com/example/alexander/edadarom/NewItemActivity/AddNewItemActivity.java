@@ -23,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -86,7 +87,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     Spinner spinner;
     ArrayList<Categories> arCategories;
-    TextView categoryName;
+    //TextView categoryName;
 
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
@@ -101,6 +102,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        arCategories = categoriesList();
         setContentView(R.layout.activity_new_item_add);
 
         db = FirebaseFirestore.getInstance();
@@ -120,10 +122,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
         ivPhoto = findViewById(R.id.ivPhoto);
 
-        spinner = findViewById(R.id.spinner);
-        arCategories = categoriesList();
-        categoryName = findViewById(R.id.category_name);
-        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this, android.R.layout.simple_spinner_item, arCategories);
+        spinner = findViewById(R.id.SpinnerCustom);
+        //categoryName = findViewById(R.id.myTextView);
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -131,7 +132,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 Categories categories;
                 if(spinner.getSelectedItem()!=null){
                     categories = (Categories)spinner.getSelectedItem();
-                    categoryName.setText(String.format(categories.getName()));
+                    //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
+                   // categoryName.setText(String.format(categories.getName()));
+
                 }
             }
 
@@ -164,7 +167,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 yesOrNoDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        completenessCheck();
+                        //completenessCheck();
                         if (!complete) {
                             Toast.makeText(getApplicationContext(), "Заполните красные поля!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -196,7 +199,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public ArrayList<Categories> categoriesList() {
         ArrayList<Categories> categories = new ArrayList<Categories>();
-        categories.add(new Categories("sdfsd","dsfsd"));
+        categories.add(new Categories("Desc_1","Item_1"));
+        categories.add(new Categories("Desc_2","Item_2"));
+        categories.add(new Categories("Desc_3","Item_3"));
         return categories;
     }
 

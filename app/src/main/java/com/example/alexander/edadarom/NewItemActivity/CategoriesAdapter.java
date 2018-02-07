@@ -1,9 +1,7 @@
 package com.example.alexander.edadarom.NewItemActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,25 +27,41 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
         this.data = data;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return super.getView(position, convertView, parent);
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        View row = convertView;
+        if (row == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            row = inflater.inflate(R.layout.spinner_layout, parent, false);
+        }
+
+        Categories item = data.get(position);
+
+        if (item != null) { // парсим данные с каждого объекта
+            TextView myCountry = (TextView) row.findViewById(R.id.countryName);
+            if (myCountry != null)
+                myCountry.setText(item.getName());
+        }
+
+        return row;
     }
 
     @Override
-    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) { // этот код выполняется, когда вы нажимаете на спиннер
         View row = convertView;
-        if(row == null) {
+        if (row == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            row = LayoutInflater.from(parent.getContext()).inflate(R.layout.spinner_layout, parent, false);
+            row = inflater.inflate(R.layout.spinner_dropdown_layout, parent, false);
         }
+
         Categories item = data.get(position);
-        if(item != null) {
-            TextView category_name = row.findViewById(R.id.category_name);
-            if(category_name != null)
-                category_name.setText(item.getName());
+
+        if (item != null) { // парсим данные с каждого объекта
+            TextView myCountry = (TextView) row.findViewById(R.id.countryName);
+            if (myCountry != null)
+                myCountry.setText(item.getName());
         }
+
         return row;
     }
 }
