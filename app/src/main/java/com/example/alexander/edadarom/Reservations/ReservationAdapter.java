@@ -16,6 +16,7 @@ import com.example.alexander.edadarom.models.UserAdsModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Ilnaz on 30.01.2018.
@@ -50,10 +51,10 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         UserAdsModel ads = list.get(position);
         holder.tvTitle.setText(ads.getTitle());
         holder.tvDesc.setText(ads.getDescription());
-        SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+        SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru","RU"));
         String date = sf.format(ads.getReservationInfo().getReservationDate());
         String dateEnd = sf.format(ads.getReservationInfo().getReservationDateEnd());
-        holder.tvTimestamp.setText("Начало брони" + date + "/nКонец брони" + dateEnd);
+        holder.tvTimestamp.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
 
         holder.ivDots.setOnClickListener(new View.OnClickListener() {
             @Override

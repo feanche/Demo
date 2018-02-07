@@ -6,15 +6,14 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="8dp"
-    android:clickable="true"
+    android:clickable="false"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:foreground="?attr/selectableItemBackground">
+        android:layout_height="wrap_content">
         <!--android:background="@drawable/click_bg">-->
 
 
@@ -27,13 +26,23 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:foregroundGravity="left"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:padding="5dp"
             android:text="Название"
             android:textSize="18sp"
-            card_view:layout_constraintEnd_toStartOf="@+id/ivDots"
+            card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="ожидает"
+            card_view:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+            card_view:layout_constraintEnd_toStartOf="@+id/ivDots"
+            card_view:layout_constraintTop_toTopOf="@+id/tvTitle" />
 
         <TextView
             android:id="@+id/tvDesc"
@@ -43,9 +52,7 @@
             android:layout_below="@+id/tvTitle"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:padding="5dp"
             android:text="Описание"
             android:textColor="@color/secondaryText"
             card_view:layout_constraintEnd_toEndOf="parent"
@@ -63,9 +70,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:padding="5dp"
             android:text="время"
             android:textColor="@color/secondaryText"
             card_view:layout_constraintBottom_toBottomOf="parent"
@@ -81,9 +86,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="6dp"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/tvTitle"
-            card_view:srcCompat="@drawable/dots_vertical" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/dots_vertical"
+            android:foreground="?attr/selectableItemBackground"/>
 
     </android.support.constraint.ConstraintLayout>
 

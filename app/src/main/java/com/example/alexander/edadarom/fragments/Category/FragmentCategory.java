@@ -2,6 +2,7 @@ package com.example.alexander.edadarom.fragments.Category;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,8 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
+import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
@@ -40,8 +43,13 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category, container, false);
+
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
+        CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+
         initRecyclerView();
         presenter = new CategoryPresenter();
         presenter.attachView(this);
@@ -121,6 +129,4 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         transaction.replace(R.id.container, fragmentBrowse)
                 .commit();
     }
-
-
 }

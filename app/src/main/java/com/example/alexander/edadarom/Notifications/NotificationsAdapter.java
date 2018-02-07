@@ -12,6 +12,7 @@ import com.example.alexander.edadarom.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Alexander on 11.01.2018.
@@ -37,7 +38,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         Notification notif = list.get(position);
         holder.tvTitle.setText(notif.getTitle());
         holder.tvDesc.setText(notif.getBody());
-        SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
+        SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru","RU"));
         String date = sf.format(notif.getTimestamp());
         holder.tvTimestamp.setText(date);
     }

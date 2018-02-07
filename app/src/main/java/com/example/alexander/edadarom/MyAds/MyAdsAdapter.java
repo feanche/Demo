@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Ilnaz on 30.01.2018.
@@ -29,7 +32,7 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_recycler_item,parent,false));
+        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.my_ads_recycler_item,parent,false));
     }
 
     @Override
@@ -37,6 +40,13 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
+        holder.tvPrice.setText(String.valueOf(user.getPrice()));
+
+        SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru","RU"));
+        String date = sf.format(user.getTimestamp());
+        holder.tvTimestamp.setText(date);
+
+        Picasso.with(context).load(user.getPhotoUrl().get(0)).into(holder.imageView);
     }
 
     @Override
@@ -47,12 +57,16 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
     class UserViewHolder extends RecyclerView.ViewHolder  {
         TextView tvTitle;
         TextView tvDesc;
+        TextView tvTimestamp;
+        TextView tvPrice;
         ImageView imageView;
         public UserViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
-            imageView = itemView.findViewById(R.id.ivToolbar);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }
