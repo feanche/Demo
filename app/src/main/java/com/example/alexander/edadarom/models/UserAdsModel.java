@@ -6,6 +6,8 @@ package com.example.alexander.edadarom.models;
 
 import android.graphics.Bitmap;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +19,7 @@ public class UserAdsModel {
     float locationLat;
     float locationLon;
     int price;
+    int categoryId;
     boolean reserved;
     String title;
     ArrayList<String> photoUrl;
@@ -24,18 +27,38 @@ public class UserAdsModel {
     String id;
     String userId;
     String description;
+    @ServerTimestamp
+    public Date timestamp;
 
     public UserAdsModel() {
 
     }
 
-    public UserAdsModel(float locationLat, float locationLon, int price, String title, ArrayList<String> photoUrl, String description) {
+    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.price = price;
+        this.categoryId = categoryId;
         this.title = title;
         this.photoUrl = photoUrl;
         this.description = description;
+        this.timestamp = timestamp;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public float getLocationLat() {

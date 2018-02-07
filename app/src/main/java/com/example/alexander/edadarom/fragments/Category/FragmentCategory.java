@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.BrowseActivity;
-import com.example.alexander.edadarom.fragments.Browse.BrowseFragmentContract;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -89,7 +87,6 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
     }
 
 
-
     @Override
     public void showLoading() {
         swipeRefreshLayout.setRefreshing(true);
@@ -109,26 +106,20 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
 
     @Override
     public void openActivity(int id, String name) {
-        /*Intent intent = new Intent(getContext(), BrowseActivity.class);
-        intent.putExtra("id", id);
-        intent.putExtra("name", name);
-        startActivity(intent);*/
-        showFragment();
+
+        FragmentBrowse fragmentBrowse = FragmentBrowse.instance(id, name);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.addToBackStack("browseFragment");
+        transaction.replace(R.id.container, fragmentBrowse)
+                .commit();
     }
 
     private void showFragment() {
         FragmentBrowse fragmentBrowse = new FragmentBrowse();
-
-        /*FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.container, fragmentBrowse)
-                .addToBackStack("browseFragment")
-                .commit();*/
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack("browseFragment");
         transaction.replace(R.id.container, fragmentBrowse)
-        .commit();
+                .commit();
     }
 
 

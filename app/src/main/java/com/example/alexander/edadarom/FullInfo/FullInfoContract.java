@@ -1,5 +1,6 @@
 package com.example.alexander.edadarom.FullInfo;
 
+import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.BaseView;
@@ -22,7 +23,7 @@ public interface FullInfoContract {
 
     interface Presenter {
         void getAd(String key);
-        void reservationAd(long reservationDate, Boolean isDeleviry, String deleviryAddress);
+        void reservationAd(ReservationInfo reservationInfo);
         void showReservationFragment();
         void hideReservationFragment();
         void showDateInFragment();

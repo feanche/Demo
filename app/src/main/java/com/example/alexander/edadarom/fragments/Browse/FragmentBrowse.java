@@ -40,6 +40,13 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     int adId;
+    public static Bundle bundle = new Bundle();
+
+    public static FragmentBrowse instance(int id, String name) {
+        bundle.putInt("id", id);
+        bundle.putString("name", name);
+        return new FragmentBrowse();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,11 +54,10 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         toolbar = view.findViewById(R.id.toolbar);
-        String title = getActivity().getIntent().getStringExtra("name");
+        String title = bundle.getString("name");
         toolbar.setTitle(title);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -59,7 +65,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);
-        adId = getActivity().getIntent().getIntExtra("id", 1);
+        adId = bundle.getInt("id", -1);
         presenter.getAds(adId);
 
         return view;

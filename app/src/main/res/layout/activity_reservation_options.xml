@@ -258,61 +258,117 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/edDate"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/dateView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:focusableInTouchMode="false"
-        app:layout_constraintEnd_toStartOf="@+id/edTime"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_view1">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/tiDate"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvReservationEnd"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="false"
-            android:hint="Дата"
-            android:inputType="none" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Конец бронирования"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edDate" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/edTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/edDate"
-        app:layout_constraintTop_toTopOf="@+id/edDate">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/tiTime"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvReservationStart"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="false"
-            android:hint="Время"
-            android:inputType="none" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Начало бронирования"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioButton
-        android:id="@+id/radioButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Самовывоз"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edDate" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edDate"
+            app:layout_constraintTop_toTopOf="@+id/edDate">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/tiTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:hint="Время"
+                android:inputType="none" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edDateEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:focusableInTouchMode="false"
+            app:layout_constraintEnd_toEndOf="@+id/edDate"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvReservationEnd">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/tiDateEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:hint="Дата"
+                android:inputType="none" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:focusableInTouchMode="false"
+            app:layout_constraintEnd_toStartOf="@+id/edTime"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvReservationStart">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/tiDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:hint="Дата"
+                android:inputType="none" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/edTimeEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/edTime"
+            app:layout_constraintTop_toBottomOf="@+id/tvReservationEnd">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/tiTimeEnd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:hint="Время"
+                android:inputType="none" />
+        </android.support.design.widget.TextInputLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <RadioButton
         android:id="@+id/radioButton2"
@@ -338,6 +394,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioButton
+        android:id="@+id/radioButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:text="Самовывоз"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateView" />
 
 
 </android.support.constraint.ConstraintLayout>

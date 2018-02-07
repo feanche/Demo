@@ -296,9 +296,11 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 locationLat,
                 locationLon,
                 Integer.parseInt(price.getText().toString()),
+                1,
                 title.getText().toString(),
                 arReportUrl,
-                description.getText().toString());
+                description.getText().toString(),
+                new Date());
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)

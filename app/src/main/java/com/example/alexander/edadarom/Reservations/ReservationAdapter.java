@@ -51,8 +51,9 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         holder.tvTitle.setText(ads.getTitle());
         holder.tvDesc.setText(ads.getDescription());
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
-        String date = sf.format(new Date(ads.getReservationInfo().getTimestamp()));
-        holder.tvTimestamp.setText(date);
+        String date = sf.format(ads.getReservationInfo().getReservationDate());
+        String dateEnd = sf.format(ads.getReservationInfo().getReservationDateEnd());
+        holder.tvTimestamp.setText("Начало брони" + date + "/nКонец брони" + dateEnd);
 
         holder.ivDots.setOnClickListener(new View.OnClickListener() {
             @Override
