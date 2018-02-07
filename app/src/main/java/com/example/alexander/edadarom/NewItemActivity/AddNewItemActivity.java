@@ -22,9 +22,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import java.util.UUID;
 
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
+import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -81,6 +85,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private Uri photoUri;
     private ConstraintLayout locationButton;
 
+    Spinner spinner;
+    ArrayList<Category> arCategories;
+    //TextView categoryName;
+
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
 
@@ -94,6 +102,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        arCategories = categoriesList();
         setContentView(R.layout.activity_new_item_add);
 
         db = FirebaseFirestore.getInstance();
@@ -112,6 +121,29 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         locationButton = findViewById(R.id.constraintLayout1);
 
         ivPhoto = findViewById(R.id.ivPhoto);
+
+        spinner = findViewById(R.id.SpinnerCustom);
+        //categoryName = findViewById(R.id.myTextView);
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
+        spinner.setAdapter(categoriesAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category categories;
+                if(spinner.getSelectedItem()!=null){
+                    categories = (Category)spinner.getSelectedItem();
+                    //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
+                   // categoryName.setText(String.format(categories.getName()));
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -135,7 +167,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 yesOrNoDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        completenessCheck();
+                        //completenessCheck();
                         if (!complete) {
                             Toast.makeText(getApplicationContext(), "Заполните красные поля!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -163,6 +195,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
 
         initRecyclerView();
+    }
+
+    public ArrayList<Category> categoriesList() {
+        ArrayList<Category> category = new ArrayList<Category>();
+        category.add(new Category("Desc_1"));
+        category.add(new Category("Desc_2"));
+        category.add(new Category("Desc_3"));
+        return category;
     }
 
     public void completenessCheck() {
