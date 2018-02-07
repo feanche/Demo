@@ -33,7 +33,7 @@ public class MyAdsActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
-    private ReservationAdapter adapter;
+    private MyAdsAdapter adapter;
     private RecyclerView recyclerView;
 
     //Toolbar back button click
@@ -66,7 +66,7 @@ public class MyAdsActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
 
-        adapter = new ReservationAdapter(getApplicationContext(), ar);
+        adapter = new MyAdsAdapter(getApplicationContext(), ar);
         recyclerView = findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());

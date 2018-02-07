@@ -24,7 +24,6 @@ public class MyApplication extends Application {
         db.setFirestoreSettings(settings);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser!=null)
-        FirebaseMessaging.getInstance().subscribeToTopic("notification_" + firebaseUser.getUid());
+        if(firebaseUser!=null) FirebaseMessaging.getInstance().subscribeToTopic("notification_" + firebaseUser.getUid());
     }
 }

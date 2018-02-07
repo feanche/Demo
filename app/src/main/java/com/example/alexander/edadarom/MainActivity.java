@@ -32,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = "myLogs_MainActivity";
     public int categoryId = -1;
 
+    //Toolbar back button click
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

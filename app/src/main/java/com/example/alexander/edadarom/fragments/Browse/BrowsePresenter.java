@@ -37,7 +37,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("ads")
                 .whereEqualTo("categoryId", id)
-                .orderBy("publicTime", Query.Direction.DESCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

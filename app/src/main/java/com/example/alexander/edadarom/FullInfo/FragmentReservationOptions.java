@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -198,7 +199,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                 Date date = new Date(dateAndTime.getTimeInMillis());
                 //mapPresenter.loadTrack(date);
                 //mapPresenter.getTrack("", dateAndTime.getTimeInMillis(), new Date().getTimestamp());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM", new Locale("ru","RU"));
                 String formattedDate = simpleDateFormat.format(date);
                 tiDate.setText(formattedDate);
             }
@@ -226,7 +227,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                 Date date = new Date(dateAndTimeEnd.getTimeInMillis());
                 //mapPresenter.loadTrack(date);
                 //mapPresenter.getTrack("", dateAndTime.getTimeInMillis(), new Date().getTimestamp());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM", new Locale("ru","RU"));
                 String formattedDate = simpleDateFormat.format(date);
                 tiDateEnd.setText(formattedDate);
             }

@@ -40,6 +40,7 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
+        holder.tvPrice.setText(String.valueOf(user.getPrice()));
 
         /*SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
         String date = sf.format(new Date(user.getPublicTime()));
@@ -58,13 +59,15 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         TextView tvTitle;
         TextView tvDesc;
         TextView tvDate;
+        TextView tvPrice;
         ImageView imageView;
         public UserViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
             tvDate = itemView.findViewById(R.id.tvDate);
-            imageView = itemView.findViewById(R.id.ivToolbar);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }

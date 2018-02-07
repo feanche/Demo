@@ -9,7 +9,14 @@ import java.util.Date;
  */
 
 public class ReservationInfo {
+
+    public final static int STATUS_FREE = 0;
+    public final static int STATUS_WAIT_CONFIRM = 1;
+    public final static int STATUS_CONFIRMED = 2;
+    public final static int STATUS_WAIT_RETURN = 3;
+
     String reservedUser;
+    int status;
     @ServerTimestamp
     public Date timestamp;
     @ServerTimestamp
