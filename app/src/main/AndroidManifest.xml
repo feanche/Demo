@@ -61,7 +61,7 @@
             android:name=".MapsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBar"/>
+            android:theme="@style/AppTheme.ActionBar" />
 
         <provider
             android:name=".utils.GenericFileProvider"
@@ -83,7 +83,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Authorization.PhoneAuthActivity" />
         <activity android:name=".Authorization.ProfileCreateActivity" />
-        <activity android:name=".UserAddressesActivity.AddressesActivity"/>
+        <activity android:name=".UserAddressesActivity.AddressesActivity" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -98,8 +98,9 @@
 
         <activity android:name=".Notifications.NotificationsActivity" />
         <activity android:name=".Reservations.ReservationsActivity" />
-        <activity android:name=".FullInfo.ReservationOptionsActivity"></activity>
-        <activity android:name=".MyAds.MyAdsActivity"></activity>
+        <activity android:name=".FullInfo.ReservationOptionsActivity" />
+        <activity android:name=".MyAds.MyAdsActivity" />
+        <activity android:name=".fragments.Browse.BrowseActivity"></activity>
     </application>
 
 </manifest>

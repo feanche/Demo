@@ -71,13 +71,13 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
     }
 
     @Override
-    public void reservationAd(long reservationDate, Boolean isDelivery, String deliveryAddress) {
-        reservationWithBatch(reservationDate, isDelivery, deliveryAddress);
+    public void reservationAd(ReservationInfo reservationInfo) {
+        reservationWithBatch(reservationInfo);
         view.hideReservationFragment();
 
     }
 
-    private void reservationWithBatch(long reservationDate, Boolean isDelivery, String deliveryAddress) {
+    private void reservationWithBatch(ReservationInfo reservationInfo) {
         //Бронирование при помощи Batch
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -85,23 +85,17 @@ public class FullInfoPresenter implements FullInfoContract.Presenter {
         if(firebaseUser!=null) {
             // Get a new write batch
             WriteBatch batch = db.batch();
-
-            // Set the value of reservationsQuery
-            DocumentReference reservationRef = db.collection(FirebaseConst.RESERVATION_QUERY).document();
-            ReservationQuery reservationQuery = new ReservationQuery(0, firebaseUser.getUid(), userAdsModel.getUserId(), userAdsModel.getId(), reservationDate, isDelivery, deliveryAddress);
-            batch.set(reservationRef, reservationQuery);
-
-            // Update the Ads
+            reservationInfo.setReservedUser(firebaseUser.getUid());
+            // get reference to Ads
             DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(userAdsModel.getId());
             DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(userAdsModel.getId());
 
-            //Информацию о бронировании
-            ReservationInfo reservationInfo = new ReservationInfo(firebaseUser.getUid(), reservationDate, 2000, new Date().getTime(), isDelivery, deliveryAddress);
-            //Добавляем её к модели пользователя
+            //Добавляем reservationInfo к модели пользователя
             userAdsModel.setReservationInfo(reservationInfo);
             //добавляем информацию о статусе бронирование
             userAdsModel.setReserved(true);
 
+            //update Ads
             batch.set(adsRef, userAdsModel);
             batch.set(myReservationRef, userAdsModel);
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.squareup.picasso.Picasso;
@@ -36,6 +37,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
 
     protected TextInputEditText tiDate;
     protected TextInputEditText tiTime;
+    protected TextInputEditText tiDateEnd;
+    protected TextInputEditText tiTimeEnd;
     protected CardView btnReservation;
     protected ProgressBar progressBar;
     protected View rootView;
@@ -56,19 +59,35 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     private FullInfoContract.Presenter presenter;
     private UserAdsModel userAdsModel;
     Calendar dateAndTime = Calendar.getInstance();
+    Calendar dateAndTimeEnd = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener d;
     TimePickerDialog.OnTimeSetListener t;
+    DatePickerDialog.OnDateSetListener d2;
+    TimePickerDialog.OnTimeSetListener t2;
+    FullInfoActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_reservation_options, container, false);
-        ((FullInfoActivity) getActivity()).registerFgReservListener(this);
+        activity = ((FullInfoActivity) getActivity());
+        activity.registerFgReservListener(this);
         initView();
+        initToolbar();
         initDateTimePickers();
         editTextClickListener();
         presenter = ((FullInfoActivity) getActivity()).presenter;
         presenter.showDateInFragment();
+
+
+
         return view;
+    }
+
+    private void initToolbar() {
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle("Детали бронирования");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void initView() {
@@ -86,6 +105,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tiDate = (TextInputEditText) view.findViewById(R.id.tiDate);
         tiTime = (TextInputEditText) view.findViewById(R.id.tiTime);
+        tiDateEnd = (TextInputEditText) view.findViewById(R.id.tiDateEnd);
+        tiTimeEnd = (TextInputEditText) view.findViewById(R.id.tiTimeEnd);
         btnReservation = (CardView) view.findViewById(R.id.btnReservation);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         tvCoastPrice = (TextView) view.findViewById(R.id.tvCoastPrice);
@@ -112,7 +133,9 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                presenter.reservationAd(dateAndTime.getTimeInMillis(), radioButton2.isChecked(), "");
+
+                ReservationInfo info = new ReservationInfo(new Date(), new Date(dateAndTime.getTimeInMillis()), new Date(dateAndTimeEnd.getTimeInMillis()), radioButton2.isChecked(), "");
+                presenter.reservationAd(info);
                 //presenter.test();
             }
         });
@@ -134,6 +157,28 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(getActivity(), t,
+                        dateAndTime.get(Calendar.HOUR_OF_DAY),
+                        dateAndTime.get(Calendar.MINUTE),
+                        true)
+                        .show();
+            }
+        });
+
+        tiDateEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), d2,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        .show();
+            }
+        });
+
+        tiTimeEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getActivity(), t2,
                         dateAndTime.get(Calendar.HOUR_OF_DAY),
                         dateAndTime.get(Calendar.MINUTE),
                         true)
@@ -168,6 +213,34 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 String formattedTime = simpleDateFormat.format(date);
                 tiTime.setText(formattedTime);
+            }
+        };
+
+        // установка обработчика выбора даты
+        d2 = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                dateAndTimeEnd.set(Calendar.YEAR, i);
+                dateAndTimeEnd.set(Calendar.MONTH, i1);
+                dateAndTimeEnd.set(Calendar.DAY_OF_MONTH, i2);
+                Date date = new Date(dateAndTimeEnd.getTimeInMillis());
+                //mapPresenter.loadTrack(date);
+                //mapPresenter.getTrack("", dateAndTime.getTimeInMillis(), new Date().getTimestamp());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                String formattedDate = simpleDateFormat.format(date);
+                tiDateEnd.setText(formattedDate);
+            }
+        };
+
+        t2 = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                dateAndTimeEnd.set(Calendar.MONTH, hourOfDay);
+                dateAndTimeEnd.set(Calendar.DAY_OF_MONTH, minute);
+                Date date = new Date(dateAndTimeEnd.getTimeInMillis());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                String formattedTime = simpleDateFormat.format(date);
+                tiTimeEnd.setText(formattedTime);
             }
         };
     }

@@ -1,43 +1,49 @@
-package com.example.alexander.edadarom.fragments.Browse;
+package com.example.alexander.edadarom.fragments.Category;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
- * Created by lAntimat on 15.01.2018.
+ * Created by GabdrakhmanovII on 06.02.2018.
  */
 
-public class BrowsePresenter implements BrowseFragmentContract.Presenter {
+public class CategoryPresenter implements CategoryMvp.Presenter {
 
-    public static String TAG = "BrowsePresenter";
+    private static final String TAG = "CategoryPresenter";
+    private CategoryMvp.View view;
+    private ArrayList<Category> ar;
 
-     private BrowseFragmentContract.View view;
-     private ArrayList<UserAdsModel> arAds = new ArrayList<>();
-
-    public BrowsePresenter(BrowseFragmentContract.View view) {
+    @Override
+    public void attachView(CategoryMvp.View view) {
         this.view = view;
+        ar = new ArrayList<>();
     }
 
     @Override
-    public void getAds(int id) {
-        arAds.clear();
+    public void detachView() {
+        this.view = null;
+    }
+
+    @Override
+    public void getDate() {
+        ar.clear();
         view.showLoading();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("ads")
-                .whereEqualTo("categoryId", id)
-                .orderBy("publicTime", Query.Direction.DESCENDING)
+        db.collection(FirebaseConst.CATEGORIES)
+                .orderBy(FirebaseConst.CATEGORY_POSITION, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -53,15 +59,19 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
 
                             for (DocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
-                                userAdsModel.setId(document.getId());
-                                arAds.add(userAdsModel);
+                                Category category = document.toObject(Category.class);
+                                ar.add(category);
                             }
 
                             view.hideLoading();
-                            view.addDate(arAds);
-                        } else view.hideLoading();
+                            view.updateRecyclerView(ar);
+                        }
                     }
                 });
     }
+
+    @Override
+    public void recyclerItemClick(int position) {
+        view.openActivity(ar.get(position).getCategoryId(), ar.get(position).getName());
     }
+}

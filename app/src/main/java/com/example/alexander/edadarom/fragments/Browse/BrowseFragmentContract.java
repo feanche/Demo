@@ -16,6 +16,6 @@ public interface BrowseFragmentContract {
     }
 
     interface Presenter {
-        void getAds();
+        void getAds(int id);
     }
 }

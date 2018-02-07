@@ -109,7 +109,7 @@ public class ReservationsActivity extends AppCompatActivity {
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS)
-                    .orderBy("publicTime", Query.Direction.DESCENDING)
+                    //.orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

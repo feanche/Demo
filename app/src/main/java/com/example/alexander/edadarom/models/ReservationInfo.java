@@ -1,35 +1,33 @@
 package com.example.alexander.edadarom.models;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
 /**
  * Created by GabdrakhmanovII on 31.01.2018.
  */
 
 public class ReservationInfo {
     String reservedUser;
-    long reservationDate;
-    long reservationPeriod;
-    long timestamp;
+    @ServerTimestamp
+    public Date timestamp;
+    @ServerTimestamp
+    Date reservationDate;
+    @ServerTimestamp
+    Date reservationDateEnd;
     boolean delivery;
     String deliveryAddress;
 
     public ReservationInfo() {
     }
 
-    public ReservationInfo(String reservedUser, long reservationDate, long reservationPeriod, long timestamp, boolean delivery, String deliveryAddress) {
-        this.reservedUser = reservedUser;
-        this.reservationDate = reservationDate;
-        this.reservationPeriod = reservationPeriod;
+    public ReservationInfo(Date timestamp, Date reservationDate, Date reservationDateEnd, boolean delivery, String deliveryAddress) {
         this.timestamp = timestamp;
+        this.reservationDate = reservationDate;
+        this.reservationDateEnd = reservationDateEnd;
         this.delivery = delivery;
         this.deliveryAddress = deliveryAddress;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getReservedUser() {
@@ -40,12 +38,28 @@ public class ReservationInfo {
         this.reservedUser = reservedUser;
     }
 
-    public long getReservationDate() {
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Date getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(long reservationDate) {
+    public void setReservationDate(Date reservationDate) {
         this.reservationDate = reservationDate;
+    }
+
+    public Date getReservationDateEnd() {
+        return reservationDateEnd;
+    }
+
+    public void setReservationDateEnd(Date reservationDateEnd) {
+        this.reservationDateEnd = reservationDateEnd;
     }
 
     public boolean isDelivery() {
@@ -62,13 +76,5 @@ public class ReservationInfo {
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
-    }
-
-    public long getReservationPeriod() {
-        return reservationPeriod;
-    }
-
-    public void setReservationPeriod(long reservationPeriod) {
-        this.reservationPeriod = reservationPeriod;
     }
 }
