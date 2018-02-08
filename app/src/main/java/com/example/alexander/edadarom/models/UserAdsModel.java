@@ -18,6 +18,7 @@ public class UserAdsModel {
 
     float locationLat;
     float locationLon;
+    String commentToAddress;
     int price;
     int categoryId;
     boolean reserved;
@@ -34,7 +35,7 @@ public class UserAdsModel {
 
     }
 
-    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp) {
+    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp, String commentToAddress) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.price = price;
@@ -43,6 +44,7 @@ public class UserAdsModel {
         this.photoUrl = photoUrl;
         this.description = description;
         this.timestamp = timestamp;
+        this.commentToAddress = commentToAddress;
     }
 
     public Date getTimestamp() {
@@ -139,5 +141,13 @@ public class UserAdsModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCommentToAddress() {
+        return commentToAddress;
+    }
+
+    public void setCommentToAddress(String commentToAddress) {
+        this.commentToAddress = commentToAddress;
     }
 }

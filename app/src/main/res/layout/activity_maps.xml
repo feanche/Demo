@@ -40,7 +40,7 @@
 
             <EditText
                 android:id="@+id/TF_location"
-                android:layout_width="257dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"

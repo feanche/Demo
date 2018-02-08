@@ -20,6 +20,7 @@
     <string name="text_addresses">Мои адреса</string>
     <string name="text_new_address">Новый адрес</string>
     <string name="text_complete">готово</string>
+    <string name="text_category">Категория</string>
 
     <string name="hint_title">Название</string>
     <string name="hint_region">Регион</string>

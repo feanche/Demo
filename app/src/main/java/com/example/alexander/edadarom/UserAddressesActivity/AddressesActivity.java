@@ -11,10 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.MapsActivity;
+import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.models.Address;
 import com.example.alexander.edadarom.utils.FirebaseConst;
+import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +58,11 @@ public class AddressesActivity extends AppCompatActivity {
     public static final int GET_MAP = 1000;
     private String addressId;
 
+    public static final String EXTRA_LAT = "com.nutter.tools.EXTRA_LAT";
+    public static final String EXTRA_LON = "com.nutter.tools.EXTRA_LON";
+    public static final String EXTRA_COMMENT = "com.nutter.tools.COMMENT";
+    public static final String EXTRA_LOCALITY = "com.nutter.tools.LOCALITY";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +71,7 @@ public class AddressesActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.fab);
         topViewAddress = findViewById(R.id.topViewAddress);
         ivClose = findViewById(R.id.iv_close);
-        delete_button = findViewById(R.id.delete_button);
+        //delete_button = findViewById(R.id.delete_button);
         db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uId = firebaseUser.getUid();
@@ -75,7 +83,6 @@ public class AddressesActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showAddAddressFragment();
                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                 startActivityForResult(intent, GET_MAP);
             }
@@ -160,7 +167,29 @@ public class AddressesActivity extends AppCompatActivity {
                     }
                 });
 
-        
+        Intent intent = getIntent();
+
+        if(getIntent().getExtras()!=null){
+            String message = intent.getStringExtra(AddNewItemActivity.EXTRA_MESSAGE);
+            if(message.equals("shit")){
+
+
+                ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Intent replyIntent = new Intent();
+                        replyIntent.putExtra(EXTRA_LAT, arAddress.get(position).getLocationLat());
+                        replyIntent.putExtra(EXTRA_LON, arAddress.get(position).getLocationLon());
+                        replyIntent.putExtra(EXTRA_COMMENT, arAddress.get(position).getCommentToAddress());
+                        replyIntent.putExtra(EXTRA_LOCALITY, arAddress.get(position).getLocality());
+                        setResult(RESULT_OK, replyIntent);
+                        finish();
+                    }
+                });
+
+            }
+        }
+
     }
 
     @Override
@@ -193,7 +222,6 @@ public class AddressesActivity extends AppCompatActivity {
                 locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
                 locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
                 getData();
-
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
