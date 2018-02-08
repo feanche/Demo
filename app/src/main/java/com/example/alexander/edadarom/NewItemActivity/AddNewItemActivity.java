@@ -23,8 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -38,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -78,76 +75,51 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     StorageReference storageReference;
     String locality;
     float locationLat, locationLon;
+    String commentToAddress;
     boolean complete = true;
-
-    public static final int GET_LOCATION = 100;
     public static final int GALLERY = 200;
     public static final int CAMERA = 300;
-
     final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
     private Uri photoUri;
     private ConstraintLayout locationButton;
-
     Spinner spinner;
     ArrayList<Category> arCategories;
-    //TextView categoryName;
-
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
-
-
+    private int categoryId;
     Uri fileUri;
-
     ArrayList<String> arReportUrl = new ArrayList<>();
-
     ImagesRecyclerAdapter imagesRecyclerAdapter;
     CategoriesAdapter categoriesAdapter;
+
+    public static final int TEXT_REQUEST = 1;
+    public static final String EXTRA_MESSAGE = "com.example.android.twoactivities.extra.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //arCategories = categoriesList();
-
         arCategories = new ArrayList<>();
-
-
-
         setContentView(R.layout.activity_new_item_add);
-
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
-
-
         localityText = findViewById(R.id.textView6);
-
         title = findViewById(R.id.editText);
         description = findViewById(R.id.editText2);
         price = findViewById(R.id.editText3);
-
         publishButton = findViewById(R.id.button2);
         backButton = findViewById(R.id.iv_close);
-
         locationButton = findViewById(R.id.constraintLayout1);
-
         ivPhoto = findViewById(R.id.ivPhoto);
-
-
         spinner = findViewById(R.id.SpinnerCustom);
-        //categoryName = findViewById(R.id.myTextView);
         categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Category categories;
                 if(spinner.getSelectedItem()!=null){
-                    categories = (Category)spinner.getSelectedItem();
-
-                    //categoryName.setText(String.format(categories.getName()+" "+categories.getDescription()));
-                     //categoryName.setText(String.format(categories.getName()));
+                    categoryId = arCategories.get(position).getCategoryId();
                 }
             }
 
@@ -166,7 +138,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             public void onClick(View v) {
                 localityText.setTextColor(getResources().getColor(R.color.secondaryText));
                 Intent intent = new Intent(getApplicationContext(), AddressesActivity.class);
-                startActivityForResult(intent, GET_LOCATION);
+                intent.putExtra(EXTRA_MESSAGE, "shit");
+                startActivityForResult(intent, TEXT_REQUEST);
             }
         });
 
@@ -178,7 +151,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 yesOrNoDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //completenessCheck();
+                        completenessCheck();
                         if (!complete) {
                             Toast.makeText(getApplicationContext(), "Заполните красные поля!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -204,7 +177,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 finish();
             }
         });
-
         initRecyclerView();
         getData();
     }
@@ -222,23 +194,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Category category = document.toObject(Category.class);
-
-                                //Log.d(TAG," "+document.getId());
-
                                 arCategories.add(category);
                                 categoriesAdapter.notifyDataSetChanged();
                             }
                         }
                     }
                 });
-    }
-
-    public ArrayList<Category> categoriesList() {
-        ArrayList<Category> category = new ArrayList<Category>();
-        category.add(new Category("Desc_1"));
-        category.add(new Category("Desc_2"));
-        category.add(new Category("Desc_3"));
-        return category;
     }
 
     public void completenessCheck() {
@@ -286,12 +247,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 imagesRecyclerAdapter.add(fileUri);
                 upload(fileUri);
             }
-        }
-        if (requestCode == GET_LOCATION) {
+        } else if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                locality = data.getExtras().getString(MapsActivity.LOCALITY);
-                locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
-                locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
+                locationLat = data.getExtras().getFloat(AddressesActivity.EXTRA_LAT);
+                locationLon = data.getExtras().getFloat(AddressesActivity.EXTRA_LON);
+                commentToAddress = data.getExtras().getString(AddressesActivity.EXTRA_COMMENT);
+                locality = data.getExtras().getString(AddressesActivity.EXTRA_LOCALITY);
                 localityText.setText(locality);
             }
         }
@@ -372,11 +333,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 locationLat,
                 locationLon,
                 Integer.parseInt(price.getText().toString()),
-                1,
+                categoryId,
                 title.getText().toString(),
                 arReportUrl,
                 description.getText().toString(),
-                new Date());
+                new Date(),
+                commentToAddress);
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
@@ -413,7 +375,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     protected void onResume() {
         super.onResume();
     }
-
 
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
@@ -453,7 +414,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             }
         });
     }
-
 
     @Override
     public void ivAddClick() {

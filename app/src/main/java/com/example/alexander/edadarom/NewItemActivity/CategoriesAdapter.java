@@ -2,11 +2,13 @@ package com.example.alexander.edadarom.NewItemActivity;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.fragments.Category.Category;
@@ -18,10 +20,9 @@ import java.util.ArrayList;
  * Created by Alexander on 07.02.2018.
  */
 
-public class CategoriesAdapter extends ArrayAdapter<Category> {
+public class CategoriesAdapter extends ArrayAdapter<Category>{
     private Activity context;
-    public String categoryId;
-    ArrayList<Category> data = null;
+    ArrayList<Category> data;
 
     public CategoriesAdapter(Activity context, int resource, ArrayList<Category> data) {
         super(context, resource, data);
@@ -41,8 +42,9 @@ public class CategoriesAdapter extends ArrayAdapter<Category> {
 
         if (item != null) { // парсим данные с каждого объекта
             TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_layout);
+            Log.d("mylog2"," "+myCountry);
             if (myCountry != null)
-                myCountry.setText(item.getDescription());
+                myCountry.setText(item.getName());
         }
 
         return row;
@@ -65,5 +67,10 @@ public class CategoriesAdapter extends ArrayAdapter<Category> {
         }
 
         return row;
+    }
+
+    @Override
+    public Category getItem(int position) {
+        return data.get(position);
     }
 }
