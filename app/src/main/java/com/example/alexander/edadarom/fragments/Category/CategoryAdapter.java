@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.SquareImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -56,13 +57,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
         TextView tvTitle;
         TextView tvDesc;
         TextView tvDate;
-        ImageView imageView;
+        SquareImageView imageView;
         public UserViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDesc = itemView.findViewById(R.id.tvDesc);
             tvDate = itemView.findViewById(R.id.tvDate);
-            imageView = itemView.findViewById(R.id.ivToolbar);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }

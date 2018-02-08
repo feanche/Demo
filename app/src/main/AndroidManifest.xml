@@ -100,7 +100,8 @@
         <activity android:name=".Reservations.ReservationsActivity" />
         <activity android:name=".FullInfo.ReservationOptionsActivity" />
         <activity android:name=".MyAds.MyAdsActivity" />
-        <activity android:name=".fragments.Browse.BrowseActivity"></activity>
+        <activity android:name=".fragments.Browse.BrowseActivity" />
+        <activity android:name=".MyAds.MyAdsFullActivity"></activity>
     </application>
 
 </manifest>

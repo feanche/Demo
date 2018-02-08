@@ -59,11 +59,13 @@
                     android:id="@+id/items"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                    app:spanCount="3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/fragment_browse_recycler_item" />
+                    tools:listitem="@layout/fragment_category_recycler_item" />
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
     </LinearLayout>

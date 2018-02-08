@@ -160,7 +160,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                     return;
                 }
 
-                if(!radioButton.isChecked() | !radioButton2.isChecked()) {
+                if(!radioButton.isChecked() & !radioButton2.isChecked()) {
                     Toast.makeText(getContext(), "Выберите способ доставки!", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -239,8 +239,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         t = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateAndTime.set(Calendar.MONTH, hourOfDay);
-                dateAndTime.set(Calendar.DAY_OF_MONTH, minute);
+                dateAndTime.set(Calendar.HOUR, hourOfDay);
+                dateAndTime.set(Calendar.MINUTE, minute);
                 Date date = new Date(dateAndTime.getTimeInMillis());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 String formattedTime = simpleDateFormat.format(date);
@@ -267,8 +267,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         t2 = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                dateAndTimeEnd.set(Calendar.MONTH, hourOfDay);
-                dateAndTimeEnd.set(Calendar.DAY_OF_MONTH, minute);
+                dateAndTimeEnd.set(Calendar.HOUR, hourOfDay);
+                dateAndTimeEnd.set(Calendar.MINUTE, minute);
                 Date date = new Date(dateAndTimeEnd.getTimeInMillis());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 String formattedTime = simpleDateFormat.format(date);

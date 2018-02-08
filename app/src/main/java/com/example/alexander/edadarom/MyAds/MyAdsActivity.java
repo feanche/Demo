@@ -1,5 +1,6 @@
 package com.example.alexander.edadarom.MyAds;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -74,6 +75,15 @@ public class MyAdsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent intent = new Intent(MyAdsActivity.this, MyAdsFullActivity.class);
+                intent.putExtra("id", ar.get(position).getId());
+                startActivity(intent);
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
@@ -105,8 +115,8 @@ public class MyAdsActivity extends AppCompatActivity {
                                 }
 
                                 for (DocumentSnapshot document : task.getResult()) {
-                                    UserAdsModel notification = document.toObject(UserAdsModel.class);
-                                    ar.add(notification);
+                                    UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                    ar.add(userAdsModel);
                                 }
                                 adapter.notifyDataSetChanged();
                                 swipeRefreshLayout.setRefreshing(false);
