@@ -121,12 +121,4 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         transaction.replace(R.id.container, fragmentBrowse)
                 .commit();
     }
-
-    private void showFragment() {
-        FragmentBrowse fragmentBrowse = new FragmentBrowse();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.addToBackStack("browseFragment");
-        transaction.replace(R.id.container, fragmentBrowse)
-                .commit();
-    }
 }
