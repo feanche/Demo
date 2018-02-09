@@ -79,17 +79,17 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
                 textView.setText("Подтвержден");
                 textView.setTextColor(ContextCompat.getColor(context, R.color.green_700));
                 break;
-                case ReservationInfo.STATUS_WAIT_RETURN:
-                    textView.setText("В ожидании возврата");
-                    textView.setTextColor(ContextCompat.getColor(context, R.color.yellow_700));
-                    break;
-                    case ReservationInfo.STATUS_NOT_CONFIRMED:
-                        textView.setText("Не подтвержден");
-                        textView.setTextColor(ContextCompat.getColor(context, R.color.red_700));
-                        break;
-                        default:
-                            textView.setText("Статус неизвестен");
-                            break;
+            case ReservationInfo.STATUS_WAIT_RETURN:
+                textView.setText("В ожидании возврата");
+                textView.setTextColor(ContextCompat.getColor(context, R.color.yellow_700));
+                break;
+            case ReservationInfo.STATUS_NOT_CONFIRMED:
+                textView.setText("Не подтвержден");
+                textView.setTextColor(ContextCompat.getColor(context, R.color.red_700));
+                break;
+            default:
+                textView.setText("Статус неизвестен");
+                break;
         }
     }
 

@@ -405,7 +405,6 @@
             android:layout_gravity="bottom"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:onClick="reservationClick"
             android:orientation="horizontal"
             app:cardBackgroundColor="@color/colorPrimary"
             app:cardElevation="0dp"

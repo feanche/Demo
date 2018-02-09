@@ -13,17 +13,21 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -50,8 +54,8 @@ public class MyAdsFullActivity extends AppCompatActivity {
     private ConstraintLayout topView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-
     private String adId;
+    private UserAdsModel userAdsModel;
 
     //Toolbar back button click
     @Override
@@ -107,6 +111,8 @@ public class MyAdsFullActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Инфрормация о объявлении");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        btnReservationListener();
     }
 
     private void getDate() {
@@ -120,7 +126,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
-                                UserAdsModel userAdsModel = task.getResult().toObject(UserAdsModel.class);
+                                userAdsModel = task.getResult().toObject(UserAdsModel.class);
                                 getUserDate(firebaseUser, userAdsModel);
                             } else {
 
@@ -140,6 +146,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         swipeRefreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.INVISIBLE);
+                        topView.setVisibility(View.VISIBLE);
                         if (task.isSuccessful()) {
                             Users user = task.getResult().toObject(Users.class);
                             updateUI(user, userAdsModel);
@@ -150,6 +157,31 @@ public class MyAdsFullActivity extends AppCompatActivity {
                 });
     }
 
+    private void confirmAdReservation() {
+        MaterialDialog dialog = CreateDialog.createPleaseWaitDialog(this);
+        //Бронирование при помощи Batch
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(firebaseUser!=null) {
+            WriteBatch batch = db.batch();
+            // get reference to Ads
+            DocumentReference myAdsRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(userAdsModel.getId());
+
+            userAdsModel.getReservationInfo().setStatus(ReservationInfo.STATUS_CONFIRMED);
+            batch.set(myAdsRef, userAdsModel);
+
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+
+
     private void setStatus(TextView textView, ReservationInfo info) {
         switch (info.getStatus()) {
             case ReservationInfo.STATUS_FREE:
@@ -158,6 +190,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
             case ReservationInfo.STATUS_WAIT_CONFIRM:
                 textView.setText("В ожидании подтверждения");
                 textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_700));
+                tvReservation.setText("Подтвердить");
                 break;
             case ReservationInfo.STATUS_CONFIRMED:
                 textView.setText("Подтвержден");
@@ -177,15 +210,28 @@ public class MyAdsFullActivity extends AppCompatActivity {
         }
     }
 
+    private void btnReservationListener() {
+        btnReservation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    switch (userAdsModel.getReservationInfo().getStatus()) {
+                        case ReservationInfo.STATUS_FREE:
+
+                            break;
+                        case ReservationInfo.STATUS_WAIT_CONFIRM:
+                           confirmAdReservation();
+                            break;
+                    }
+            }
+        });
+    }
+
     private void setDelivery(ReservationInfo info) {
         if(info.isDelivery()) {
+            cardViewAddress.setVisibility(View.VISIBLE);
             tvAddressTitle.setText("Способ отправки: доставка");
             tvAddressSubtitle.setText(info.getDeliveryAddress());
-            topView.setVisibility(View.VISIBLE);
-        }
-        else {
-            topView.setVisibility(View.INVISIBLE);
-        }
+        } else cardViewAddress.setVisibility(View.INVISIBLE);
 
     }
 
@@ -206,8 +252,5 @@ public class MyAdsFullActivity extends AppCompatActivity {
         setDelivery(u.getReservationInfo());
         setStatus(tvStatus, u.getReservationInfo());
 
-        if(u.getReservationInfo().isDelivery()) {
-            cardViewAddress.setVisibility(View.VISIBLE);
-        } else cardViewAddress.setVisibility(View.INVISIBLE);
     }
 }
