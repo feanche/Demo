@@ -108,6 +108,7 @@
         android:foreground="?attr/selectableItemBackground"
         android:onClick="onClick"
         android:orientation="horizontal"
+        android:visibility="visible"
         app:cardBackgroundColor="@color/amber_600"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -136,11 +137,11 @@
         android:foreground="?attr/selectableItemBackground"
         android:onClick="onClick"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone">
+        app:layout_constraintStart_toStartOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -148,9 +149,10 @@
 
             <EditText
                 android:id="@+id/text_comment"
-                android:layout_width="262dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
@@ -158,6 +160,7 @@
                 android:inputType="textCapSentences"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/comment_complete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,8 +172,8 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:onClick="onClick"
                 android:gravity="center_vertical|center_horizontal"
+                android:onClick="onClick"
                 android:text="@string/text_complete"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

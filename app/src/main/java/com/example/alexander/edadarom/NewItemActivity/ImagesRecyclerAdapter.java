@@ -102,6 +102,11 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
+    public void remove(int position) {
+        mList.remove(position);
+        notifyDataSetChanged();
+    }
+
 
     public void setIsLoaded(int position, boolean b) {
         mList.get(position).setLoaded(b);

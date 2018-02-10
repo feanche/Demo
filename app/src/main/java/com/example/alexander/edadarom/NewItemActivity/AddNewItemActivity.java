@@ -113,6 +113,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         locationButton = findViewById(R.id.constraintLayout1);
         ivPhoto = findViewById(R.id.ivPhoto);
         spinner = findViewById(R.id.SpinnerCustom);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -376,6 +377,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         super.onResume();
     }
 
+    private void deletePhoto() {
+
+    }
+
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         String[] pictureDialogItems = {"Выбрать из галереи", "Сделать фото на камеру"};
@@ -401,7 +406,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     private void initRecyclerView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setHasFixedSize(true);
         arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
@@ -410,6 +414,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Log.d(TAG, "position: "+position);
 
             }
         });

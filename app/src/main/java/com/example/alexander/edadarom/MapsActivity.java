@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -182,8 +183,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userLatLng = latLng;
         userLat = latLng.latitude;
         userLng = latLng.longitude;
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(13)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
@@ -231,8 +235,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<Address> addressList = geocoder.getFromLocation(position.latitude, position.longitude, 1);
             if (addressList != null && addressList.size() > 0) {
                 locality = addressList.get(0).getAddressLine(0);
-                country = addressList.get(0).getCountryName();
-                if (!locality.isEmpty() && !country.isEmpty())
+                if (!locality.isEmpty())
                     find_location.setText(locality);
             }
         } catch (IOException e) {
@@ -258,7 +261,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerDragListener(this);
         mMap.setOnMarkerClickListener(this);
         onMapClick();
-
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -339,7 +341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
     }
 
-
     public void onMapClick() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -353,9 +354,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
                     marker = mMap.addMarker(markerOptions);
                 }
-                getGeocoder(latLng);
                 markerLocationLat = (float) latLng.latitude;
                 markerLocationLon = (float) latLng.longitude;
+                getGeocoder(latLng);
             }
         });
     }
