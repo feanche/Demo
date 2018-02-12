@@ -5,4 +5,11 @@
         <item>Открыть обьявление</item>
         <item>Позвонить арендадателю</item>
     </string-array>
+    <string-array name="dialog_addresses_activity">
+        <item>Удалить</item>
+    </string-array>
+    <string-array name="dialog_image_activity">
+        <item>Удалить</item>
+    </string-array>
+
 </resources>

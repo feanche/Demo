@@ -8,11 +8,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.models.Address;
@@ -46,10 +45,12 @@ public class AddressesActivity extends AppCompatActivity {
     String locality, comment;
     float locationLat, locationLon;
 
+    private MaterialDialog dialog;
+
     FirebaseFirestore db;
 
     ConstraintLayout topViewAddress;
-    ImageView ivClose, delete_button;
+    ImageView ivClose;
 
     private AddressesRecyclerAdapter adapter;
     private RecyclerView recyclerView;
@@ -66,12 +67,11 @@ public class AddressesActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_addresses);
+        setContentView(R.layout.activity_my_addresses);;
         topViewAddress = findViewById(R.id.topViewAddress);
         floatingActionButton = findViewById(R.id.fab);
         topViewAddress = findViewById(R.id.topViewAddress);
         ivClose = findViewById(R.id.iv_close);
-        //delete_button = findViewById(R.id.delete_button);
         db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uId = firebaseUser.getUid();
@@ -96,20 +96,6 @@ public class AddressesActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteAddress(int position) {
-        Address address = arAddress.get(position);
-        WriteBatch batch = db.batch();
-        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId);
-        batch.delete(myAddressRef);
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                arAddress.remove(position);
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
-
     private void getData() {
         Address address = new Address();
         address.setCommentToAddress(comment);
@@ -125,14 +111,13 @@ public class AddressesActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("mylogs", "Success");
                         initRecyclerView();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("mylogs", "Error");
+
                     }
                 });
     }
@@ -172,8 +157,6 @@ public class AddressesActivity extends AppCompatActivity {
         if(getIntent().getExtras()!=null){
             String message = intent.getStringExtra(AddNewItemActivity.EXTRA_MESSAGE);
             if(message.equals("shit")){
-
-
                 ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -189,6 +172,13 @@ public class AddressesActivity extends AppCompatActivity {
 
             }
         }
+
+        adapter.setClickListener(new AddressesRecyclerAdapter.DotsClickListener() {
+            @Override
+            public void onClick(int position) {
+                createListDialog(position);
+            }
+        });
 
     }
 
@@ -226,4 +216,45 @@ public class AddressesActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public MaterialDialog createListDialog(int position) {
+        return new MaterialDialog.Builder(this)
+                .items(R.array.dialog_addresses_activity)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                deleteAddress(position);
+
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
+    public MaterialDialog createDialog() {
+        return new MaterialDialog.Builder(this)
+                .content("Пожалуйста, подождите!")
+                .progress(true, 0)
+                .show();
+    }
+
+    public void deleteAddress(int position) {
+        dialog = createDialog();
+        dialog.show();
+        WriteBatch batch = db.batch();
+        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId);
+        batch.delete(myAddressRef);
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                arAddress.remove(position);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+    }
+
 }

@@ -24,6 +24,15 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
 
     BtnClickListener listener;
+    private DotsClickListener dotsClickListener;
+
+    interface DotsClickListener {
+        void onClick(int position);
+    }
+
+    public void setClickListener(DotsClickListener dotsClickListener) {
+        this.dotsClickListener = dotsClickListener;
+    }
 
     public interface BtnClickListener {
         void ivAddClick();
@@ -101,12 +110,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         mList.add(mList.size() - 1, new UploadImage(uri, false));
         notifyDataSetChanged();
     }
-
-    public void remove(int position) {
-        mList.remove(position);
-        notifyDataSetChanged();
-    }
-
 
     public void setIsLoaded(int position, boolean b) {
         mList.get(position).setLoaded(b);

@@ -101,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     searchObject();
-                    Log.d(TAG,"onEditorAction");
                     return true;
                 }
                 return false;
@@ -203,9 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMarkerDragStart(Marker marker) {
         LatLng position = marker.getPosition();
         marker.setSnippet(position.toString());
-        Log.d(TAG, String.format("Drag from %f:%f",
-                position.latitude,
-                position.longitude));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_shadow_on));
     }
 
@@ -213,17 +209,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMarkerDrag(Marker marker) {
         LatLng position = marker.getPosition();
         marker.setSnippet(position.toString());
-        Log.d(TAG, String.format("Dragging to %f:%f", position.latitude,
-                position.longitude));
     }
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
         LatLng position=marker.getPosition();
         marker.setSnippet(position.toString());
-        Log.d(TAG, String.format("Dragged to %f:%f",
-                position.latitude,
-                position.longitude));
         getGeocoder(position);
 
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
@@ -274,11 +265,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void searchObject() {
         String location = find_location.getText().toString();
-        Log.d(TAG,"searchObject enter");
         List<Address> addressList = null;
         MarkerOptions markerOptions = new MarkerOptions();
         if (!location.equals("")) {
-            Log.d(TAG,"searchObject location is not empty");
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location, 5);
@@ -286,7 +275,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
             if(addressList != null) {
-                Log.d(TAG,"searchObject addressList is not empty");
                 for (int i = 0; i < addressList.size(); i++) {
                     Address myAddress = addressList.get(i);
                     LatLng latLng = new LatLng(myAddress.getLatitude(), myAddress.getLongitude());

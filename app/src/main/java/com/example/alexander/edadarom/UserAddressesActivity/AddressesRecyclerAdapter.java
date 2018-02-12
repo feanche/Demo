@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
@@ -20,6 +21,11 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
 
     Context context;
     private ArrayList<Address> arrayList;
+    private DotsClickListener dotsClickListener;
+
+    interface DotsClickListener {
+        void onClick(int position);
+    }
 
     public AddressesRecyclerAdapter(Context context, ArrayList<Address> arrayList) {
         this.context = context;
@@ -31,11 +37,21 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
         return new UserAddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_addresses_item,parent,false));
     }
 
+    public void setClickListener(DotsClickListener dotsClickListener) {
+        this.dotsClickListener = dotsClickListener;
+    }
+
     @Override
     public void onBindViewHolder(UserAddressViewHolder holder, int position) {
         Address address = arrayList.get(position);
         holder.tvTitle.setText(address.getCommentToAddress());
         holder.tvAddress.setText(address.getLocality());
+        holder.ivDots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dotsClickListener.onClick(position);
+            }
+        });
     }
 
     @Override
@@ -45,11 +61,13 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
 
     class UserAddressViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvAddress;
+        ImageView ivDots;
 
         public UserAddressViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAddress = itemView.findViewById(R.id.tvAddress);
+            ivDots = itemView.findViewById(R.id.ivDots);
         }
     }
 }

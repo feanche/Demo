@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -51,6 +52,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -81,7 +83,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     public static final int CAMERA = 300;
     final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
-    private Uri photoUri;
+    private Uri localPhotoUri;
     private ConstraintLayout locationButton;
     Spinner spinner;
     ArrayList<Category> arCategories;
@@ -89,12 +91,13 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
     private int categoryId;
     Uri fileUri;
+    Uri downloadUrl;
     ArrayList<String> arReportUrl = new ArrayList<>();
     ImagesRecyclerAdapter imagesRecyclerAdapter;
     CategoriesAdapter categoriesAdapter;
 
-    public static final int TEXT_REQUEST = 1;
-    public static final String EXTRA_MESSAGE = "com.example.android.twoactivities.extra.MESSAGE";
+    public static final int TEXT_REQUEST = 400;
+    public static final String EXTRA_MESSAGE = "com.example.alexander.edadarom.EXTRA_MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +267,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Log.d(TAG,"onBitmapLoaded");
                 uploadImage(bitmap);
             }
 
@@ -279,6 +283,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         };
 
         Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).centerInside().into(target);
+        Log.d(TAG,"uploadEnd");
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -308,7 +313,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                downloadUrl = taskSnapshot.getDownloadUrl();
                 arReportUrl.add(downloadUrl.toString());
             }
         });
@@ -324,8 +329,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File path = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
-        photoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".com.example.alexander.edadarom.provider", path);
-        return photoUri;
+        localPhotoUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".com.example.alexander.edadarom.provider", path);
+        return localPhotoUri;
     }
 
     public void sendDataToFirestore() {
@@ -367,18 +372,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    private void deletePhoto() {
-
     }
 
     private void showPictureDialog() {
@@ -414,10 +409,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Log.d(TAG, "position: "+position);
-
+                createListDialog(position);
             }
         });
+
     }
 
     @Override
@@ -428,5 +423,37 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     @Override
     public void ivDelClick() {
 
+    }
+
+    public void deleteAddress(int position) {
+        StorageReference photoRef = storage.getReferenceFromUrl(downloadUrl.toString());//исправить
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Image removing error",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public MaterialDialog createListDialog(int position) {
+        return new MaterialDialog.Builder(this)
+                .items(R.array.dialog_image_activity)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                deleteAddress(position);
+
+                                break;
+                        }
+                    }
+                })
+                .show();
     }
 }

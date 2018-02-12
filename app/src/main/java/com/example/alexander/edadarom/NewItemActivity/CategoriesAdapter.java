@@ -42,7 +42,6 @@ public class CategoriesAdapter extends ArrayAdapter<Category>{
 
         if (item != null) { // парсим данные с каждого объекта
             TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_layout);
-            Log.d("mylog2"," "+myCountry);
             if (myCountry != null)
                 myCountry.setText(item.getName());
         }

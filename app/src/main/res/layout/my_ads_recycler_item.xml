@@ -4,11 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
     android:layout_gravity="center"
-    android:layout_margin="8dp"
-    android:clickable="false"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp">
+    android:clickable="true"
+    android:focusable="true"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/relativeLayout"
