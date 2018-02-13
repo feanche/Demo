@@ -94,6 +94,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     ArrayList<String> arReportUrl = new ArrayList<>();
     ImagesRecyclerAdapter imagesRecyclerAdapter;
     CategoriesAdapter categoriesAdapter;
+    private MaterialDialog dialog;
 
     public static final int TEXT_REQUEST = 400;
     public static final String EXTRA_MESSAGE = "com.example.alexander.edadarom.EXTRA_MESSAGE";
@@ -229,6 +230,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void takePicture() {
+        dialog = createDialog();
+        dialog.show();
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFile();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -249,6 +252,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             if (resultCode == RESULT_OK) {
                 imagesRecyclerAdapter.add(fileUri);
                 upload(fileUri);
+            } else {
+                dialog.hide();
             }
         } else if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -266,7 +271,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Log.d(TAG,"onBitmapLoaded");
                 uploadImage(bitmap);
             }
 
@@ -282,7 +286,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         };
 
         Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).centerInside().into(target);
-        Log.d(TAG,"uploadEnd");
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -300,7 +303,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Toast.makeText(getApplicationContext(),"Ошибка загрузки изображения",Toast.LENGTH_SHORT).show();
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -314,6 +317,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
                 downloadUrl = taskSnapshot.getDownloadUrl();
                 arReportUrl.add(downloadUrl.toString());
+                Toast.makeText(getApplicationContext(),"Изображение добавлено",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -345,18 +349,20 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 new Date(),
                 commentToAddress);
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
+        dialog = createDialog();
+        dialog.show();
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Document snapshot written by ID: " + documentReference.getId());
+                        Toast.makeText(getApplicationContext(),"Объявление успешно добавлено",Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error adding document ", e);
+                        Toast.makeText(getApplicationContext(),"Ошибка загрузки данных",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -405,13 +411,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
         imagesRecyclerAdapter = new ImagesRecyclerAdapter(getApplicationContext(), arUploadImages, this);
         recyclerView.setAdapter(imagesRecyclerAdapter);
-        /*ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                createListDialog(position);
-            }
-        });*/
-
     }
 
     @Override
@@ -435,7 +434,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"Image removing error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Ошибка удаления изображения",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -449,11 +448,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                         switch (which) {
                             case 0:
                                 deleteCurrentPhoto(position);
-
                                 break;
                         }
                     }
                 })
+                .show();
+    }
+
+    public MaterialDialog createDialog() {
+        return new MaterialDialog.Builder(this)
+                .content("Пожалуйста, подождите")
+                .progress(true, 0)
                 .show();
     }
 }

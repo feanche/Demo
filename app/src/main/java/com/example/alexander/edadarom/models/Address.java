@@ -9,16 +9,18 @@ public class Address {
     float locationLon;
     String commentToAddress;
     String locality;
+    boolean defaultMark;
 
     public Address() {
 
     }
 
-    public Address(float locationLat, float locationLon, String commentToAddress, String locality) {
+    public Address(float locationLat, float locationLon, String commentToAddress, String locality, boolean defaultMark) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.commentToAddress = commentToAddress;
         this.locality = locality;
+        this.defaultMark = defaultMark;
     }
 
     public float getLocationLat() {
@@ -51,5 +53,13 @@ public class Address {
 
     public void setLocality(String locality) {
         this.locality = locality;
+    }
+
+    public boolean isDefaultMark() {
+        return defaultMark;
+    }
+
+    public void setDefaultMark(boolean defaultMark) {
+        this.defaultMark = defaultMark;
     }
 }
