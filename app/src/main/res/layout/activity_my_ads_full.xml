@@ -93,58 +93,6 @@
                         android:focusable="true">
 
 
-                        <android.support.constraint.ConstraintLayout
-                            android:id="@+id/constraintLayout2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="320dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider">
-
-                            <ImageView
-                                android:id="@+id/ivOpen"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-                                android:tint="@color/secondaryText"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tvProfileTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="@+id/ivProfile"
-                                app:layout_constraintStart_toEndOf="@+id/ivProfile"
-                                app:layout_constraintTop_toTopOf="@+id/ivProfile" />
-
-                            <ImageView
-                                android:id="@+id/ivProfile"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/bg_personal" />
-                        </android.support.constraint.ConstraintLayout>
-
                         <View
                             android:id="@+id/divider"
                             android:layout_width="0dp"
@@ -279,6 +227,57 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/constraintLayout2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="320dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/ivOpen"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+                                android:tint="@color/secondaryText"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvProfileTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:text="TextView"
+                                app:layout_constraintBottom_toBottomOf="@+id/ivProfile"
+                                app:layout_constraintStart_toEndOf="@+id/ivProfile"
+                                app:layout_constraintTop_toTopOf="@+id/ivProfile" />
+
+                            <ImageView
+                                android:id="@+id/ivProfile"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/bg_personal" />
+                        </android.support.constraint.ConstraintLayout>
+
                         <TextView
                             android:id="@+id/tvStatusTitle"
                             android:layout_width="wrap_content"
@@ -288,7 +287,7 @@
                             android:text="Статус:"
                             android:textSize="12sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
                         <TextView
                             android:id="@+id/tvStatus"
@@ -322,7 +321,6 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="4dp"
-                            android:text="TextView"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/divider4" />

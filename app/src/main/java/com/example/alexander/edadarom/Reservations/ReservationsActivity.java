@@ -163,11 +163,11 @@ public class ReservationsActivity extends AppCompatActivity {
 
 
             //Добавляем её к модели пользователя
-            ads.setReservationInfo(null);
+            //ads.setReservationInfo(null);
             //добавляем информацию о статусе бронирование
-            ads.setReserved(false);
+            //ads.setReserved(false);
 
-            batch.set(adsRef, ads);
+//            batch.set(adsRef, ads);
             batch.delete(myReservationRef);
 
             // Commit the batch

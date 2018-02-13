@@ -102,10 +102,13 @@
 
         <activity android:name=".Notifications.NotificationsActivity" />
         <activity android:name=".Reservations.ReservationsActivity" />
-        <activity android:name=".FullInfo.ReservationOptionsActivity" />
         <activity android:name=".MyAds.MyAdsActivity" />
-        <activity android:name=".fragments.Browse.BrowseActivity" />
-        <activity android:name=".MyAds.MyAdsFullActivity"></activity>
+        <activity android:name=".MyAds.MyAdsFullActivity">
+            <intent-filter>
+                <action android:name="com.example.alexander.edadarom.MyAds.MyAdsFullActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

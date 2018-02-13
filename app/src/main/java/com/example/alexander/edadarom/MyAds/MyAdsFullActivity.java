@@ -75,7 +75,6 @@ public class MyAdsFullActivity extends AppCompatActivity {
 
     private void initView() {
         tvBrn = (TextView) findViewById(R.id.tvBrn);
-        btnReservation = (CardView) findViewById(R.id.btnReservation);
         ivOpen = (ImageView) findViewById(R.id.ivOpen);
         tvProfileTitle = (TextView) findViewById(R.id.tvProfileTitle);
         ivProfile = (ImageView) findViewById(R.id.ivProfile);
@@ -91,6 +90,11 @@ public class MyAdsFullActivity extends AppCompatActivity {
         tvAddressTitle = (TextView) findViewById(R.id.tvAddressTitle);
         tvAddressSubtitle = (TextView) findViewById(R.id.tvAddressSubtitle);
         cardViewAddress = (CardView) findViewById(R.id.card_view3);
+
+        //Кнопка подтвердить
+        btnReservation = (CardView) findViewById(R.id.btnReservation);
+        btnReservation.setVisibility(View.INVISIBLE);
+
         topView = findViewById(R.id.topView);
         topView.setVisibility(View.INVISIBLE);
 
@@ -116,6 +120,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
     }
 
     private void getDate() {
+        swipeRefreshLayout.setRefreshing(true);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -175,6 +180,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     dialog.dismiss();
+                    getDate();
                 }
             });
         }
@@ -183,31 +189,37 @@ public class MyAdsFullActivity extends AppCompatActivity {
 
 
     private void setStatus(TextView textView, ReservationInfo info) {
-        switch (info.getStatus()) {
-            case ReservationInfo.STATUS_FREE:
+        btnReservation.setVisibility(View.INVISIBLE);
+        if(info!=null) {
+            switch (info.getStatus()) {
+                case ReservationInfo.STATUS_FREE:
 
-                break;
-            case ReservationInfo.STATUS_WAIT_CONFIRM:
-                textView.setText("В ожидании подтверждения");
-                textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_700));
-                tvReservation.setText("Подтвердить");
-                break;
-            case ReservationInfo.STATUS_CONFIRMED:
-                textView.setText("Подтвержден");
-                textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_700));
-                break;
-            case ReservationInfo.STATUS_WAIT_RETURN:
-                textView.setText("В ожидании возврата");
-                textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_700));
-                break;
-            case ReservationInfo.STATUS_NOT_CONFIRMED:
-                textView.setText("Не подтвержден");
-                textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red_700));
-                break;
-            default:
-                textView.setText("Статус неизвестен");
-                break;
-        }
+                    break;
+                case ReservationInfo.STATUS_WAIT_CONFIRM:
+                    textView.setText("В ожидании подтверждения");
+                    textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_700));
+
+                    btnReservation.setVisibility(View.VISIBLE);
+                    tvBrn.setText("Подтвердить");
+                    break;
+                case ReservationInfo.STATUS_CONFIRMED:
+                    textView.setText("Подтвержден");
+                    textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green_700));
+                    break;
+                case ReservationInfo.STATUS_WAIT_RETURN:
+                    textView.setText("В ожидании возврата");
+                    textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow_700));
+                    break;
+                case ReservationInfo.STATUS_NOT_CONFIRMED:
+                    textView.setText("Не подтвержден");
+                    textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red_700));
+                    break;
+                default:
+                    textView.setText("Статус неизвестен");
+                    break;
+            }
+        } else textView.setText("Не забронирован!");
+
     }
 
     private void btnReservationListener() {
@@ -227,30 +239,36 @@ public class MyAdsFullActivity extends AppCompatActivity {
     }
 
     private void setDelivery(ReservationInfo info) {
-        if(info.isDelivery()) {
-            cardViewAddress.setVisibility(View.VISIBLE);
-            tvAddressTitle.setText("Способ отправки: доставка");
-            tvAddressSubtitle.setText(info.getDeliveryAddress());
-        } else cardViewAddress.setVisibility(View.INVISIBLE);
+        if(info!=null) {
+            if (info.isDelivery()) {
+                cardViewAddress.setVisibility(View.VISIBLE);
+                tvAddressTitle.setText("Способ отправки: доставка");
+                tvAddressSubtitle.setText(info.getDeliveryAddress());
+            } else cardViewAddress.setVisibility(View.INVISIBLE);
+        } cardViewAddress.setVisibility(View.INVISIBLE);
 
     }
 
     private void updateUI(Users user, UserAdsModel u) {
         tvTitle.setText(u.getTitle());
-
-        SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru", "RU"));
-        String date = sf.format(u.getReservationInfo().getReservationDate());
-        String dateEnd = sf.format(u.getReservationInfo().getReservationDateEnd());
-        tvReservation.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
-
         tvProfileTitle.setText(user.getFirstName());
-
-
-        Picasso.with(this).load(u.getPhotoUrl().get(0)).into(ivAd);
         Picasso.with(this).load(user.getPhoto()).into(ivProfile);
 
         setDelivery(u.getReservationInfo());
         setStatus(tvStatus, u.getReservationInfo());
+
+
+        if(userAdsModel.getReservationInfo()!=null) {
+            SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru", "RU"));
+            String date = sf.format(u.getReservationInfo().getReservationDate());
+            String dateEnd = sf.format(u.getReservationInfo().getReservationDateEnd());
+            tvReservation.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
+            Picasso.with(this).load(u.getPhotoUrl().get(0)).into(ivAd);
+        }
+
+
+
+
 
     }
 }

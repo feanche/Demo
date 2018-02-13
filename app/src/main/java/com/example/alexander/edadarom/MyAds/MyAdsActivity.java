@@ -10,12 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.Reservations.ReservationAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,19 +26,23 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
 public class MyAdsActivity extends AppCompatActivity {
 
+    public static final String TAG = "MyAdsActivity";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
     private MyAdsAdapter adapter;
     private RecyclerView recyclerView;
+    private MaterialDialog dialog;
 
     //Toolbar back button click
     @Override
@@ -84,6 +91,13 @@ public class MyAdsActivity extends AppCompatActivity {
             }
         });
 
+        adapter.setDotsClickListener(new MyAdsAdapter.DotsClickListener() {
+            @Override
+            public void onClick(int position) {
+                createListDialog(position);
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
@@ -116,6 +130,7 @@ public class MyAdsActivity extends AppCompatActivity {
 
                                 for (DocumentSnapshot document : task.getResult()) {
                                     UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                    userAdsModel.setId(document.getId());
                                     ar.add(userAdsModel);
                                 }
                                 adapter.notifyDataSetChanged();
@@ -134,5 +149,55 @@ public class MyAdsActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    public void deleteAds(int position) {
+        dialog = CreateDialog.createPleaseWaitDialog(MyAdsActivity.this);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserAdsModel ads = ar.get(position);
+
+        if (firebaseUser != null) {
+            // Get a new write batch
+            WriteBatch batch = db.batch();
+
+            // Update the Ads
+            DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(ads.getId());
+            DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(ads.getId());
+
+            //batch.delete(adsRef);
+            batch.delete(myReservationRef);
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    ar.remove(position);
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "batch success");
+                    dialog.dismiss();
+                }
+            });
+        }
+
+    }
+
+    public MaterialDialog createListDialog(int position) {
+        return new MaterialDialog.Builder(this)
+                .items(R.array.dialog_my_ads_activity)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                deleteAds(position);
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
 
 }

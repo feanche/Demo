@@ -23,7 +23,7 @@
 
 
         <ImageView
-            android:id="@+id/ivDots2"
+            android:id="@+id/ivDots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -83,7 +83,7 @@
             android:paddingRight="10dp"
             android:text="Название"
             android:textSize="18sp"
-            card_view:layout_constraintEnd_toStartOf="@+id/ivDots2"
+            card_view:layout_constraintEnd_toStartOf="@+id/ivDots"
             card_view:layout_constraintStart_toEndOf="@+id/imageView"
             card_view:layout_constraintTop_toTopOf="parent" />
 

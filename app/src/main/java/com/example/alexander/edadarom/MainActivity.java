@@ -121,9 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager childFragmentManager = fragmentCategory.getChildFragmentManager();
-        //Если сейчас viewPager в позиции 0, то проверяем количество дочерних фрагментов у нулевого фрагмента и нажимаем назад
-        if(viewPager.getCurrentItem() == 0 & childFragmentManager.getBackStackEntryCount() > 0) childFragmentManager.popBackStackImmediate();
-        else super.onBackPressed();
+        if (fragmentCategory.isAdded()) {
+            FragmentManager childFragmentManager = fragmentCategory.getChildFragmentManager();
+            //Если сейчас viewPager в позиции 0, то проверяем количество дочерних фрагментов у нулевого фрагмента и нажимаем назад
+            if (viewPager.getCurrentItem() == 0 & childFragmentManager.getBackStackEntryCount() > 0)
+                childFragmentManager.popBackStackImmediate();
+            else super.onBackPressed();
+        } else super.onBackPressed();
     }
 }
