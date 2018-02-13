@@ -52,7 +52,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -406,12 +405,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         arUploadImages.add(new UploadImage(Uri.parse("uri"), false));
         imagesRecyclerAdapter = new ImagesRecyclerAdapter(getApplicationContext(), arUploadImages, this);
         recyclerView.setAdapter(imagesRecyclerAdapter);
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        /*ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 createListDialog(position);
             }
-        });
+        });*/
 
     }
 
@@ -421,16 +420,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     @Override
-    public void ivDelClick() {
-
+    public void ivDelClick(int position) {
+        createListDialog(position);
     }
 
-    public void deleteAddress(int position) {
-        StorageReference photoRef = storage.getReferenceFromUrl(downloadUrl.toString());//исправить
+    public void deleteCurrentPhoto(int position) {
+        StorageReference photoRef = storage.getReferenceFromUrl(arReportUrl.get(position).toString());
         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
+                arUploadImages.remove(position);
+                imagesRecyclerAdapter.notifyDataSetChanged();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -448,7 +448,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         switch (which) {
                             case 0:
-                                deleteAddress(position);
+                                deleteCurrentPhoto(position);
 
                                 break;
                         }

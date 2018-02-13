@@ -37,7 +37,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public interface BtnClickListener {
         void ivAddClick();
 
-        void ivDelClick();
+        void ivDelClick(int position);
     }
 
 
@@ -91,7 +91,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((SecondViewHolder) holder).ivDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.ivDelClick();
+                    listener.ivDelClick(position);
                 }
             });
         }
