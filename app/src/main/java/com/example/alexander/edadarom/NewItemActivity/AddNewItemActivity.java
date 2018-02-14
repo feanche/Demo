@@ -177,7 +177,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                exitAddActivityConfirmation();
             }
         });
         initRecyclerView();
@@ -438,6 +438,13 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
     }
 
+    private void deletAllPhoto() {
+        for(int i=0; i<arReportUrl.size(); i++) {
+            StorageReference photoRef = storage.getReferenceFromUrl(arReportUrl.get(i).toString());
+            photoRef.delete();
+        }
+    }
+
     public MaterialDialog createListDialog(int position) {
         return new MaterialDialog.Builder(this)
                 .items(R.array.dialog_image_activity)
@@ -459,5 +466,31 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 .content("Пожалуйста, подождите")
                 .progress(true, 0)
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitAddActivityConfirmation();
+    }
+
+    private void exitAddActivityConfirmation() {
+        AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
+        yesOrNoDialog.setTitle("Действительно хотите выйти?");
+        yesOrNoDialog.setMessage("После выхода вся информация будет утеряна");
+        yesOrNoDialog
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletAllPhoto();
+                        finish();
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        yesOrNoDialog.show();
     }
 }
