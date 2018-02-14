@@ -41,7 +41,6 @@ import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
-import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -290,7 +289,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public void uploadImage(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream);
         final byte[] data = byteArrayOutputStream.toByteArray();
         if (data.length > 0) {
             uploadImageToStorage(data);

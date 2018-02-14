@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.MapsActivity;
@@ -60,7 +61,6 @@ public class AddressesActivity extends AppCompatActivity {
     ArrayList<Address> arAddress = new ArrayList<>();
 
     public static final int GET_MAP = 1000;
-    private String addressId;
 
     public static final String EXTRA_LAT = "com.nutter.tools.EXTRA_LAT";
     public static final String EXTRA_LON = "com.nutter.tools.EXTRA_LON";
@@ -149,7 +149,7 @@ public class AddressesActivity extends AppCompatActivity {
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Address address = document.toObject(Address.class);
-                                addressId = document.getId();
+                                address.setId(document.getId());
                                 arAddress.add(address);
                             }
                             adapter.notifyDataSetChanged();
@@ -250,13 +250,49 @@ public class AddressesActivity extends AppCompatActivity {
     }
 
     private void markAsDefaultAddress(int position) {
+        dialog = createDialog();
+        dialog.show();
+        Address address = arAddress.get(position);
+        String addressId = address.getId();
+        DocumentReference userRef = db.collection(FirebaseConst.USERS).document(uId);
+        userRef.update("defaultAddress",addressId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
 
+                Toast.makeText(getApplicationContext(),"Адрес <"+address.getCommentToAddress()+"> выбран по-умолчанию",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Ошибка изменения адреса по-умолчанию",Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
     }
 
     private void deleteAddress(int position) {
-        arAddress.get(position);
-        Log.d("myLogs"," "+arAddress.get(position));
-
+        dialog = createDialog();
+        dialog.show();
+        Address address = arAddress.get(position);
+        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(address.getId());
+        myAddressRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        arAddress.remove(position);
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),"Ошибка удаления адреса",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
     }
 
 }
