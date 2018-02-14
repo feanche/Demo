@@ -15,6 +15,13 @@ public class Address {
 
     }
 
+    public Address(float locationLat, float locationLon, String commentToAddress, String locality) {
+        this.locationLat = locationLat;
+        this.locationLon = locationLon;
+        this.commentToAddress = commentToAddress;
+        this.locality = locality;
+    }
+
     public Address(float locationLat, float locationLon, String commentToAddress, String locality, String id) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
