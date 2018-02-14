@@ -243,7 +243,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
             if (info.isDelivery()) {
                 cardViewAddress.setVisibility(View.VISIBLE);
                 tvAddressTitle.setText("Способ отправки: доставка");
-                tvAddressSubtitle.setText(info.getDeliveryAddress());
+                tvAddressSubtitle.setText(info.getAddress().getLocality());
             } else cardViewAddress.setVisibility(View.INVISIBLE);
         } cardViewAddress.setVisibility(View.INVISIBLE);
 

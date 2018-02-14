@@ -75,5 +75,6 @@
     <string name="my_reservations">Мои бронирования</string>
 
     <string name="button_pin">Добавить адрес</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>

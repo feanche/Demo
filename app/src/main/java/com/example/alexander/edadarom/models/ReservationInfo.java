@@ -25,17 +25,17 @@ public class ReservationInfo {
     @ServerTimestamp
     Date reservationDateEnd;
     boolean delivery;
-    String deliveryAddress;
+    Address address;
 
     public ReservationInfo() {
     }
 
-    public ReservationInfo(Date timestamp, Date reservationDate, Date reservationDateEnd, boolean delivery, String deliveryAddress) {
+    public ReservationInfo(Date timestamp, Date reservationDate, Date reservationDateEnd, boolean delivery, Address address) {
         this.timestamp = timestamp;
         this.reservationDate = reservationDate;
         this.reservationDateEnd = reservationDateEnd;
         this.delivery = delivery;
-        this.deliveryAddress = deliveryAddress;
+        this.address = address;
     }
 
     public int getStatus() {
@@ -86,11 +86,11 @@ public class ReservationInfo {
         this.delivery = delivery;
     }
 
-    public String getDeliveryAddress() {
-        return deliveryAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

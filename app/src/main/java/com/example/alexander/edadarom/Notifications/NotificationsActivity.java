@@ -108,7 +108,7 @@ public class NotificationsActivity extends AppCompatActivity {
                     }
                 });
                 arNotificatons.remove(viewHolder.getAdapterPosition());
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
         };
 

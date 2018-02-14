@@ -85,7 +85,7 @@
         <activity android:name=".Authorization.ProfileCreateActivity" />
         <activity android:name=".UserAddressesActivity.AddressesActivity">
             <intent-filter>
-                <action android:name="com.nutter.tools.getaddress"/>
+                <action android:name="com.nutter.tools.getaddress" />
             </intent-filter>
         </activity>
 
@@ -106,9 +106,14 @@
         <activity android:name=".MyAds.MyAdsFullActivity">
             <intent-filter>
                 <action android:name="com.example.alexander.edadarom.MyAds.MyAdsFullActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Search.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

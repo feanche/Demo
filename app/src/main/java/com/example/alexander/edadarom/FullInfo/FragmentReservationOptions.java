@@ -2,6 +2,7 @@ package com.example.alexander.edadarom.FullInfo;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -21,10 +22,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
+import com.example.alexander.edadarom.models.Address;
 import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.CreateDialog;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -32,11 +38,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Alexander on 10.01.2018.
  */
 
 public class FragmentReservationOptions extends Fragment implements FullInfoActivity.ReservationOptionFragmentListener {
+
+    public static final int TEXT_REQUEST = 400;
 
     protected TextInputEditText tiDate;
     protected TextInputEditText tiTime;
@@ -60,7 +70,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     protected TextInputLayout edTimeEnd;
     protected RadioButton radioButton;
     protected RadioButton radioButton2;
-    protected TextView tvTitle;
+    protected TextView tvTitle, tvAddressSubTitle;
     private FullInfoContract.Presenter presenter;
     private UserAdsModel userAdsModel;
     Calendar dateAndTime = Calendar.getInstance();
@@ -70,6 +80,9 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     DatePickerDialog.OnDateSetListener d2;
     TimePickerDialog.OnTimeSetListener t2;
     FullInfoActivity activity;
+    private Address address =  new Address();
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,6 +130,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
         btnReservation = (CardView) view.findViewById(R.id.btnReservation);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         tvCoastPrice = (TextView) view.findViewById(R.id.tvCoastPrice);
+        tvAddressSubTitle = view.findViewById(R.id.tvAddressSubtitle);
 
         btnReservationClick();
 
@@ -131,6 +145,15 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 radioButton.setChecked(!isChecked);
+            }
+        });
+
+        cardView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AddressesActivity.class);
+                intent.putExtra(AddNewItemActivity.EXTRA_MESSAGE, "shit");
+                startActivityForResult(intent, TEXT_REQUEST);
             }
         });
     }
@@ -165,8 +188,13 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                     return;
                 }
 
+                if(radioButton2.isChecked()) {
+                    Toast.makeText(getContext(), "Введите адрес", Toast.LENGTH_LONG).show();
+                    if(address.getLocality()==null) return;
+                }
+
                 progressBar.setVisibility(View.VISIBLE);
-                ReservationInfo info = new ReservationInfo(new Date(), new Date(dateAndTime.getTimeInMillis()), new Date(dateAndTimeEnd.getTimeInMillis()), radioButton2.isChecked(), "");
+                ReservationInfo info = new ReservationInfo(new Date(), new Date(dateAndTime.getTimeInMillis()), new Date(dateAndTimeEnd.getTimeInMillis()), radioButton2.isChecked(), address);
                 info.setStatus(ReservationInfo.STATUS_WAIT_CONFIRM);
                 presenter.reservationAd(info);
                 //presenter.test();
@@ -276,6 +304,22 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
                 tiTimeEnd.setText(formattedTime);
             }
         };
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TEXT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+               float locationLat = data.getExtras().getFloat(AddressesActivity.EXTRA_LAT);
+                float locationLon = data.getExtras().getFloat(AddressesActivity.EXTRA_LON);
+                String locality = data.getExtras().getString(AddressesActivity.EXTRA_LOCALITY);
+                String commentToAddress = data.getExtras().getString(AddressesActivity.EXTRA_COMMENT);
+
+                tvAddressSubTitle.setText(locality);
+                address = new Address(locationLat, locationLon, commentToAddress, locality);
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

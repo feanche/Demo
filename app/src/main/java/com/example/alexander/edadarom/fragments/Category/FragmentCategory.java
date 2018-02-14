@@ -12,13 +12,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.Search.SearchActivity;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -40,15 +44,21 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
     private ArrayList<Category> ar = new ArrayList<>();
     private CategoryAdapter adapter;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category, container, false);
+
+        setHasOptionsMenu(true);
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        //((MainActivity) getActivity()).getSupportActionBar().
 
         initRecyclerView();
         presenter = new CategoryPresenter();
@@ -92,6 +102,22 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
     public void onDestroy() {
         presenter.detachView();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            startActivity(new Intent(getContext(), SearchActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
