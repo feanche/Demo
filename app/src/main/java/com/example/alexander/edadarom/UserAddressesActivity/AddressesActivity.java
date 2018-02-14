@@ -8,8 +8,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.MapsActivity;
@@ -32,6 +34,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Alexander on 29.01.2018.
@@ -57,7 +61,6 @@ public class AddressesActivity extends AppCompatActivity {
     ArrayList<Address> arAddress = new ArrayList<>();
 
     public static final int GET_MAP = 1000;
-    private String addressId;
 
     public static final String EXTRA_LAT = "com.nutter.tools.EXTRA_LAT";
     public static final String EXTRA_LON = "com.nutter.tools.EXTRA_LON";
@@ -67,7 +70,7 @@ public class AddressesActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_addresses);;
+        setContentView(R.layout.activity_my_addresses);
         topViewAddress = findViewById(R.id.topViewAddress);
         floatingActionButton = findViewById(R.id.fab);
         topViewAddress = findViewById(R.id.topViewAddress);
@@ -133,6 +136,8 @@ public class AddressesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        dialog = createDialog();
+        dialog.show();
         db.collection("users").document(uId).collection("address")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -144,13 +149,14 @@ public class AddressesActivity extends AppCompatActivity {
                             }
                             for (DocumentSnapshot document : task.getResult()) {
                                 Address address = document.toObject(Address.class);
-                                addressId = document.getId();
+                                address.setId(document.getId());
                                 arAddress.add(address);
                             }
                             adapter.notifyDataSetChanged();
                         }
                     }
                 });
+        dialog.hide();
 
         Intent intent = getIntent();
 
@@ -226,7 +232,9 @@ public class AddressesActivity extends AppCompatActivity {
                         switch (which) {
                             case 0:
                                 deleteAddress(position);
-
+                                break;
+                            case 1:
+                                markAsDefaultAddress(position);
                                 break;
                         }
                     }
@@ -236,25 +244,55 @@ public class AddressesActivity extends AppCompatActivity {
 
     public MaterialDialog createDialog() {
         return new MaterialDialog.Builder(this)
-                .content("Пожалуйста, подождите!")
+                .content("Пожалуйста, подождите")
                 .progress(true, 0)
                 .show();
     }
 
-    public void deleteAddress(int position) {
+    private void markAsDefaultAddress(int position) {
         dialog = createDialog();
         dialog.show();
-        WriteBatch batch = db.batch();
-        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId);
-        batch.delete(myAddressRef);
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+        Address address = arAddress.get(position);
+        String addressId = address.getId();
+        DocumentReference userRef = db.collection(FirebaseConst.USERS).document(uId);
+        userRef.update("defaultAddress",addressId).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                arAddress.remove(position);
-                adapter.notifyDataSetChanged();
+            public void onSuccess(Void aVoid) {
+
+                Toast.makeText(getApplicationContext(),"Адрес <"+address.getCommentToAddress()+"> выбран по-умолчанию",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Ошибка изменения адреса по-умолчанию",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
+    }
+
+    private void deleteAddress(int position) {
+        dialog = createDialog();
+        dialog.show();
+        Address address = arAddress.get(position);
+        DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(address.getId());
+        myAddressRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        arAddress.remove(position);
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),"Ошибка удаления адреса",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
     }
 
 }

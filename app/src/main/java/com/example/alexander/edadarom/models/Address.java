@@ -9,16 +9,18 @@ public class Address {
     float locationLon;
     String commentToAddress;
     String locality;
+    String id;
 
     public Address() {
 
     }
 
-    public Address(float locationLat, float locationLon, String commentToAddress, String locality) {
+    public Address(float locationLat, float locationLon, String commentToAddress, String locality, String id) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.commentToAddress = commentToAddress;
         this.locality = locality;
+        this.id = id;
     }
 
     public float getLocationLat() {
@@ -51,5 +53,13 @@ public class Address {
 
     public void setLocality(String locality) {
         this.locality = locality;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
