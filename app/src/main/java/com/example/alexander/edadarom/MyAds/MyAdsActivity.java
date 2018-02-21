@@ -180,7 +180,6 @@ public class MyAdsActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     public MaterialDialog createListDialog(int position) {

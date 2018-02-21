@@ -14,8 +14,14 @@
         <item>Удалить</item>
         <item>Адрес по-умолчанию</item>
     </string-array>
+
     <string-array name="dialog_image_activity">
         <item>Удалить</item>
+    </string-array>
+
+    <string-array name="spinner_price">
+        <item>₽/час</item>
+        <item>₽/день</item>
     </string-array>
 
 </resources>

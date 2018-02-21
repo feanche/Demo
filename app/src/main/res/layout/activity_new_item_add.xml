@@ -156,7 +156,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/card_view2"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/card_view1"
@@ -170,99 +170,101 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/tvToolbarSubtitle"
-                        android:layout_width="wrap_content"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout6"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/text_title"
-                        android:textColor="@color/primaryText"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/editText"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:backgroundTint="@color/secondaryText"
-                        android:hint="@string/hint_title_sample"
+                        android:layout_marginTop="8dp"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="30"
+                        app:counterOverflowTextAppearance="@style/counterOverride"
+                        app:counterTextAppearance="@style/counterText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapSentences"
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:scrollHorizontally="true"
+                            android:ems="10"
+                            android:hint="@string/text_title" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:inputType="textCapSentences"
-                        android:singleLine="true"
-                        android:textColor="@color/secondaryText"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvToolbarSubtitle" />
-
-                    <EditText
-                        android:id="@+id/editText3"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:backgroundTint="@color/secondaryText"
-                        android:hint="@string/hint_price"
-                        android:inputType="number"
-                        android:singleLine="true"
-                        android:textColor="@color/secondaryText"
-                        android:textSize="16sp"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="50"
+                        app:counterOverflowTextAppearance="@style/counterOverride"
+                        app:counterTextAppearance="@style/counterText"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/editText" />
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout6">
 
-                    <TextView
-                        android:id="@+id/textView3"
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:ems="10"
+                            android:hint="@string/text_description" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Spinner
+                        android:id="@+id/spinnerCustomPrice"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/text_description"
-                        android:textColor="@color/primaryText"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/editText3" />
-
-                    <EditText
-                        android:id="@+id/editText2"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
+                        android:layout_height="23dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:backgroundTint="@color/secondaryText"
-                        android:hint="@string/hint_description_sample"
-                        android:textColor="@color/secondaryText"
-                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"
+                        android:entries="@array/spinner_price"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                        app:layout_constraintStart_toEndOf="@+id/textInputLayout7"
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
 
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/text_category"
-                        android:textColor="@color/primaryText"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout7"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/spinnerCustomPrice"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/textInputEditText7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_price"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLines="1" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <Spinner
                         android:id="@+id/SpinnerCustom"
                         android:layout_width="0dp"
                         android:layout_height="23dp"
-                        android:layout_marginEnd="8dp"
 
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="24dp"
                         android:spinnerMode="dialog"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
 
                 </android.support.constraint.ConstraintLayout>
 

@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.MapsActivity;
 import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.models.Address;
+import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -109,7 +110,7 @@ public class AddressesActivity extends AppCompatActivity {
     }
 
     public void sendToFirestore(Address address) {
-        db.collection("users").document(uId).collection("address")
+        db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS)
                 .add(address)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -136,9 +137,8 @@ public class AddressesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        dialog = createDialog();
-        dialog.show();
-        db.collection("users").document(uId).collection("address")
+        dialog = CreateDialog.createPleaseWaitDialog(AddressesActivity.this);
+        db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -156,7 +156,7 @@ public class AddressesActivity extends AppCompatActivity {
                         }
                     }
                 });
-        dialog.hide();
+        dialog.dismiss();
 
         Intent intent = getIntent();
 
@@ -242,16 +242,8 @@ public class AddressesActivity extends AppCompatActivity {
                 .show();
     }
 
-    public MaterialDialog createDialog() {
-        return new MaterialDialog.Builder(this)
-                .content("Пожалуйста, подождите")
-                .progress(true, 0)
-                .show();
-    }
-
     private void markAsDefaultAddress(int position) {
-        dialog = createDialog();
-        dialog.show();
+        dialog = CreateDialog.createPleaseWaitDialog(AddressesActivity.this);
         Address address = arAddress.get(position);
         String addressId = address.getId();
         DocumentReference userRef = db.collection(FirebaseConst.USERS).document(uId);
@@ -269,11 +261,27 @@ public class AddressesActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+
+        /*db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(address.getCommentToAddress()=="salam"){
+
+                                };
+                                //arAddress.add(address);
+
+                            adapter.notifyDataSetChanged();
+
+                    }
+                });*/
+
     }
 
     private void deleteAddress(int position) {
-        dialog = createDialog();
-        dialog.show();
+        dialog = CreateDialog.createPleaseWaitDialog(AddressesActivity.this);
         Address address = arAddress.get(position);
         DocumentReference myAddressRef = db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(address.getId());
         myAddressRef

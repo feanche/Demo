@@ -10,6 +10,7 @@ public class Address {
     String commentToAddress;
     String locality;
     String id;
+    Boolean defaultAddress;
 
     public Address() {
 
@@ -68,5 +69,13 @@ public class Address {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(Boolean defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 }

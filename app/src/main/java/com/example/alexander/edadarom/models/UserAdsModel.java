@@ -4,15 +4,9 @@ package com.example.alexander.edadarom.models;
  * Created by Alexander on 11.01.2018.
  */
 
-import android.graphics.Bitmap;
-
 import com.google.firebase.firestore.ServerTimestamp;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserAdsModel {
 
@@ -30,12 +24,13 @@ public class UserAdsModel {
     String description;
     @ServerTimestamp
     public Date timestamp;
+    String priceType;
 
     public UserAdsModel() {
 
     }
 
-    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp, String commentToAddress) {
+    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp, String commentToAddress, String priceType) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.price = price;
@@ -45,6 +40,7 @@ public class UserAdsModel {
         this.description = description;
         this.timestamp = timestamp;
         this.commentToAddress = commentToAddress;
+        this.priceType = priceType;
     }
 
     public Date getTimestamp() {
@@ -149,5 +145,13 @@ public class UserAdsModel {
 
     public void setCommentToAddress(String commentToAddress) {
         this.commentToAddress = commentToAddress;
+    }
+
+    public String getPriceType() {
+        return priceType;
+    }
+
+    public void setPriceType(String priceType) {
+        this.priceType = priceType;
     }
 }

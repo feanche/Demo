@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -20,7 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -40,6 +43,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -66,7 +70,8 @@ import com.example.alexander.edadarom.R;
 
 public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyclerAdapter.BtnClickListener {
 
-    private EditText title, description, price;
+    UploadTask uploadTask;
+    private TextInputLayout description, title, price;
     private CardView publishButton;
     private ImageView backButton, ivPhoto;
     Target target;
@@ -76,6 +81,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     String locality;
     float locationLat, locationLon;
     String commentToAddress;
+    String priceType;
     boolean complete = true;
     public static final int GALLERY = 200;
     public static final int CAMERA = 300;
@@ -83,7 +89,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private TextView localityText;
     private Uri localPhotoUri;
     private ConstraintLayout locationButton;
-    Spinner spinner;
+    Spinner spinner, priceTypeSpinner;
     ArrayList<Category> arCategories;
     RecyclerView recyclerView;
     ArrayList<UploadImage> arUploadImages = new ArrayList<>();
@@ -107,14 +113,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         localityText = findViewById(R.id.textView6);
-        title = findViewById(R.id.editText);
-        description = findViewById(R.id.editText2);
-        price = findViewById(R.id.editText3);
+        title = findViewById(R.id.textInputLayout6);
+        description = findViewById(R.id.textInputLayout5);
+        price = findViewById(R.id.textInputLayout7);
         publishButton = findViewById(R.id.button2);
         backButton = findViewById(R.id.iv_close);
         locationButton = findViewById(R.id.constraintLayout1);
         ivPhoto = findViewById(R.id.ivPhoto);
         spinner = findViewById(R.id.SpinnerCustom);
+        priceTypeSpinner = findViewById(R.id.spinnerCustomPrice);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
@@ -124,6 +131,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 if(spinner.getSelectedItem()!=null){
                     categoryId = arCategories.get(position).getCategoryId();
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        priceTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                priceType = priceTypeSpinner.getSelectedItem().toString();
             }
 
             @Override
@@ -156,8 +174,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     public void onClick(DialogInterface dialog, int which) {
                         completenessCheck();
                         if (!complete) {
-                            Toast.makeText(getApplicationContext(), "Заполните красные поля!", Toast.LENGTH_SHORT).show();
-                        } else {
+                            Toast.makeText(getApplicationContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+                        } else if (complete && arReportUrl.isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "Добавьте хотя бы одно изображение", Toast.LENGTH_SHORT).show();
+                        } else if (complete && !arReportUrl.isEmpty()){
                             sendDataToFirestore();
                             finish();
                         }
@@ -180,6 +200,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 exitAddActivityConfirmation();
             }
         });
+
         initRecyclerView();
         getData();
     }
@@ -206,22 +227,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void completenessCheck() {
-        String mTitle = title.getText().toString();
-        String mDescription = description.getText().toString();
-        String mPrice = price.getText().toString();
-        if (mTitle.matches("")) {
-            title.setHintTextColor(getResources().getColor(R.color.red));
-        }
-        if (mDescription.matches("")) {
-            description.setHintTextColor(getResources().getColor(R.color.red));
-        }
-        if (mPrice.matches("")) {
-            price.setHintTextColor(getResources().getColor(R.color.red));
-        }
-        if (locationLat == 0 && locationLon == 0) {
-            localityText.setTextColor(getResources().getColor(R.color.red));
-        }
-        if (mTitle.matches("") | mDescription.matches("") | mPrice.matches("") | locationLat == 0 | locationLon == 0) {
+        String mTitle = title.getEditText().toString();
+        String mDescription = description.getEditText().toString();
+        String mPrice = price.getEditText().toString();
+        if (mTitle.matches("") |
+                mDescription.matches("") |
+                mPrice.matches("") |
+                locationLat == 0 |
+                locationLon == 0) {
             complete = false;
         } else {
             complete = true;
@@ -229,8 +242,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void takePicture() {
-        dialog = createDialog();
-        dialog.show();
+        dialog = CreateDialog.createPleaseWaitDialog(AddNewItemActivity.this);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFile();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -252,8 +264,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 imagesRecyclerAdapter.add(fileUri);
                 upload(fileUri);
             } else {
-                dialog.hide();
             }
+            dialog.dismiss();
         } else if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 locationLat = data.getExtras().getFloat(AddressesActivity.EXTRA_LAT);
@@ -298,7 +310,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public void uploadImageToStorage(byte[] data) {
         StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-        UploadTask uploadTask = ref.putBytes(data);
+        uploadTask = ref.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -340,16 +352,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         UserAdsModel userAdsModel = new UserAdsModel(
                 locationLat,
                 locationLon,
-                Integer.parseInt(price.getText().toString()),
+                Integer.parseInt(price.getEditText().getText().toString()),
                 categoryId,
-                title.getText().toString(),
+                title.getEditText().getText().toString(),
                 arReportUrl,
-                description.getText().toString(),
+                description.getEditText().getText().toString(),
                 new Date(),
-                commentToAddress);
+                commentToAddress,
+                priceType);
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
-        dialog = createDialog();
-        dialog.show();
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -428,6 +439,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             @Override
             public void onSuccess(Void aVoid) {
                 arUploadImages.remove(position);
+                arReportUrl.remove(position);
                 imagesRecyclerAdapter.notifyDataSetChanged();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -438,11 +450,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
     }
 
-    private void deletAllPhoto() {
+    private void deleteAllPhoto() {
         for(int i=0; i<arReportUrl.size(); i++) {
             StorageReference photoRef = storage.getReferenceFromUrl(arReportUrl.get(i).toString());
             photoRef.delete();
         }
+        finish();
     }
 
     public MaterialDialog createListDialog(int position) {
@@ -461,13 +474,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 .show();
     }
 
-    public MaterialDialog createDialog() {
-        return new MaterialDialog.Builder(this)
-                .content("Пожалуйста, подождите")
-                .progress(true, 0)
-                .show();
-    }
-
     @Override
     public void onBackPressed() {
         exitAddActivityConfirmation();
@@ -481,8 +487,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deletAllPhoto();
-                        finish();
+                        deleteAllPhoto();
                     }
                 })
                 .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
