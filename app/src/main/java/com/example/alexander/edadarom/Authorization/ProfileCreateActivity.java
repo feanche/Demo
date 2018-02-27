@@ -144,7 +144,7 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             Users user = new Users(firebaseUser.getUid(), edName.getText().toString(), edEmail.getText().toString(), edPhone.getText().toString());
                             if(firebaseUser.getPhotoUrl()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
                             //user.setPustNotificationToken(FirebaseInstanceId.getInstance().getToken());
-                            FirebaseMethods.updateToken();
+                            //FirebaseMethods.updateToken();
                             db.collection("users").document(firebaseUser.getUid())
                                     .set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

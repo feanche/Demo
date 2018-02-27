@@ -71,5 +71,7 @@
 
     <string name="button_pin">Добавить адрес</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="notifications_admin_channel_name">admin channel</string>
+    <string name="notifications_admin_channel_description">admin_channel_desc</string>
 
 </resources>
