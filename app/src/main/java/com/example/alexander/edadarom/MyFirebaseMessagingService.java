@@ -35,15 +35,7 @@ import com.google.firebase.messaging.RemoteMessage;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-    private String ADMIN_CHANNEL_ID = getString(R.string.default_notification_channel_id);
-
-    @Override
-    public void onCreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            setupChannels();
-        }
-        super.onCreate();
-    }
+    private String ADMIN_CHANNEL_ID = "99";
 
     /**
      * Called when body is received.
@@ -65,6 +57,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setupChannels();
+        }
+
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         sendNotificationWithAction(remoteMessage);
         // Check if body contains a data payload.
