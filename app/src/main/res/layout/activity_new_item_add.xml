@@ -332,7 +332,11 @@
                         android:textColor="@color/secondaryText"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
-                        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView5"
+                        android:maxLines="2"
+                        android:lines="2"
+                        android:scrollHorizontally="true"
+                        android:ellipsize="end" />
 
                     <ImageView
                         android:id="@+id/imageView3"

@@ -126,23 +126,13 @@ public class AddressesActivity extends AppCompatActivity {
                 });
     }
 
-
-    public void initRecyclerView() {
-        arAddress = new ArrayList<>();
-        adapter = new AddressesRecyclerAdapter(getApplicationContext(), arAddress);
-        recyclerView = findViewById(R.id.items);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(adapter);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        dialog = CreateDialog.createPleaseWaitDialog(AddressesActivity.this);
+    public void getDataFromDatabase() {
         db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        arAddress.clear();
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0) {
                                 return;
@@ -156,10 +146,21 @@ public class AddressesActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void initRecyclerView() {
+        arAddress = new ArrayList<>();
+        adapter = new AddressesRecyclerAdapter(getApplicationContext(), arAddress);
+        recyclerView = findViewById(R.id.items);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(adapter);
+        dialog = CreateDialog.createPleaseWaitDialog(AddressesActivity.this);
+        getDataFromDatabase();
         dialog.dismiss();
-
         Intent intent = getIntent();
-
         if(getIntent().getExtras()!=null){
             String message = intent.getStringExtra(AddNewItemActivity.EXTRA_MESSAGE);
             if(message.equals("shit")){
@@ -250,7 +251,6 @@ public class AddressesActivity extends AppCompatActivity {
         userRef.update("defaultAddress",addressId).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
                 Toast.makeText(getApplicationContext(),"Адрес <"+address.getCommentToAddress()+"> выбран по-умолчанию",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
@@ -262,22 +262,18 @@ public class AddressesActivity extends AppCompatActivity {
             }
         });
 
-
-        /*db.collection(FirebaseConst.USERS).document(uId).collection(FirebaseConst.ADDRESS).document(addressId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(address.getCommentToAddress()=="salam"){
-
-                                };
-                                //arAddress.add(address);
-
-                            adapter.notifyDataSetChanged();
-
-                    }
-                });*/
-
+        for (int i = 0; i < arAddress.size(); i++) {
+            Address addressSearch = arAddress.get(i);
+            String addressSearchId = addressSearch.getId();
+            if (addressSearch.getDefaultAddress()) {
+                addressSearch.setDefaultAddress(false);
+                userRef.collection(FirebaseConst.ADDRESS).document(addressSearchId).update("defaultAddress",false);
+            }
+            addressSearch.setDefaultAddress(true);
+            address.setDefaultAddress(true);
+            userRef.collection(FirebaseConst.ADDRESS).document(addressId).update("defaultAddress",true);
+        }
+        getDataFromDatabase();
     }
 
     private void deleteAddress(int position) {

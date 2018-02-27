@@ -46,6 +46,11 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
         Address address = arrayList.get(position);
         holder.tvTitle.setText(address.getCommentToAddress());
         holder.tvAddress.setText(address.getLocality());
+        if(address.getDefaultAddress()){
+            holder.checkDefault.setVisibility(View.VISIBLE);
+        } else {
+            holder.checkDefault.setVisibility(View.GONE);
+        }
         holder.ivDots.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,13 +66,14 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
 
     class UserAddressViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvAddress;
-        ImageView ivDots;
+        ImageView ivDots, checkDefault;
 
         public UserAddressViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAddress = itemView.findViewById(R.id.tvAddress);
             ivDots = itemView.findViewById(R.id.ivDots);
+            checkDefault = itemView.findViewById(R.id.imageView5);
         }
     }
 }
