@@ -54,7 +54,6 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:3.1.0'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
-    compile 'com.algolia:algoliasearch-android:3.+'
     implementation files('libs/picasso-2.5.3-20160130.024215-21.jar')
 }
 

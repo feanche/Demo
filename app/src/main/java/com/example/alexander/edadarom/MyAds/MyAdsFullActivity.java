@@ -112,7 +112,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Инфрормация о объявлении");
+        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_ads_full_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

@@ -5,8 +5,8 @@ package com.example.alexander.edadarom.models;
  */
 
 public class Address {
-    float locationLat;
-    float locationLon;
+    double locationLat;
+    double locationLon;
     String commentToAddress;
     String locality;
     String id;
@@ -16,7 +16,7 @@ public class Address {
 
     }
 
-    public Address(float locationLat, float locationLon, String commentToAddress, String locality) {
+    public Address(double locationLat, double locationLon, String commentToAddress, String locality) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.commentToAddress = commentToAddress;
@@ -31,19 +31,19 @@ public class Address {
         this.id = id;
     }
 
-    public float getLocationLat() {
+    public double getLocationLat() {
         return locationLat;
     }
 
-    public void setLocationLat(float locationLat) {
+    public void setLocationLat(double locationLat) {
         this.locationLat = locationLat;
     }
 
-    public float getLocationLon() {
+    public double getLocationLon() {
         return locationLon;
     }
 
-    public void setLocationLon(float locationLon) {
+    public void setLocationLon(double locationLon) {
         this.locationLon = locationLon;
     }
 

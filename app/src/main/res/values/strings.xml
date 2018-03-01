@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">NutterTools</string>
 
+    <string name="activity_my_ads_name">Мои объявления</string>
+    <string name="activity_my_reservations_name">Мои бронирования</string>
+    <string name="activity_my_addresses_name">Мои адреса</string>
+    <string name="activity_notifications_name">Уведомления</string>
+    <string name="activity_my_ads_full_name">Информация об объявлении</string>
+    <string name="activity_my_ad_name">Создать объявление</string>
+
     <string name="menu_browse">Обзор</string>
     <string name="menu_add">Рядом со мной</string>
     <string name="menu_messages">Сообщения</string>

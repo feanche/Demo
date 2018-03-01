@@ -60,7 +60,7 @@ public class NotificationsActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Уведомления");
+        getSupportActionBar().setTitle(getResources().getString(R.string.activity_notifications_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         initRecyclerView();

@@ -10,9 +10,8 @@
     android:clickable="true"
     android:focusable="true"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="4dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    card_view:cardElevation="1.5dp"
+    android:layout_marginBottom="8dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/relativeLayout"

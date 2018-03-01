@@ -62,7 +62,7 @@ public class ReservationsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Мои бронирования");
+        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_reservations_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

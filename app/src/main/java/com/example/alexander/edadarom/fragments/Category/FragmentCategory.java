@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.Search.SearchActivity;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -112,10 +111,6 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
-            startActivity(new Intent(getContext(), SearchActivity.class));
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

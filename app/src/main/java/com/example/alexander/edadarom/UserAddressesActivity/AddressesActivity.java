@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,11 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.alexander.edadarom.R;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Alexander on 29.01.2018.
@@ -48,7 +46,7 @@ public class AddressesActivity extends AppCompatActivity {
 
     String uId;
     String locality, comment;
-    float locationLat, locationLon;
+    double locationLat, locationLon;
 
     private MaterialDialog dialog;
 
@@ -69,13 +67,24 @@ public class AddressesActivity extends AppCompatActivity {
     public static final String EXTRA_LOCALITY = "com.nutter.tools.LOCALITY";
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_addresses);
-        topViewAddress = findViewById(R.id.topViewAddress);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_addresses_name));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         floatingActionButton = findViewById(R.id.fab);
-        topViewAddress = findViewById(R.id.topViewAddress);
-        ivClose = findViewById(R.id.iv_close);
         db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uId = firebaseUser.getUid();
@@ -91,13 +100,6 @@ public class AddressesActivity extends AppCompatActivity {
                 startActivityForResult(intent, GET_MAP);
             }
         });
-
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void getData() {
@@ -106,6 +108,7 @@ public class AddressesActivity extends AppCompatActivity {
         address.setLocationLat(locationLat);
         address.setLocationLon(locationLon);
         address.setLocality(locality);
+        address.setDefaultAddress(false);
         sendToFirestore(address);
     }
 
@@ -216,8 +219,8 @@ public class AddressesActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 comment = data.getExtras().getString(MapsActivity.COMMENT);
                 locality = data.getExtras().getString(MapsActivity.LOCALITY);
-                locationLat = data.getExtras().getFloat(MapsActivity.LOCATION_LAT);
-                locationLon = data.getExtras().getFloat(MapsActivity.LOCATION_LON);
+                locationLat = data.getExtras().getDouble(MapsActivity.LOCATION_LAT);
+                locationLon = data.getExtras().getDouble(MapsActivity.LOCATION_LON);
                 getData();
             }
         }

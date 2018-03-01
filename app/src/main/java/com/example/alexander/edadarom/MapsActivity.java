@@ -54,26 +54,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
+    private Marker marker;
+
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    double latitude, longitude;
     LatLng userLatLng;
+    String locality, comment;
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     public static String LOCALITY = "locality";
     public static String LOCATION_LAT = "location_lat";
     public static String LOCATION_LON = "location_lon";
     public static String COMMENT = "cv_comment";
-    public String locality, country, comment;
+
+    final static String TAG = "myLogs_MapsActivity";
 
     EditText find_location, text_comment;
     CardView btn_pinMarker, cv_comment;
     TextView comment_complete;
 
-    final static String TAG = "myLogs_MapsActivity";
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public float markerLocationLat, markerLocationLon;
-    private Marker marker;
-    private double userLat, userLng;
+    double markerLocationLat, markerLocationLon;
+    double userLat, userLng;
+    double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -297,8 +301,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             break;
             case R.id.comment_complete:
-                if(text_comment.getText().toString() == null){
-                    comment="";
+                if (text_comment.getText().toString().isEmpty()) {
+                    comment = "Последнее местоположение";
                 } else {
                     comment = text_comment.getText().toString();
                 }
@@ -384,6 +388,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<Address> addressList = geocoder.getFromLocation(userLat, userLng, 1);
             if (addressList != null && addressList.size() > 0) {
                 locality = addressList.get(0).getAddressLine(0);
+                double new1 = userLat;
             }
         } catch (IOException e) {
             e.printStackTrace();

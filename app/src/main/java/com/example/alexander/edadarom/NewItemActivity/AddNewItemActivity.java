@@ -12,7 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,11 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -105,10 +103,26 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     public static final String EXTRA_MESSAGE = "com.example.alexander.edadarom.EXTRA_MESSAGE";
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         arCategories = new ArrayList<>();
         setContentView(R.layout.activity_new_item_add);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_ad_name));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -117,7 +131,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         description = findViewById(R.id.textInputLayout5);
         price = findViewById(R.id.textInputLayout7);
         publishButton = findViewById(R.id.button2);
-        backButton = findViewById(R.id.iv_close);
         locationButton = findViewById(R.id.constraintLayout1);
         ivPhoto = findViewById(R.id.ivPhoto);
         spinner = findViewById(R.id.SpinnerCustom);
@@ -193,14 +206,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                 yesOrNoDialog.show();
             }
         });
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exitAddActivityConfirmation();
-            }
-        });
-
         initRecyclerView();
         getData();
     }
@@ -295,7 +300,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
             }
         };
-
         Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).centerInside().into(target);
     }
 
