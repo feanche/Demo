@@ -13,11 +13,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.alexander.edadarom.MyFirebaseInstanceIDService;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.FirebaseMethods;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.firebase.ui.auth.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -97,13 +99,22 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             edName.setText(user.getFirstName() == null ? (firebaseUser.getDisplayName()) : user.getFirstName());
                             edPhone.setText(user.getPhoneNumber() == null ? firebaseUser.getPhoneNumber() : user.getPhoneNumber());
                             edEmail.setText(user.getEmail() == null ? firebaseUser.getEmail() : user.getEmail());
-                            if(user.getPhoto()!=null) Picasso.with(getApplicationContext()).load(user.getPhoto()).into(ivProfile);
-                            else if(firebaseUser.getPhotoUrl()!=null) Picasso.with(getApplicationContext()).load(firebaseUser.getPhotoUrl().toString()).into(ivProfile);
+                            if(user.getPhoto()!=null)
+                                GlideApp.with(getApplicationContext())
+                                        .load(user.getPhoto())
+                                        .into(ivProfile);
+                            else if(firebaseUser.getPhotoUrl()!=null)
+                                GlideApp.with(getApplicationContext())
+                                        .load(firebaseUser.getPhotoUrl().toString())
+                                        .into(ivProfile);
                         } else {
                             edName.setText(firebaseUser.getDisplayName());
                             edPhone.setText(firebaseUser.getPhoneNumber());
                             edEmail.setText(firebaseUser.getEmail());
-                            if(firebaseUser.getPhotoUrl()!=null) Picasso.with(getApplicationContext()).load(firebaseUser.getPhotoUrl().toString()).into(ivProfile);
+                            if(firebaseUser.getPhotoUrl()!=null)
+                                GlideApp.with(getApplicationContext())
+                                        .load(firebaseUser.getPhotoUrl().toString())
+                                        .into(ivProfile);
                         }
                         progressBar.setVisibility(View.INVISIBLE);
                         cl.setVisibility(View.VISIBLE);

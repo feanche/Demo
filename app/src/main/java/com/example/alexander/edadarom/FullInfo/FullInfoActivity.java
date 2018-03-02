@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 public class FullInfoActivity extends AppCompatActivity implements FullInfoContract.View {
@@ -146,7 +147,12 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
             tvSellerTitle.setText(users.getFirstName());
             tvSellerSubtitle.setText(users.getSecondName());
             tvSellerRating.setText(String.valueOf(users.getRating()));
-            if(users.getPhoto()!=null) Picasso.with(getApplicationContext()).load(users.getPhoto()).fit().into(imgSeller);
+            if(users.getPhoto()!=null)
+                GlideApp.with(getApplicationContext())
+                        .load(users.getPhoto())
+                        .fitCenter()
+                        .into(imgSeller);
+            //TODO .fit >>> .fitCenter()
         }
     }
 

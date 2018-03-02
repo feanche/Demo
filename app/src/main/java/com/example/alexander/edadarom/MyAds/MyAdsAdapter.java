@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.Reservations.ReservationAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -58,7 +59,9 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
         String date = sf.format(user.getTimestamp());
         holder.tvTimestamp.setText(date);
 
-        Picasso.with(context).load(user.getPhotoUrl().get(0)).into(holder.imageView);
+        GlideApp.with(context)
+                .load(user.getPhotoUrl().get(0))
+                .into(holder.imageView);
 
         holder.ivDots.setOnClickListener(new View.OnClickListener() {
             @Override

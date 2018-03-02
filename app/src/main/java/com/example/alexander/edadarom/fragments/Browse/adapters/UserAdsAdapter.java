@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -47,7 +48,11 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         holder.tvDate.setText("Время публикации: \n" +  date);*/
 
         if(user.getPhotoUrl().size() != 0)
-        Picasso.with(context).load(user.getPhotoUrl().get(0)).fit().into(holder.imageView);
+        GlideApp.with(context)
+                .load(user.getPhotoUrl().get(0))
+                .fitCenter()
+                .into(holder.imageView);
+        //TODO .fit >>> .fitCenter()
     }
 
     @Override

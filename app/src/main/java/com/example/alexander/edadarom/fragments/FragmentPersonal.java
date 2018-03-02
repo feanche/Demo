@@ -19,6 +19,7 @@ import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.Reservations.ReservationsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.models.Users;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -140,7 +141,10 @@ public class FragmentPersonal extends Fragment {
                 tvSignInOut.setText(R.string.title_personal_sign_out);
                 tvToolbarTitle.setText(firebaseUser.getDisplayName());
                 if (firebaseUser.getPhotoUrl() != null)
-                    Picasso.with(getContext()).load(firebaseUser.getPhotoUrl().toString()).placeholder(R.mipmap.ic_launcher).into(ivToolbarProfile);
+                    GlideApp.with(getContext())
+                            .load(firebaseUser.getPhotoUrl().toString())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .into(ivToolbarProfile);
 
                 addressButtonActive();
                 break;
@@ -148,7 +152,9 @@ public class FragmentPersonal extends Fragment {
                 tvSignInOut.setText(R.string.title_personal_sign_in);
                 tvToolbarTitle.setText("Вы не авторизованы");
                 //tvToolbarSubtitle.setText("");
-                Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(ivToolbarProfile);
+                GlideApp.with(getContext())
+                        .load(R.mipmap.ic_launcher)
+                        .into(ivToolbarProfile);
 
                 addressButtonNonActive();
                 break;

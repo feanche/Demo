@@ -20,6 +20,7 @@ import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -252,7 +253,9 @@ public class MyAdsFullActivity extends AppCompatActivity {
     private void updateUI(Users user, UserAdsModel u) {
         tvTitle.setText(u.getTitle());
         tvProfileTitle.setText(user.getFirstName());
-        Picasso.with(this).load(user.getPhoto()).into(ivProfile);
+        GlideApp.with(this)
+                .load(user.getPhoto())
+                .into(ivProfile);
 
         setDelivery(u.getReservationInfo());
         setStatus(tvStatus, u.getReservationInfo());
@@ -263,7 +266,9 @@ public class MyAdsFullActivity extends AppCompatActivity {
             String date = sf.format(u.getReservationInfo().getReservationDate());
             String dateEnd = sf.format(u.getReservationInfo().getReservationDateEnd());
             tvReservation.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
-            Picasso.with(this).load(u.getPhotoUrl().get(0)).into(ivAd);
+            GlideApp.with(this)
+                    .load(u.getPhotoUrl().get(0))
+                    .into(ivAd);
         }
 
 

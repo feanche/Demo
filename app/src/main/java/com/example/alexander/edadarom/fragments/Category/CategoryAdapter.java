@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.example.alexander.edadarom.utils.SquareImageView;
 import com.squareup.picasso.Picasso;
 
@@ -45,7 +46,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
         holder.tvDate.setText("Время публикации: \n" +  date);*/
 
         if(category.getImgUrl()!=null)
-        Picasso.with(context).load(category.getImgUrl()).fit().into(holder.imageView);
+        GlideApp.with(context)
+                .load(category.getImgUrl())
+                .fitCenter()
+                .into(holder.imageView);
+        //TODO .fit >>> .fitCenter()
     }
 
     @Override

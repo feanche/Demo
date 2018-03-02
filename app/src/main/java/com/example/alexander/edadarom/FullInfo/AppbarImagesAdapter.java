@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class AppbarImagesAdapter extends PagerAdapter {
         View myImageLayout = inflater.inflate(R.layout.appbar_image_slide, view, false);
         ImageView myImage = (ImageView) myImageLayout.findViewById(R.id.image);
 
-        Picasso.with(context).load(images.get(position)).into(myImage);
+        GlideApp.with(context)
+                .load(images.get(position))
+                .into(myImage);
         view.addView(myImageLayout);
         return myImageLayout;
     }

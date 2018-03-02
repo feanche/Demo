@@ -31,6 +31,7 @@ import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.CreateDialog;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -326,6 +327,8 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
     public void addDate(UserAdsModel userAdModel, Users users) {
         tvTitle.setText(userAdModel.getTitle());
 //        tvCoastPrice.setText(userAdModel.getPrice());
-        Picasso.with(getContext()).load(userAdModel.getPhotoUrl().get(0)).into(ivAd);
+        GlideApp.with(getContext())
+                .load(userAdModel.getPhotoUrl().get(0))
+                .into(ivAd);
     }
 }

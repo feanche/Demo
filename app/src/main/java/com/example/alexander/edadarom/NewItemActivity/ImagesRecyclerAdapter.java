@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -86,7 +87,11 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
 
-            Picasso.with(context).load(mList.get(position).getUri()).fit().centerCrop().into(((SecondViewHolder) holder).imageView);
+            GlideApp.with(context)
+                    .load(mList.get(position).getUri())
+                    .fitCenter()
+                    .centerCrop()
+                    .into(((SecondViewHolder) holder).imageView);
 
             ((SecondViewHolder) holder).ivDel.setOnClickListener(new View.OnClickListener() {
                 @Override
