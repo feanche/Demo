@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.GlideApp;
@@ -49,6 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
         GlideApp.with(context)
                 .load(category.getImgUrl())
                 .fitCenter()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
         //TODO .fit >>> .fitCenter()
     }

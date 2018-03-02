@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.NewItemActivity.AddNewItemActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
@@ -329,6 +330,7 @@ public class FragmentReservationOptions extends Fragment implements FullInfoActi
 //        tvCoastPrice.setText(userAdModel.getPrice());
         GlideApp.with(getContext())
                 .load(userAdModel.getPhotoUrl().get(0))
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(ivAd);
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.models.Users;
@@ -151,6 +152,7 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
                 GlideApp.with(getApplicationContext())
                         .load(users.getPhoto())
                         .fitCenter()
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(imgSeller);
             //TODO .fit >>> .fitCenter()
         }

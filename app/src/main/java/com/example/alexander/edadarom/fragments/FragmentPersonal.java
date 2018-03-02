@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
 import com.example.alexander.edadarom.MyAds.MyAdsActivity;
 import com.example.alexander.edadarom.Notifications.NotificationsActivity;
@@ -144,6 +145,7 @@ public class FragmentPersonal extends Fragment {
                     GlideApp.with(getContext())
                             .load(firebaseUser.getPhotoUrl().toString())
                             .placeholder(R.mipmap.ic_launcher)
+                            .transition(DrawableTransitionOptions.withCrossFade())
                             .into(ivToolbarProfile);
 
                 addressButtonActive();
@@ -154,6 +156,7 @@ public class FragmentPersonal extends Fragment {
                 //tvToolbarSubtitle.setText("");
                 GlideApp.with(getContext())
                         .load(R.mipmap.ic_launcher)
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(ivToolbarProfile);
 
                 addressButtonNonActive();

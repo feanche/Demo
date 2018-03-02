@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.Reservations.ReservationAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -61,6 +62,7 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
 
         GlideApp.with(context)
                 .load(user.getPhotoUrl().get(0))
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
 
         holder.ivDots.setOnClickListener(new View.OnClickListener() {

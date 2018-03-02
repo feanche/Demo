@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
@@ -45,6 +46,7 @@ public class AppbarImagesAdapter extends PagerAdapter {
 
         GlideApp.with(context)
                 .load(images.get(position))
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(myImage);
         view.addView(myImageLayout);
         return myImageLayout;

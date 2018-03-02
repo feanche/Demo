@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;
@@ -91,6 +92,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     .load(mList.get(position).getUri())
                     .fitCenter()
                     .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(((SecondViewHolder) holder).imageView);
 
             ((SecondViewHolder) holder).ivDel.setOnClickListener(new View.OnClickListener() {

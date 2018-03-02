@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
@@ -255,6 +256,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
         tvProfileTitle.setText(user.getFirstName());
         GlideApp.with(this)
                 .load(user.getPhoto())
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(ivProfile);
 
         setDelivery(u.getReservationInfo());
@@ -268,6 +270,7 @@ public class MyAdsFullActivity extends AppCompatActivity {
             tvReservation.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
             GlideApp.with(this)
                     .load(u.getPhotoUrl().get(0))
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAd);
         }
 

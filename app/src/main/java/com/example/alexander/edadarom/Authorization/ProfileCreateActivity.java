@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.MyFirebaseInstanceIDService;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
@@ -102,10 +103,12 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             if(user.getPhoto()!=null)
                                 GlideApp.with(getApplicationContext())
                                         .load(user.getPhoto())
+                                        .transition(DrawableTransitionOptions.withCrossFade())
                                         .into(ivProfile);
                             else if(firebaseUser.getPhotoUrl()!=null)
                                 GlideApp.with(getApplicationContext())
                                         .load(firebaseUser.getPhotoUrl().toString())
+                                        .transition(DrawableTransitionOptions.withCrossFade())
                                         .into(ivProfile);
                         } else {
                             edName.setText(firebaseUser.getDisplayName());
@@ -114,6 +117,7 @@ public class ProfileCreateActivity extends AppCompatActivity {
                             if(firebaseUser.getPhotoUrl()!=null)
                                 GlideApp.with(getApplicationContext())
                                         .load(firebaseUser.getPhotoUrl().toString())
+                                        .transition(DrawableTransitionOptions.withCrossFade())
                                         .into(ivProfile);
                         }
                         progressBar.setVisibility(View.INVISIBLE);
