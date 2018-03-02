@@ -10,8 +10,8 @@ import java.util.Date;
 
 public class UserAdsModel {
 
-    float locationLat;
-    float locationLon;
+    double locationLat;
+    double locationLon;
     String commentToAddress;
     int price;
     int categoryId;
@@ -30,7 +30,7 @@ public class UserAdsModel {
 
     }
 
-    public UserAdsModel(float locationLat, float locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp, String commentToAddress, String priceType) {
+    public UserAdsModel(double locationLat, double locationLon, int price, int categoryId, String title, ArrayList<String> photoUrl, String description, Date timestamp, String commentToAddress, String priceType) {
         this.locationLat = locationLat;
         this.locationLon = locationLon;
         this.price = price;
@@ -59,19 +59,19 @@ public class UserAdsModel {
         this.timestamp = timestamp;
     }
 
-    public float getLocationLat() {
+    public double getLocationLat() {
         return locationLat;
     }
 
-    public void setLocationLat(float locationLat) {
+    public void setLocationLat(double locationLat) {
         this.locationLat = locationLat;
     }
 
-    public float getLocationLon() {
+    public double getLocationLon() {
         return locationLon;
     }
 
-    public void setLocationLon(float locationLon) {
+    public void setLocationLon(double locationLon) {
         this.locationLon = locationLon;
     }
 

@@ -77,7 +77,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     FirebaseStorage storage;
     StorageReference storageReference;
     String locality;
-    float locationLat, locationLon;
+    double locationLat, locationLon;
     String commentToAddress;
     String priceType;
     boolean complete = true;
@@ -232,12 +232,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void completenessCheck() {
-        String mTitle = title.getEditText().toString();
-        String mDescription = description.getEditText().toString();
-        String mPrice = price.getEditText().toString();
-        if (mTitle.matches("") |
-                mDescription.matches("") |
-                mPrice.matches("") |
+        String mTitle = title.getEditText().getText().toString();
+        String mDescription = description.getEditText().getText().toString();
+        String mPrice = price.getEditText().getText().toString();
+        if (mTitle.isEmpty() |
+                mDescription.isEmpty() |
+                mPrice.isEmpty() |
                 locationLat == 0 |
                 locationLon == 0) {
             complete = false;
@@ -273,8 +273,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             dialog.dismiss();
         } else if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                locationLat = data.getExtras().getFloat(AddressesActivity.EXTRA_LAT);
-                locationLon = data.getExtras().getFloat(AddressesActivity.EXTRA_LON);
+                locationLat = data.getExtras().getDouble(AddressesActivity.EXTRA_LAT);
+                locationLon = data.getExtras().getDouble(AddressesActivity.EXTRA_LON);
                 commentToAddress = data.getExtras().getString(AddressesActivity.EXTRA_COMMENT);
                 locality = data.getExtras().getString(AddressesActivity.EXTRA_LOCALITY);
                 localityText.setText(locality);
