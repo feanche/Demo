@@ -1,15 +1,17 @@
 package com.example.alexander.edadarom.fragments.Browse;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,7 +30,7 @@ import java.util.ArrayList;
  * Created by Alexander on 10.01.2018.
  */
 
-public class FragmentBrowse extends Fragment implements BrowseFragmentContract.View {
+public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentContract.View {
 
     private BrowseFragmentContract.Presenter presenter;
     private View view;
@@ -43,41 +45,37 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     int adId;
     public static Bundle bundle = new Bundle();
 
-    public static FragmentBrowse instance(int id, String name) {
+    public static FragmentBrowseLastItems instance(int id, String name) {
         bundle.putInt("id", id);
         bundle.putString("name", name);
-        return new FragmentBrowse();
+        return new FragmentBrowseLastItems();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_browse, container, false);
+        setHasOptionsMenu(true);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
         toolbar = view.findViewById(R.id.toolbar);
-        String title = bundle.getString("name");
+        String title = getString(R.string.title_last_added_items);
         toolbar.setTitle(title);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-        ((CategoryActivity) getActivity()).setSupportActionBar(toolbar);
-        ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
 
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);
         adId = bundle.getInt("id", -1);
-        presenter.getAds(adId);
+        presenter.getLastAddedItems(20);
 
         return view;
     }
 
     private void initButtons() {
         mFab = view.findViewById(R.id.fab);
-        mFab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddNewItemActivity.class);
-             startActivityForResult(intent, NEW_ITEM);
-        });
+        mFab.setVisibility(View.INVISIBLE);
     }
 
     private void initRecyclerView() {
@@ -130,6 +128,22 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         arUserAds.clear();
         arUserAds.addAll(ar);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_search:
+                startActivity(new Intent(getContext(), CategoryActivity.class));
+        }
+        //noinspection SimplifiableIfStatement
+
+        return super.onOptionsItemSelected(item);
     }
 
 

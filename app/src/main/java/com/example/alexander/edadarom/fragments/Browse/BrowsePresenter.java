@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.alexander.edadarom.fragments.Browse.Models.Ad;
 import com.example.alexander.edadarom.models.UserAdsModel;
+import com.example.alexander.edadarom.utils.FirebaseConst;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,7 +36,7 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
         arAds.clear();
         view.showLoading();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("ads")
+        db.collection(FirebaseConst.ADS)
                 .whereEqualTo("categoryId", id)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
@@ -64,4 +65,37 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void getLastAddedItems(int limit) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(FirebaseConst.ADS)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(limit)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            if (task.getResult().size() == 0) {
+                                //view.showToast("Нет данных");
+                                view.hideLoading();
+                                return;
+                            }
+
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                userAdsModel.setId(document.getId());
+                                arAds.add(userAdsModel);
+                            }
+
+                            view.hideLoading();
+                            view.addDate(arAds);
+                        } else view.hideLoading();
+                    }
+                });
     }
+}

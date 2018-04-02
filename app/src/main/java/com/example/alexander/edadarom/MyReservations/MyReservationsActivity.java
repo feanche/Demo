@@ -1,5 +1,6 @@
-package com.example.alexander.edadarom.Reservations;
+package com.example.alexander.edadarom.MyReservations;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.alexander.edadarom.MyAds.MyAdsActivity;
+import com.example.alexander.edadarom.MyAds.MyAdsFullActivity;
 import com.example.alexander.edadarom.R;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.FirebaseConst;
@@ -25,20 +28,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
-public class ReservationsActivity extends AppCompatActivity {
+public class MyReservationsActivity extends AppCompatActivity {
 
     public static final String TAG = "ReservationActivity";
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<UserAdsModel> ar = new ArrayList<>();
-    private ReservationAdapter adapter;
+    private MyReservationAdapter adapter;
     private RecyclerView recyclerView;
     private MaterialDialog dialog;
 
@@ -71,7 +72,7 @@ public class ReservationsActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        adapter = new ReservationAdapter(getApplicationContext(), ar);
+        adapter = new MyReservationAdapter(getApplicationContext(), ar);
         recyclerView = findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
@@ -79,7 +80,7 @@ public class ReservationsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        adapter.setClickListener(new ReservationAdapter.DotsClickListener() {
+        adapter.setClickListener(new MyReservationAdapter.DotsClickListener() {
             @Override
             public void onClick(int position) {
                 createListDialog(position);
@@ -89,7 +90,9 @@ public class ReservationsActivity extends AppCompatActivity {
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
+                Intent intent = new Intent(MyReservationsActivity.this, MyAdsFullActivity.class);
+                intent.putExtra("id", ar.get(position).getId());
+                startActivity(intent);
             }
         });
 

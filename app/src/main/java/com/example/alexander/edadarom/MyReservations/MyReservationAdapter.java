@@ -1,4 +1,4 @@
-package com.example.alexander.edadarom.Reservations;
+package com.example.alexander.edadarom.MyReservations;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,14 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.alexander.edadarom.Notifications.Notification;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.models.ReservationInfo;
 import com.example.alexander.edadarom.models.UserAdsModel;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,7 +21,7 @@ import java.util.Locale;
  * Created by Ilnaz on 30.01.2018.
  */
 
-public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.UserViewHolder> {
+public class MyReservationAdapter extends RecyclerView.Adapter<MyReservationAdapter.UserViewHolder> {
 
     interface DotsClickListener {
         void onClick(int position);
@@ -34,7 +31,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     private List<UserAdsModel> list;
     private DotsClickListener dotsClickListener;
 
-    public ReservationAdapter(Context context, List<UserAdsModel> list) {
+    public MyReservationAdapter(Context context, List<UserAdsModel> list) {
         this.context = context;
         this.list = list;
     }

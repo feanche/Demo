@@ -8,6 +8,8 @@
     <string name="activity_my_ads_full_name">Информация об объявлении</string>
     <string name="activity_my_ad_name">Создать объявление</string>
 
+    <string name="title_last_added_items">Последние добавленные</string>
+
     <string name="menu_browse">Обзор</string>
     <string name="menu_add">Избранное</string>
     <string name="menu_messages">Сообщения</string>

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
+import com.example.alexander.edadarom.fragments.Browse.FragmentBrowseLastItems;
 import com.example.alexander.edadarom.fragments.Category.FragmentCategory;
 import com.example.alexander.edadarom.fragments.FragmentFavorites;
 import com.example.alexander.edadarom.fragments.FragmentMessages;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    FragmentCategory fragmentCategory;
+    FragmentBrowseLastItems fragmentBrowseLastItems;
     FragmentFavorites fragmentFavorites;
     FragmentMessages fragmentMessages;
     FragmentPersonal fragmentPersonal;
@@ -91,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        fragmentCategory = new FragmentCategory();
+        fragmentBrowseLastItems = new FragmentBrowseLastItems();
         fragmentFavorites = new FragmentFavorites();
         fragmentMessages = new FragmentMessages();
         fragmentPersonal = new FragmentPersonal();
-        adapter.addFragment(fragmentCategory);
+        adapter.addFragment(fragmentBrowseLastItems);
         adapter.addFragment(fragmentFavorites);
         adapter.addFragment(fragmentMessages);
         adapter.addFragment(fragmentPersonal);
@@ -124,11 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (fragmentCategory.isAdded()) {
-            FragmentManager childFragmentManager = fragmentCategory.getChildFragmentManager();
-            if (viewPager.getCurrentItem() == 0 & childFragmentManager.getBackStackEntryCount() > 0)
-                childFragmentManager.popBackStackImmediate();
-            else super.onBackPressed();
-        } else super.onBackPressed();
+      super.onBackPressed();
     }
 }
