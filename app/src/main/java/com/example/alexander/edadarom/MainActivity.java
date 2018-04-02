@@ -13,8 +13,8 @@ import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowseLastItems;
 import com.example.alexander.edadarom.fragments.Category.FragmentCategory;
 import com.example.alexander.edadarom.fragments.FragmentFavorites;
-import com.example.alexander.edadarom.fragments.FragmentMessages;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
+import com.example.alexander.edadarom.fragments.MyReservations.FragmentReservations;
 import com.example.alexander.edadarom.utils.CustomViewPager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     FragmentBrowseLastItems fragmentBrowseLastItems;
-    FragmentFavorites fragmentFavorites;
+    FragmentReservations fragmentReservations;
     FragmentPersonal fragmentPersonal;
     private CustomViewPager viewPager;
     MenuItem prevMenuItem;
@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragmentBrowseLastItems = new FragmentBrowseLastItems();
-        fragmentFavorites = new FragmentFavorites();
+        fragmentReservations = new FragmentReservations();
         fragmentPersonal = new FragmentPersonal();
         adapter.addFragment(fragmentBrowseLastItems);
-        adapter.addFragment(fragmentFavorites);
+        adapter.addFragment(fragmentReservations);
         adapter.addFragment(fragmentPersonal);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
