@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.Reservations.ReservationAdapter;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.GlideApp;
 import com.squareup.picasso.Picasso;

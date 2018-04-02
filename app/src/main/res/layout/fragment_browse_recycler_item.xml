@@ -110,7 +110,9 @@
             android:id="@+id/imageView"
             android:layout_width="96dp"
             android:layout_height="96dp"
+            android:layout_marginStart="16dp"
             card_view:layout_constraintBottom_toBottomOf="@+id/tvPriceTitle"
+            card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:srcCompat="@drawable/bg_personal" />
 

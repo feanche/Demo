@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.alexander.edadarom.FullInfo.FullInfoActivity;
 import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.R;
+import com.example.alexander.edadarom.category.CategoryActivity;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowse;
 import com.example.alexander.edadarom.fragments.Browse.adapters.UserAdsAdapter;
 import com.example.alexander.edadarom.utils.ItemClickSupport;
@@ -55,8 +56,8 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         toolbar.setTitle(getResources().getString(R.string.app_name));
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        ((CategoryActivity) getActivity()).setSupportActionBar(toolbar);
+        ((CategoryActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         //((MainActivity) getActivity()).getSupportActionBar().
 
         initRecyclerView();

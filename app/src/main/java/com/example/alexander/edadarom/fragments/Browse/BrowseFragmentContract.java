@@ -17,5 +17,6 @@ public interface BrowseFragmentContract {
 
     interface Presenter {
         void getAds(int id);
+        void getLastAddedItems(int count);
     }
 }

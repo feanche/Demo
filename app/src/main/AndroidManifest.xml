@@ -101,7 +101,7 @@
         </service>
 
         <activity android:name=".Notifications.NotificationsActivity" />
-        <activity android:name=".Reservations.ReservationsActivity" />
+        <activity android:name=".MyReservations.MyReservationsActivity" />
         <activity android:name=".MyAds.MyAdsActivity" />
         <activity android:name=".MyAds.MyAdsFullActivity">
             <intent-filter>
@@ -111,7 +111,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Search.SearchActivity"
+            android:name=".category.CategoryActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme"></activity>
     </application>
