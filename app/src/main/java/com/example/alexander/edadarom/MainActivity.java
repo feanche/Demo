@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     FragmentCategory fragmentCategory;
     FragmentFavorites fragmentFavorites;
-    FragmentMessages fragmentMessages;
     FragmentPersonal fragmentPersonal;
     private CustomViewPager viewPager;
     MenuItem prevMenuItem;
@@ -50,11 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.menu_browse:
                     viewPager.setCurrentItem(0, false);
                     break;
-                case R.id.menu_add:
+                case R.id.menu_reservations:
                     viewPager.setCurrentItem(1, false);
-                    break;
-                case R.id.menu_messages:
-                    viewPager.setCurrentItem(2, false);
                     break;
                 case R.id.menu_profile:
                     viewPager.setCurrentItem(3, false);
@@ -93,14 +89,12 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragmentCategory = new FragmentCategory();
         fragmentFavorites = new FragmentFavorites();
-        fragmentMessages = new FragmentMessages();
         fragmentPersonal = new FragmentPersonal();
         adapter.addFragment(fragmentCategory);
         adapter.addFragment(fragmentFavorites);
-        adapter.addFragment(fragmentMessages);
         adapter.addFragment(fragmentPersonal);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
     }
 
 

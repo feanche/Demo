@@ -7,13 +7,8 @@
         android:title="@string/menu_browse" />
 
     <item
-        android:id="@+id/menu_add"
-        android:icon="@drawable/ic_location_on_black_24dp"
-        android:title="@string/menu_add" />
-
-    <item
-        android:id="@+id/menu_messages"
-        android:icon="@drawable/ic_email_black_24dp"
+        android:id="@+id/menu_reservations"
+        android:icon="@drawable/ic_add_shopping_cart_black_24dp"
         android:title="@string/menu_messages" />
 
     <item

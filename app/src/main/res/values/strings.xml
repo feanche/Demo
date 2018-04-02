@@ -10,7 +10,7 @@
 
     <string name="menu_browse">Обзор</string>
     <string name="menu_add">Избранное</string>
-    <string name="menu_messages">Сообщения</string>
+    <string name="menu_messages">Мои заказы</string>
     <string name="menu_personal">Профиль</string>
 
     <string name="text_photo">Фотографии</string>
