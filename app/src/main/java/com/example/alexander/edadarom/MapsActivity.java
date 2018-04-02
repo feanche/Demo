@@ -14,14 +14,11 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -100,15 +97,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         cv_comment = findViewById(R.id.comment);
         comment_complete = findViewById(R.id.comment_complete);
         text_comment = findViewById(R.id.text_comment);
-        find_location.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchObject();
-                    return true;
-                }
-                return false;
+        find_location.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchObject();
+                return true;
             }
+            return false;
         });
     }
 
@@ -334,50 +328,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onMapClick() {
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                if (marker != null){
-                    marker.setPosition(latLng);
-                } else {
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.draggable(true);
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
-                    marker = mMap.addMarker(markerOptions);
-                }
-                markerLocationLat = (float) latLng.latitude;
-                markerLocationLon = (float) latLng.longitude;
-                getGeocoder(latLng);
+        mMap.setOnMapClickListener(latLng -> {
+            if (marker != null){
+                marker.setPosition(latLng);
+            } else {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.draggable(true);
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_on));
+                marker = mMap.addMarker(markerOptions);
             }
+            markerLocationLat = (float) latLng.latitude;
+            markerLocationLon = (float) latLng.longitude;
+            getGeocoder(latLng);
         });
     }
 
     private void executeDataSending() {
-        // Fake data sending effect
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    Intent intent = getIntent();
-                    setResult(RESULT_OK, intent);
-                    if (locality != null) {
-                        intent.putExtra(COMMENT, comment);
-                        intent.putExtra(LOCALITY, locality);
-                        intent.putExtra(LOCATION_LAT, markerLocationLat);
-                        intent.putExtra(LOCATION_LON, markerLocationLon);
-                    } else if (locality == null) {
-                        ifLocalityEmpty();
-                        intent.putExtra(COMMENT, comment);
-                        intent.putExtra(LOCALITY, locality);
-                        intent.putExtra(LOCATION_LAT, userLat);
-                        intent.putExtra(LOCATION_LON, userLng);
-                    }
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                Intent intent = getIntent();
+                setResult(RESULT_OK, intent);
+                if (locality != null) {
+                    intent.putExtra(COMMENT, comment);
+                    intent.putExtra(LOCALITY, locality);
+                    intent.putExtra(LOCATION_LAT, markerLocationLat);
+                    intent.putExtra(LOCATION_LON, markerLocationLon);
+                } else if (locality == null) {
+                    ifLocalityEmpty();
+                    intent.putExtra(COMMENT, comment);
+                    intent.putExtra(LOCALITY, locality);
+                    intent.putExtra(LOCATION_LAT, userLat);
+                    intent.putExtra(LOCATION_LON, userLng);
                 }
+                finish();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }).start();
     }
@@ -388,7 +375,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<Address> addressList = geocoder.getFromLocation(userLat, userLng, 1);
             if (addressList != null && addressList.size() > 0) {
                 locality = addressList.get(0).getAddressLine(0);
-                double new1 = userLat;
             }
         } catch (IOException e) {
             e.printStackTrace();

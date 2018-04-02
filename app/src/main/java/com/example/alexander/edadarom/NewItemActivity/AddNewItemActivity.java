@@ -5,12 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
@@ -25,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,27 +35,21 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.fragments.Category.Category;
 import com.example.alexander.edadarom.models.UserAdsModel;
 import com.example.alexander.edadarom.utils.CreateDialog;
 import com.example.alexander.edadarom.utils.FirebaseConst;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.example.alexander.edadarom.utils.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import com.example.alexander.edadarom.R;
 
@@ -71,8 +62,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     UploadTask uploadTask;
     private TextInputLayout description, title, price;
     private CardView publishButton;
-    private ImageView backButton, ivPhoto;
-    Target target;
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -132,10 +121,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         price = findViewById(R.id.textInputLayout7);
         publishButton = findViewById(R.id.button2);
         locationButton = findViewById(R.id.constraintLayout1);
-        ivPhoto = findViewById(R.id.ivPhoto);
         spinner = findViewById(R.id.SpinnerCustom);
         priceTypeSpinner = findViewById(R.id.spinnerCustomPrice);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         categoriesAdapter = new CategoriesAdapter(this,android.R.layout.simple_spinner_item, arCategories);
         spinner.setAdapter(categoriesAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -167,44 +155,31 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                localityText.setTextColor(getResources().getColor(R.color.secondaryText));
-                Intent intent = new Intent(getApplicationContext(), AddressesActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, "shit");
-                startActivityForResult(intent, TEXT_REQUEST);
-            }
+        locationButton.setOnClickListener(v -> {
+            localityText.setTextColor(getResources().getColor(R.color.secondaryText));
+            Intent intent = new Intent(getApplicationContext(), AddressesActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, "shit");
+            startActivityForResult(intent, TEXT_REQUEST);
         });
 
-        publishButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
-                yesOrNoDialog.setTitle("Подтверждаете размещение объявления?");
-                yesOrNoDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        completenessCheck();
-                        if (!complete) {
-                            Toast.makeText(getApplicationContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
-                        } else if (complete && arReportUrl.isEmpty()) {
-                            Toast.makeText(getApplicationContext(), "Добавьте хотя бы одно изображение", Toast.LENGTH_SHORT).show();
-                        } else if (complete && !arReportUrl.isEmpty()){
-                            sendDataToFirestore();
-                            finish();
-                        }
-                    }
-                });
+        publishButton.setOnClickListener(v -> {
+            AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
+            yesOrNoDialog.setTitle("Подтверждаете размещение объявления?");
+            yesOrNoDialog.setPositiveButton("OK", (dialog, which) -> {
+                completenessCheck();
+                if (!complete) {
+                    Toast.makeText(getApplicationContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+                } else if (complete && arReportUrl.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Добавьте хотя бы одно изображение", Toast.LENGTH_SHORT).show();
+                } else if (complete && !arReportUrl.isEmpty()){
+                    sendDataToFirestore();
+                    finish();
+                }
+            });
 
-                yesOrNoDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "Тебе что-то не понравилось", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                yesOrNoDialog.show();
-            }
+            yesOrNoDialog.setNegativeButton("Отмена", (dialog, which) ->
+                    Toast.makeText(getApplicationContext(), "Тебе что-то не понравилось", Toast.LENGTH_SHORT).show());
+            yesOrNoDialog.show();
         });
         initRecyclerView();
         getData();
@@ -214,18 +189,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirebaseConst.CATEGORIES)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() == 0) {
-                                return;
-                            }
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Category category = document.toObject(Category.class);
-                                arCategories.add(category);
-                                categoriesAdapter.notifyDataSetChanged();
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() == 0) {
+                            return;
+                        }
+                        for (DocumentSnapshot document : task.getResult()) {
+                            Category category = document.toObject(Category.class);
+                            arCategories.add(category);
+                            categoriesAdapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -284,23 +256,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     }
 
     public void upload(Uri file) {
-        target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                uploadImage(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-        Picasso.with(getApplicationContext()).load(file).resize(1000, 1000).centerInside().into(target);
+        GlideApp.with(getApplicationContext())
+                .asBitmap()
+                .load(file)
+                .override(1000,1000)
+                .fitCenter()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        uploadImage(resource);
+                    }
+                });
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -315,26 +281,19 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     public void uploadImageToStorage(byte[] data) {
         StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
         uploadTask = ref.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"Ошибка загрузки изображения",Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                imagesRecyclerAdapter.setProgress(arReportUrl.size(), (int) progress);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
-                downloadUrl = taskSnapshot.getDownloadUrl();
-                arReportUrl.add(downloadUrl.toString());
-                Toast.makeText(getApplicationContext(),"Изображение добавлено",Toast.LENGTH_SHORT).show();
-            }
-        });
+        uploadTask.addOnFailureListener(e ->
+                Toast.makeText(getApplicationContext(),"Ошибка загрузки изображения",Toast.LENGTH_SHORT)
+                        .show())
+                .addOnProgressListener(taskSnapshot -> {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    imagesRecyclerAdapter.setProgress(arReportUrl.size(), (int) progress);
+                })
+                .addOnSuccessListener(taskSnapshot -> {
+                    imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
+                    downloadUrl = taskSnapshot.getDownloadUrl();
+                    arReportUrl.add(downloadUrl.toString());
+                    Toast.makeText(getApplicationContext(),"Изображение добавлено",Toast.LENGTH_SHORT).show();
+                });
     }
 
     private Uri getOutputMediaFile() {
@@ -367,18 +326,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getApplicationContext(),"Объявление успешно добавлено",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Ошибка загрузки данных",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(getApplicationContext(),"Объявление успешно добавлено",Toast.LENGTH_SHORT)
+                                .show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(getApplicationContext(),"Ошибка загрузки данных",Toast.LENGTH_SHORT)
+                                .show());
     }
 
     @Override
@@ -398,17 +351,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
         String[] pictureDialogItems = {"Выбрать из галереи", "Сделать фото на камеру"};
-        pictureDialog.setItems(pictureDialogItems, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        choosePhotoFromGallery();
-                        break;
-                    case 1:
-                        takePicture();
-                        break;
-                }
+        pictureDialog.setItems(pictureDialogItems, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    choosePhotoFromGallery();
+                    break;
+                case 1:
+                    takePicture();
+                    break;
             }
         });
         pictureDialog.show();
@@ -439,19 +389,16 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public void deleteCurrentPhoto(int position) {
         StorageReference photoRef = storage.getReferenceFromUrl(arReportUrl.get(position).toString());
-        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                arUploadImages.remove(position);
-                arReportUrl.remove(position);
-                imagesRecyclerAdapter.notifyDataSetChanged();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"Ошибка удаления изображения",Toast.LENGTH_SHORT).show();
-            }
-        });
+        photoRef
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    arUploadImages.remove(position);
+                    arReportUrl.remove(position);
+                    imagesRecyclerAdapter.notifyDataSetChanged();
+        })
+                .addOnFailureListener(e ->
+                Toast.makeText(getApplicationContext(),"Ошибка удаления изображения",Toast.LENGTH_SHORT)
+                        .show());
     }
 
     private void deleteAllPhoto() {
@@ -465,14 +412,11 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     public MaterialDialog createListDialog(int position) {
         return new MaterialDialog.Builder(this)
                 .items(R.array.dialog_image_activity)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                deleteCurrentPhoto(position);
-                                break;
-                        }
+                .itemsCallback((dialog, view, which, text) -> {
+                    switch (which) {
+                        case 0:
+                            deleteCurrentPhoto(position);
+                            break;
                     }
                 })
                 .show();
@@ -488,17 +432,10 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         yesOrNoDialog.setTitle("Действительно хотите выйти?");
         yesOrNoDialog.setMessage("После выхода вся информация будет утеряна");
         yesOrNoDialog
-                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteAllPhoto();
-                    }
-                })
-                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton("Да", (dialog, which) ->
+                        deleteAllPhoto())
+                .setNegativeButton("Нет", (dialog, which) -> {
 
-                    }
                 });
         yesOrNoDialog.show();
     }
