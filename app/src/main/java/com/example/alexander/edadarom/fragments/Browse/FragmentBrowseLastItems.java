@@ -53,7 +53,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_browse, container, false);
+        view = inflater.inflate(R.layout.fragment_last_items, container, false);
         setHasOptionsMenu(true);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));

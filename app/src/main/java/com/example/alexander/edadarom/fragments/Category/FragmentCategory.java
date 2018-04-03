@@ -57,8 +57,10 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         ((CategoryActivity) getActivity()).setSupportActionBar(toolbar);
-        ((CategoryActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-        //((MainActivity) getActivity()).getSupportActionBar().
+        ((CategoryActivity) getActivity()).getSupportActionBar().setTitle("Категории");
+        //((CategoryActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initRecyclerView();
         presenter = new CategoryPresenter();
