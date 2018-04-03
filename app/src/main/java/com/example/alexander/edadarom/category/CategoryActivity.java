@@ -25,16 +25,15 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         showFragment();
     }
 
     private void showFragment() {
-        FragmentCategory fragment = new FragmentCategory();
+        fragment = new FragmentCategory();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction
                 .replace(R.id.content, fragment)
-                .addToBackStack("fragment")
+                //.addToBackStack("fragment")
                 .commit();
     }
 
@@ -45,6 +44,6 @@ public class CategoryActivity extends AppCompatActivity {
             if (childFragmentManager.getBackStackEntryCount() > 0)
                 childFragmentManager.popBackStackImmediate();
             else super.onBackPressed();
-        }
+        } else super.onBackPressed();
     }
 }
