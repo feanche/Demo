@@ -67,7 +67,7 @@ public class MyReservationFullActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_my_reservation_full);
+        super.setContentView(R.layout.fragment_reservations_full);
         initView();
         adId = getIntent().getStringExtra("id");
         getDate();

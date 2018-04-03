@@ -10,7 +10,7 @@
 
     <string name="title_last_added_items">Последние добавленные</string>
 
-    <string name="menu_browse">Обзор</string>
+    <string name="menu_browse">Главная</string>
     <string name="menu_add">Избранное</string>
     <string name="menu_messages">Мои заказы</string>
     <string name="menu_personal">Профиль</string>
