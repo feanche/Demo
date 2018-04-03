@@ -59,7 +59,7 @@ public class FragmentPersonal extends Fragment {
     private CircleImageView ivToolbarProfile;
     ImageView iv7;
 
-    private ConstraintLayout clSignInOut, clEditProfile, clNotifications, clAddresses, clReservations, clMyAds;
+    private ConstraintLayout clSignInOut, clEditProfile, clNotifications, clAddresses, clMyAds;
     private FirebaseAuth mAuth;
     private GoogleApiClient googleApiClient;
 
@@ -85,7 +85,6 @@ public class FragmentPersonal extends Fragment {
         clEditProfile = view.findViewById(R.id.clProfile);
         clNotifications = view.findViewById(R.id.clNotifications);
         clAddresses = view.findViewById(R.id.clAddresses);
-        clReservations = view.findViewById(R.id.clReservations);
         clMyAds = view.findViewById(R.id.clMyAds);
         iv7 = view.findViewById(R.id.iv7);
 
@@ -217,13 +216,6 @@ public class FragmentPersonal extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), AddressesActivity.class));
-            }
-        });
-
-        clReservations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), MyReservationsActivity.class));
             }
         });
 

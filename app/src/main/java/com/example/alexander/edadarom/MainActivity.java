@@ -2,7 +2,6 @@ package com.example.alexander.edadarom;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -11,8 +10,6 @@ import android.view.View;
 
 import com.example.alexander.edadarom.adapters.ViewPagerAdapter;
 import com.example.alexander.edadarom.fragments.Browse.FragmentBrowseLastItems;
-import com.example.alexander.edadarom.fragments.Category.FragmentCategory;
-import com.example.alexander.edadarom.fragments.FragmentFavorites;
 import com.example.alexander.edadarom.fragments.FragmentPersonal;
 import com.example.alexander.edadarom.fragments.MyReservations.FragmentReservations;
 import com.example.alexander.edadarom.utils.CustomViewPager;
