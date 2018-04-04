@@ -7,11 +7,11 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:layout_gravity="center"
+    android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true"
-    card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="1.5dp"
-    android:layout_marginBottom="8dp">
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="6dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/relativeLayout"
@@ -25,8 +25,7 @@
             android:id="@+id/ivDots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
+            android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:padding="6dp"
             card_view:layout_constraintEnd_toEndOf="parent"
@@ -47,11 +46,14 @@
             android:paddingRight="10dp"
             android:text="Стоимость:"
             android:textColor="@color/secondaryText"
-            card_view:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="12sp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/imageView"
             card_view:layout_constraintEnd_toStartOf="@+id/tvPrice"
+            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/imageView"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvDesc" />
+            card_view:layout_constraintTop_toBottomOf="@+id/tvDesc"
+            card_view:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/tvPrice"
@@ -63,8 +65,9 @@
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Описание"
+            android:text="Цена"
             android:textColor="@color/secondaryText"
+            android:textSize="12sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/tvPriceTitle"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="@+id/tvPriceTitle" />
@@ -73,16 +76,17 @@
             android:id="@+id/tvTitle"
             style="@style/Base.TextAppearance.AppCompat.Body2"
             android:layout_width="0dp"
-            android:layout_height="27dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:foregroundGravity="left"
+            android:maxLines="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="Название"
-            android:textSize="18sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
+            android:textSize="16sp"
+            card_view:layout_constraintEnd_toStartOf="@+id/ivDots"
             card_view:layout_constraintStart_toEndOf="@+id/imageView"
             card_view:layout_constraintTop_toTopOf="parent" />
 
@@ -96,22 +100,23 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:maxLines="5"
+            android:maxLines="3"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="Описание"
             android:textColor="@color/secondaryText"
+            android:textSize="12sp"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/imageView"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginStart="16dp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/tvPriceTitle"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:srcCompat="@drawable/bg_personal" />
@@ -120,14 +125,17 @@
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:background="@color/grey_400"
+            card_view:layout_constraintBottom_toTopOf="@+id/tvPriceTitle"
             card_view:layout_constraintEnd_toEndOf="@+id/tvPrice"
             card_view:layout_constraintHorizontal_bias="0.928"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintStart_toStartOf="@+id/tvDesc"
-            card_view:layout_constraintTop_toBottomOf="@+id/tvDesc" />
+            card_view:layout_constraintTop_toBottomOf="@+id/tvDesc"
+            card_view:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 
