@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
         toolbar.setTitle(title);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
+
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
 
         initRecyclerView();
@@ -71,6 +73,19 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
         presenter.getLastAddedItems(20);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(true);
     }
 
     private void initButtons() {

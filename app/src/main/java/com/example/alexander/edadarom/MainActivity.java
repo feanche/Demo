@@ -2,6 +2,7 @@ package com.example.alexander.edadarom;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -116,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-      super.onBackPressed();
+        if (fragmentReservations.isAdded()) {
+            FragmentManager childFragmentManager = fragmentReservations.getChildFragmentManager();
+            if (childFragmentManager.getBackStackEntryCount() > 0)
+                childFragmentManager.popBackStackImmediate();
+            else super.onBackPressed();
+        } else super.onBackPressed();
     }
 }

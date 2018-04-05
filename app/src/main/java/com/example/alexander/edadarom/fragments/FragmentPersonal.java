@@ -17,7 +17,6 @@ import com.example.alexander.edadarom.Authorization.ProfileCreateActivity;
 import com.example.alexander.edadarom.MyAds.MyAdsActivity;
 import com.example.alexander.edadarom.Notifications.NotificationsActivity;
 import com.example.alexander.edadarom.R;
-import com.example.alexander.edadarom.MyReservations.MyReservationsActivity;
 import com.example.alexander.edadarom.UserAddressesActivity.AddressesActivity;
 import com.example.alexander.edadarom.models.Users;
 import com.example.alexander.edadarom.utils.GlideApp;

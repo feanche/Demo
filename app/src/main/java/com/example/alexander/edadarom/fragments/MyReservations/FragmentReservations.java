@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.alexander.edadarom.MainActivity;
 import com.example.alexander.edadarom.MyAds.MyAdsFullActivity;
 import com.example.alexander.edadarom.R;
 
@@ -61,8 +62,11 @@ public class FragmentReservations extends Fragment {
 
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle( getResources().getString(R.string.app_name));
+        toolbar.setTitle("Мои заказы");
 
+        //((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        //((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         initRecyclerView();
         getDate();
         return view;
@@ -132,6 +136,7 @@ public class FragmentReservations extends Fragment {
                 FragmentReservationsFull fragmentReservationsFull = new FragmentReservationsFull();
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container1, fragmentReservationsFull);
+                fragmentTransaction.addToBackStack("fragmentReservationFull");
                 fragmentTransaction.commit();
                 container = view.findViewById(R.id.container1);
                 container.setVisibility(View.VISIBLE);
