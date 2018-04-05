@@ -67,6 +67,7 @@ public class FragmentReservationsFull extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private UserAdsModel userAdsModel;
     private String adId;
+    private String adTitle;
     private Toolbar toolbar;
 
 
@@ -85,7 +86,7 @@ public class FragmentReservationsFull extends Fragment {
         collapsingToolbarLayout.setTitleEnabled(false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Заказ " + adId);
+        toolbar.setTitle("Бронирование");
 
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);

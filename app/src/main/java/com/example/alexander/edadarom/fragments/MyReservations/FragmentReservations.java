@@ -143,6 +143,7 @@ public class FragmentReservations extends Fragment {
 
                 Bundle b = new Bundle();
                 b.putString("id", ar.get(position).getId());
+                b.putString("title", ar.get(position).getTitle());
                 fragmentReservationsFull.setArguments(b);
             }
         });
