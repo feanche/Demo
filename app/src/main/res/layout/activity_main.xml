@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alexander.edadarom.MainActivity">
+    tools:context="com.nuttertools.MainActivity">
 
 
     <android.support.constraint.ConstraintLayout
@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/navigation" />
 
-        <com.example.alexander.edadarom.utils.CustomViewPager
+        <com.nuttertools.utils.CustomViewPager
             android:id="@+id/viewpager"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -36,7 +36,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        </com.example.alexander.edadarom.utils.CustomViewPager>
+        </com.nuttertools.utils.CustomViewPager>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

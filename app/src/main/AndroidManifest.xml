@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.alexander.edadarom">
+    package="com.nuttertools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -65,7 +65,7 @@
 
         <provider
             android:name=".utils.GenericFileProvider"
-            android:authorities="${applicationId}.com.example.alexander.edadarom.provider"
+            android:authorities="${applicationId}.com.nuttertools.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -101,7 +101,6 @@
         </service>
 
         <activity android:name=".Notifications.NotificationsActivity" />
-        <activity android:name=".MyReservations.MyReservationsActivity" />
         <activity android:name=".MyAds.MyAdsActivity" />
         <activity android:name=".MyAds.MyAdsFullActivity">
             <intent-filter>

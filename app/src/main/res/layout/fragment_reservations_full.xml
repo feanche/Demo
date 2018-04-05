@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="false"
-    tools:context="com.example.alexander.edadarom.MyAds.MyAdsFullActivity">
+    tools:context="com.nuttertools.MyAds.MyAdsFullActivity">
 
     <ProgressBar
         android:id="@+id/progressBar"

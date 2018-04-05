@@ -200,6 +200,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_view"
-        tools:context="com.example.alexander.edadarom.MapsActivity" />
+        tools:context="com.nuttertools.MapsActivity" />
 
 </android.support.constraint.ConstraintLayout>

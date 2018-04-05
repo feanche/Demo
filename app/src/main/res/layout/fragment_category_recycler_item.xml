@@ -9,7 +9,7 @@
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">
 
-    <com.example.alexander.edadarom.utils.SquareRelativeLayout
+    <com.nuttertools.utils.SquareRelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -57,7 +57,7 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/tvDesc" />
 
-        <com.example.alexander.edadarom.utils.SquareImageView
+        <com.nuttertools.utils.SquareImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -89,6 +89,6 @@
             card_view:layout_constraintStart_toStartOf="@+id/ivToolbar"
             card_view:layout_constraintTop_toTopOf="parent" />
 
-    </com.example.alexander.edadarom.utils.SquareRelativeLayout>
+    </com.nuttertools.utils.SquareRelativeLayout>
 
 </android.support.v7.widget.CardView>

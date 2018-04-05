@@ -47,7 +47,7 @@
             android:baselineAligned="false"
             android:divider="?android:attr/dividerHorizontal"
             android:orientation="horizontal"
-            tools:context="com.example.popularmovies2.MainActivity">
+            tools:context="com.nuttertools.popularmovies2.MainActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
