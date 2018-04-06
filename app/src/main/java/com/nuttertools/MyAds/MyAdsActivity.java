@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.CreateDialog;
@@ -41,6 +43,8 @@ public class MyAdsActivity extends AppCompatActivity {
     private MyAdsAdapter adapter;
     private RecyclerView recyclerView;
     private MaterialDialog dialog;
+    private FloatingActionButton fab;
+    public static final int NEW_ITEM = 1;
 
     //Toolbar back button click
     @Override
@@ -57,6 +61,9 @@ public class MyAdsActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
 
+        fab = findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
@@ -68,6 +75,19 @@ public class MyAdsActivity extends AppCompatActivity {
 
         initRecyclerView();
         getDate();
+        initButtons();
+    }
+
+    private void initButtons() {
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), AddNewItemActivity.class);
+            startActivityForResult(intent, NEW_ITEM);
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initRecyclerView() {

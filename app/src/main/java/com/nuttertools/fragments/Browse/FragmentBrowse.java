@@ -33,9 +33,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private BrowseFragmentContract.Presenter presenter;
     private View view;
     private RecyclerView recyclerView;
-    FloatingActionButton mFab;
     private UserAdsAdapter adapter;
-    public static final int NEW_ITEM = 1;
     private ArrayList<UserAdsModel> arUserAds;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
@@ -64,20 +62,11 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initRecyclerView();
-        initButtons();
         presenter = new BrowsePresenter(this);
         adId = bundle.getInt("id", -1);
         presenter.getAds(adId);
 
         return view;
-    }
-
-    private void initButtons() {
-        mFab = view.findViewById(R.id.fab);
-        mFab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddNewItemActivity.class);
-             startActivityForResult(intent, NEW_ITEM);
-        });
     }
 
     private void initRecyclerView() {

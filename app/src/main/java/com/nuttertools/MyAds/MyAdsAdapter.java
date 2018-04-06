@@ -62,6 +62,7 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
         GlideApp.with(context)
                 .load(user.getPhotoUrl().get(0))
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .centerCrop()
                 .into(holder.imageView);
 
         holder.ivDots.setOnClickListener(new View.OnClickListener() {
