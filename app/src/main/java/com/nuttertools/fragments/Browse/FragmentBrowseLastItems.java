@@ -1,5 +1,6 @@
 package com.nuttertools.fragments.Browse;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -45,6 +46,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
     private CollapsingToolbarLayout collapsingToolbarLayout;
     int adId;
     public static Bundle bundle = new Bundle();
+    private Menu menu;
 
     public static FragmentBrowseLastItems instance(int id, String name) {
         bundle.putInt("id", id);
@@ -78,12 +80,28 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
     @Override
     public void onStart() {
         super.onStart();
-        setHasOptionsMenu(true);
 
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(toolbar!=null) ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+    }
+
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuItem item = menu.findItem(R.id.action_search);
         item.setVisible(true);
     }
@@ -105,13 +123,10 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent intent = new Intent(getActivity(), FullInfoActivity.class);
-                intent.putExtra("key", arUserAds.get(position).getId());
-                startActivity(intent);
-            }
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
+            Intent intent = new Intent(getActivity(), FullInfoActivity.class);
+            intent.putExtra("key", arUserAds.get(position).getId());
+            startActivity(intent);
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {

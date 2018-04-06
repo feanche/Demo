@@ -80,13 +80,13 @@ public class FragmentReservationsFull extends Fragment {
         //adId = getIntent().getStringExtra("id");
         adId = getArguments().getString("id");
 
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Бронирование");
+        toolbar.setTitle("Мои бронирования");
 
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,6 +94,12 @@ public class FragmentReservationsFull extends Fragment {
 
         getDate();
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setUserVisibleHint(false);
+        super.onCreate(savedInstanceState);
     }
 
     private void initView() {
@@ -134,47 +140,6 @@ public class FragmentReservationsFull extends Fragment {
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
 
-        btnReservationListener();
-    }
-
-    private void btnReservationListener() {
-        btnReservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (userAdsModel.getReservationInfo().getStatus()) {
-                    case ReservationInfo.STATUS_FREE:
-
-                        break;
-                    case ReservationInfo.STATUS_WAIT_CONFIRM:
-                        confirmAdReservation();
-                        break;
-                }
-            }
-        });
-    }
-
-    private void confirmAdReservation() {
-        MaterialDialog dialog = CreateDialog.createPleaseWaitDialog(getContext());
-        //Бронирование при помощи Batch
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(firebaseUser!=null) {
-            WriteBatch batch = db.batch();
-            // get reference to Ads
-            DocumentReference myAdsRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(userAdsModel.getId());
-
-            userAdsModel.getReservationInfo().setStatus(ReservationInfo.STATUS_CONFIRMED);
-            batch.set(myAdsRef, userAdsModel);
-
-            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    dialog.dismiss();
-                    getDate();
-                }
-            });
-        }
     }
 
     private void getDate() {
@@ -190,7 +155,7 @@ public class FragmentReservationsFull extends Fragment {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
                                 userAdsModel = task.getResult().toObject(UserAdsModel.class);
-                                getUserDate(firebaseUser, userAdsModel);
+                                getUserDate(userAdsModel);
                             } else {
 
                             }
@@ -199,10 +164,10 @@ public class FragmentReservationsFull extends Fragment {
         }
     }
 
-    private void getUserDate(FirebaseUser firebaseUser, UserAdsModel userAdsModel) {
+    private void getUserDate(UserAdsModel userAdsModel) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection(FirebaseConst.USERS).document(firebaseUser.getUid())
+        db.collection(FirebaseConst.USERS).document(userAdsModel.getUserId())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -287,5 +252,17 @@ public class FragmentReservationsFull extends Fragment {
             }
         } else textView.setText("Не забронирован!");
 
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(toolbar!=null) {
+                ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+                ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
+        }
     }
 }

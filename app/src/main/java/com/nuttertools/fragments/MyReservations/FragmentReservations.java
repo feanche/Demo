@@ -48,7 +48,7 @@ public class FragmentReservations extends Fragment {
     private RecyclerView recyclerView;
     private MaterialDialog dialog;
     private ConstraintLayout container;
-
+    private FragmentReservationsFull fragmentReservationsFull;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_reservations, container, false);
@@ -133,7 +133,7 @@ public class FragmentReservations extends Fragment {
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                FragmentReservationsFull fragmentReservationsFull = new FragmentReservationsFull();
+                fragmentReservationsFull = new FragmentReservationsFull();
                 FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container1, fragmentReservationsFull);
                 fragmentTransaction.addToBackStack("fragmentReservationFull");
@@ -217,6 +217,16 @@ public class FragmentReservations extends Fragment {
             });
         }
 
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(fragmentReservationsFull!=null) {
+                if (fragmentReservationsFull.isVisible()) fragmentReservationsFull.setMenuVisibility(visible);
+            }
+        }
     }
 
 }
