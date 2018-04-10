@@ -14,6 +14,7 @@ import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -53,11 +54,13 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
-        holder.tvPrice.setText(String.valueOf(user.getPrice()));
+
+        DecimalFormat dfnd = new DecimalFormat("#,###.00");
+        holder.tvPrice.setText((dfnd.format(user.getPrice())).concat(" ").concat(user.getPriceType()));
 
         SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru","RU"));
         String date = sf.format(user.getTimestamp());
-        holder.tvTimestamp.setText(date);
+        holder.tvTimestamp.setText("Дата публикации: ".concat(date));
 
         GlideApp.with(context)
                 .load(user.getPhotoUrl().get(0))

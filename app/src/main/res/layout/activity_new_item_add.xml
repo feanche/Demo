@@ -232,7 +232,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_price"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
                             android:lines="1"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>

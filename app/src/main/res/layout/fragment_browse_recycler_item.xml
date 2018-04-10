@@ -47,7 +47,7 @@
             android:paddingRight="10dp"
             android:text="Стоимость:"
             android:textColor="@color/secondaryText"
-            android:textSize="12sp"
+            android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/imageView"
             card_view:layout_constraintEnd_toStartOf="@+id/tvPrice"
             card_view:layout_constraintHorizontal_bias="0.0"
@@ -67,8 +67,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="Цена"
-            android:textColor="@color/secondaryText"
-            android:textSize="12sp"
+            android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="@+id/tvPriceTitle"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="@+id/tvPriceTitle" />
@@ -107,7 +106,7 @@
             android:paddingRight="10dp"
             android:text="Описание"
             android:textColor="@color/secondaryText"
-            android:textSize="12sp"
+            android:textSize="14sp"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/imageView"
             card_view:layout_constraintTop_toBottomOf="@+id/tvTitle" />

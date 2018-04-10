@@ -23,6 +23,8 @@ import com.nuttertools.models.Users;
 import com.nuttertools.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+
 public class FullInfoActivity extends AppCompatActivity implements FullInfoContract.View {
 
     private ConstraintLayout topView;
@@ -113,7 +115,10 @@ public class FullInfoActivity extends AppCompatActivity implements FullInfoContr
         tvToolbarTitle.setText(userAdsModel.getTitle());
         tvToolbarSubtitle.setText(userAdsModel.getDescription());
 
-        tvPrice.setText(String.valueOf(userAdsModel.getPrice()));
+        DecimalFormat dfnd = new DecimalFormat("#,###.00");
+        tvPrice.setText((dfnd.format(userAdsModel.getPrice())).concat(" \u20BD/").concat(userAdsModel.getPriceType()));
+
+
         tvDesc.setText(userAdsModel.getDescription());
 
         initViewPager(userAdsModel);

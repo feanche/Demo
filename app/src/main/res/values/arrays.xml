@@ -20,8 +20,8 @@
     </string-array>
 
     <string-array name="spinner_price">
-        <item>₽/час</item>
-        <item>₽/день</item>
+        <item>час</item>
+        <item>день</item>
     </string-array>
 
 </resources>

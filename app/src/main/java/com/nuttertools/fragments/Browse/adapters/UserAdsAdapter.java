@@ -14,6 +14,7 @@ import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -42,11 +43,15 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
         UserAdsModel user = list.get(position);
         holder.tvTitle.setText(user.getTitle());
         holder.tvDesc.setText(user.getDescription());
-        holder.tvPrice.setText(String.valueOf(user.getPrice()));
+        //holder.tvPrice.setText(String.valueOf(user.getPrice()));
 
         /*SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
         String date = sf.format(new Date(user.getPublicTime()));
         holder.tvDate.setText("Время публикации: \n" +  date);*/
+
+        DecimalFormat dfnd = new DecimalFormat("#,###.00");
+        holder.tvPrice.setText((dfnd.format(user.getPrice())).concat(" \u20BD/").concat(user.getPriceType()));
+
 
         if(user.getPhotoUrl().size() != 0)
         GlideApp.with(context)

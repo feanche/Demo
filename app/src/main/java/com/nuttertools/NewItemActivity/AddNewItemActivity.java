@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import com.nuttertools.R;
+import com.nuttertools.utils.NumberTextWatcher;
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -90,6 +92,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public static final int TEXT_REQUEST = 400;
     public static final String EXTRA_MESSAGE = "com.nuttertools.EXTRA_MESSAGE";
+    private TextInputEditText priceField;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -119,6 +122,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         title = findViewById(R.id.textInputLayout6);
         description = findViewById(R.id.textInputLayout5);
         price = findViewById(R.id.textInputLayout7);
+        priceField = findViewById(R.id.textInputEditText7);
         publishButton = findViewById(R.id.button2);
         locationButton = findViewById(R.id.constraintLayout1);
         spinner = findViewById(R.id.SpinnerCustom);
@@ -183,6 +187,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
         initRecyclerView();
         getData();
+        priceField.addTextChangedListener(new NumberTextWatcher(priceField, "#,###"));
     }
 
     private void getData() {
