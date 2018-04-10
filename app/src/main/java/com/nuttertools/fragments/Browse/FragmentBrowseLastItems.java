@@ -132,7 +132,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
                     // The method calls setRefreshing(false) when it's finished.
-                    presenter.getAds(adId);
+                    presenter.getLastAddedItems(20);
                 }
         );
 
