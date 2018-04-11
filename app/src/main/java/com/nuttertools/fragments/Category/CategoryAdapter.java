@@ -52,7 +52,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
                 .fitCenter()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
-        //TODO .fit >>> .fitCenter()
     }
 
     @Override

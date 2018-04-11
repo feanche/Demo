@@ -25,6 +25,7 @@ import com.nuttertools.R;
 import com.nuttertools.category.CategoryActivity;
 import com.nuttertools.fragments.MyReservations.Adapters.ReservationAdapter;
 import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.ItemClickSupport;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,7 +61,6 @@ public class FragmentReservations extends Fragment {
 
 
 
-
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("Мои заказы");
 
@@ -85,14 +85,10 @@ public class FragmentReservations extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-
                                 if (task.getResult().size() == 0) {
-                                    //view.showToast("Нет данных");
                                     swipeRefreshLayout.setRefreshing(false);
-
                                     return;
                                 }
-
                                 for (DocumentSnapshot document : task.getResult()) {
                                     UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
                                     ar.add(userAdsModel);
@@ -114,6 +110,15 @@ public class FragmentReservations extends Fragment {
         }
     }
 
+    private void showEmptyFragment() {
+        EmptyFragment emptyFragment = new EmptyFragment();
+            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container1, emptyFragment);
+            fragmentTransaction.commit();
+            container = view.findViewById(R.id.container1);
+            container.setVisibility(View.VISIBLE);
+    }
+
     private void initRecyclerView() {
         adapter = new ReservationAdapter(getContext(), ar);
         recyclerView = view.findViewById(R.id.items);
@@ -122,6 +127,8 @@ public class FragmentReservations extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
+
+
 
         adapter.setClickListener(new ReservationAdapter.DotsClickListener() {
             @Override
@@ -154,7 +161,6 @@ public class FragmentReservations extends Fragment {
                     getDate();
                 }
         );
-
     }
 
     public MaterialDialog createListDialog(int position) {
