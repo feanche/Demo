@@ -187,7 +187,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         });
         initRecyclerView();
         getData();
-        priceField.addTextChangedListener(new NumberTextWatcher(priceField, "#,###"));
     }
 
     private void getData() {
