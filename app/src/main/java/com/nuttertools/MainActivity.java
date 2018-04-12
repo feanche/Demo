@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.nuttertools.adapters.ViewPagerAdapter;
 import com.nuttertools.fragments.Browse.FragmentBrowseLastItems;
 import com.nuttertools.fragments.FragmentPersonal;
@@ -41,23 +42,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initBottomNavigationView();
+        initViewPager();
+        setupViewPager(viewPager);
+    }
+
+    private void initViewPager() {
         viewPager = findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
-        bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menu_browse:
-                    viewPager.setCurrentItem(0, false);
-                    break;
-                case R.id.menu_reservations:
-                    viewPager.setCurrentItem(1, false);
-                    break;
-                case R.id.menu_profile:
-                    viewPager.setCurrentItem(3, false);
-                    break;
-            }
-            return false;
-        });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -82,7 +74,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        setupViewPager(viewPager);
+    }
+
+    private void initBottomNavigationView() {
+        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_browse:
+                    viewPager.setCurrentItem(0, false);
+                    break;
+                case R.id.menu_reservations:
+                    viewPager.setCurrentItem(1, false);
+                    break;
+                case R.id.menu_profile:
+                    viewPager.setCurrentItem(3, false);
+                    break;
+            }
+            return false;
+        });
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -125,4 +134,5 @@ public class MainActivity extends AppCompatActivity {
             else super.onBackPressed();
         } else super.onBackPressed();
     }
+
 }
