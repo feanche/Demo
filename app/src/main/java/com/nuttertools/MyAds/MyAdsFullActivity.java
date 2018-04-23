@@ -1,7 +1,6 @@
 package com.nuttertools.MyAds;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,15 +21,11 @@ import com.nuttertools.models.Users;
 import com.nuttertools.utils.CreateDialog;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.GlideApp;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -76,25 +71,25 @@ public class MyAdsFullActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        tvBrn = (TextView) findViewById(R.id.tvBrn);
-        ivOpen = (ImageView) findViewById(R.id.ivOpen);
-        tvProfileTitle = (TextView) findViewById(R.id.tvProfileTitle);
-        ivProfile = (ImageView) findViewById(R.id.ivProfile);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        ivAd = (ImageView) findViewById(R.id.ivAd);
-        tvCoastPrice = (TextView) findViewById(R.id.tvCoastPrice);
-        tvFinishCoast = (TextView) findViewById(R.id.tvFinishCoast);
-        tvShipPrice = (TextView) findViewById(R.id.tvShipPrice);
-        tvFinishCoastPrice = (TextView) findViewById(R.id.tvFinishCoastPrice);
-        tvStatus = (TextView) findViewById(R.id.tvStatus);
-        tvReservation = (TextView) findViewById(R.id.tvReservation);
-        ivAd = (ImageView) findViewById(R.id.ivAd);
-        tvAddressTitle = (TextView) findViewById(R.id.tvAddressTitle);
-        tvAddressSubtitle = (TextView) findViewById(R.id.tvAddressSubtitle);
-        cardViewAddress = (CardView) findViewById(R.id.card_view3);
+        tvBrn = findViewById(R.id.tvBrn);
+        ivOpen = findViewById(R.id.ivOpen);
+        tvProfileTitle = findViewById(R.id.tvProfileTitle);
+        ivProfile = findViewById(R.id.ivProfile);
+        tvTitle = findViewById(R.id.tvTitle);
+        ivAd = findViewById(R.id.ivAd);
+        tvCoastPrice = findViewById(R.id.tvCoastPrice);
+        tvFinishCoast = findViewById(R.id.tvFinishCoast);
+        tvShipPrice = findViewById(R.id.tvShipPrice);
+        tvFinishCoastPrice = findViewById(R.id.tvFinishCoastPrice);
+        tvStatus = findViewById(R.id.tvStatus);
+        tvReservation = findViewById(R.id.tvReservation);
+        ivAd = findViewById(R.id.ivAd);
+        tvAddressTitle = findViewById(R.id.tvAddressTitle);
+        tvAddressSubtitle = findViewById(R.id.tvAddressSubtitle);
+        cardViewAddress = findViewById(R.id.card_view3);
 
         //Кнопка подтвердить
-        btnReservation = (CardView) findViewById(R.id.btnReservation);
+        btnReservation = findViewById(R.id.btnReservation);
         btnReservation.setVisibility(View.INVISIBLE);
 
         topView = findViewById(R.id.topView);
@@ -105,19 +100,12 @@ public class MyAdsFullActivity extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDate();
-            }
-        });
-
+        swipeRefreshLayout.setOnRefreshListener(() -> getDate());
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_ads_full_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         btnReservationListener();
     }
 
@@ -126,40 +114,32 @@ public class MyAdsFullActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(adId)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                userAdsModel = task.getResult().toObject(UserAdsModel.class);
-                                getUserDate(firebaseUser, userAdsModel);
-                            } else {
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            userAdsModel = task.getResult().toObject(UserAdsModel.class);
+                            getUserDate(firebaseUser, userAdsModel);
+                        } else {
 
-                            }
                         }
-                        });
+                    });
         }
     }
 
     private void getUserDate(FirebaseUser firebaseUser, UserAdsModel userAdsModel) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection(FirebaseConst.USERS).document(firebaseUser.getUid())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        topView.setVisibility(View.VISIBLE);
-                        if (task.isSuccessful()) {
-                            Users user = task.getResult().toObject(Users.class);
-                            updateUI(user, userAdsModel);
-                        } else {
+                .addOnCompleteListener(task -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    topView.setVisibility(View.VISIBLE);
+                    if (task.isSuccessful()) {
+                        Users user = task.getResult().toObject(Users.class);
+                        updateUI(user, userAdsModel);
+                    } else {
 
-                        }
                     }
                 });
     }
@@ -169,21 +149,15 @@ public class MyAdsFullActivity extends AppCompatActivity {
         //Бронирование при помощи Batch
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         if(firebaseUser!=null) {
             WriteBatch batch = db.batch();
             // get reference to Ads
             DocumentReference myAdsRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(userAdsModel.getId());
-
             userAdsModel.getReservationInfo().setStatus(ReservationInfo.STATUS_CONFIRMED);
             batch.set(myAdsRef, userAdsModel);
-
-            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    dialog.dismiss();
-                    getDate();
-                }
+            batch.commit().addOnCompleteListener(task -> {
+                dialog.dismiss();
+                getDate();
             });
         }
     }
@@ -195,7 +169,6 @@ public class MyAdsFullActivity extends AppCompatActivity {
         if(info!=null) {
             switch (info.getStatus()) {
                 case ReservationInfo.STATUS_FREE:
-
                     break;
                 case ReservationInfo.STATUS_WAIT_CONFIRM:
                     textView.setText("В ожидании подтверждения");
@@ -225,18 +198,15 @@ public class MyAdsFullActivity extends AppCompatActivity {
     }
 
     private void btnReservationListener() {
-        btnReservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    switch (userAdsModel.getReservationInfo().getStatus()) {
-                        case ReservationInfo.STATUS_FREE:
+        btnReservation.setOnClickListener(v -> {
+                switch (userAdsModel.getReservationInfo().getStatus()) {
+                    case ReservationInfo.STATUS_FREE:
 
-                            break;
-                        case ReservationInfo.STATUS_WAIT_CONFIRM:
-                           confirmAdReservation();
-                            break;
-                    }
-            }
+                        break;
+                    case ReservationInfo.STATUS_WAIT_CONFIRM:
+                       confirmAdReservation();
+                        break;
+                }
         });
     }
 
@@ -248,7 +218,6 @@ public class MyAdsFullActivity extends AppCompatActivity {
                 tvAddressSubtitle.setText(info.getAddress().getLocality());
             } else cardViewAddress.setVisibility(View.INVISIBLE);
         } else cardViewAddress.setVisibility(View.INVISIBLE);
-
     }
 
     private void updateUI(Users user, UserAdsModel u) {
@@ -258,11 +227,8 @@ public class MyAdsFullActivity extends AppCompatActivity {
                 .load(user.getPhoto())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(ivProfile);
-
         setDelivery(u.getReservationInfo());
         setStatus(tvStatus, u.getReservationInfo());
-
-
         if(userAdsModel.getReservationInfo()!=null) {
             SimpleDateFormat sf = new SimpleDateFormat("d MMMM HH:mm", new Locale("ru", "RU"));
             String date = sf.format(u.getReservationInfo().getReservationDate());
@@ -273,10 +239,6 @@ public class MyAdsFullActivity extends AppCompatActivity {
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivAd);
         }
-
-
-
-
 
     }
 }
