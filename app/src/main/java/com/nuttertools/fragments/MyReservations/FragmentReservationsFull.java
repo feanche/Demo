@@ -1,31 +1,44 @@
 package com.nuttertools.fragments.MyReservations;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nuttertools.MainActivity;
 import com.nuttertools.R;
 import com.nuttertools.models.ReservationInfo;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.models.Users;
+import com.nuttertools.utils.CreateDialog;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.GlideApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -57,19 +70,28 @@ public class FragmentReservationsFull extends Fragment {
     private String adTitle;
     private Toolbar toolbar;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_reservations_full, container, false);
         initView();
+        //adId = getIntent().getStringExtra("id");
         adId = getArguments().getString("id");
+
         setHasOptionsMenu(true);
+
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
+
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.title_my_booking));
+        toolbar.setTitle("Мои бронирования");
+
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         getDate();
         return view;
     }
@@ -109,7 +131,15 @@ public class FragmentReservationsFull extends Fragment {
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
-        swipeRefreshLayout.setOnRefreshListener(() -> getDate());
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDate();
+            }
+        });
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+
     }
 
     private void getDate() {
@@ -120,12 +150,15 @@ public class FragmentReservationsFull extends Fragment {
 
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(adId)
                     .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            userAdsModel = task.getResult().toObject(UserAdsModel.class);
-                            getUserDate(userAdsModel);
-                        } else {
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                userAdsModel = task.getResult().toObject(UserAdsModel.class);
+                                getUserDate(userAdsModel);
+                            } else {
 
+                            }
                         }
                     });
         }
@@ -136,15 +169,18 @@ public class FragmentReservationsFull extends Fragment {
 
         db.collection(FirebaseConst.USERS).document(userAdsModel.getUserId())
                 .get()
-                .addOnCompleteListener(task -> {
-                    swipeRefreshLayout.setRefreshing(false);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    topView.setVisibility(View.VISIBLE);
-                    if (task.isSuccessful()) {
-                        Users user = task.getResult().toObject(Users.class);
-                        updateUI(user, userAdsModel);
-                    } else {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        topView.setVisibility(View.VISIBLE);
+                        if (task.isSuccessful()) {
+                            Users user = task.getResult().toObject(Users.class);
+                            updateUI(user, userAdsModel);
+                        } else {
 
+                        }
                     }
                 });
     }
@@ -177,7 +213,7 @@ public class FragmentReservationsFull extends Fragment {
         if(info!=null) {
             if (info.isDelivery()) {
                 cardViewAddress.setVisibility(View.VISIBLE);
-                tvAddressTitle.setText(getString(R.string.tv_delivery_method));
+                tvAddressTitle.setText("Способ отправки: доставка");
                 tvAddressSubtitle.setText(info.getAddress().getLocality());
             } else cardViewAddress.setVisibility(View.INVISIBLE);
         } else cardViewAddress.setVisibility(View.INVISIBLE);
@@ -192,29 +228,29 @@ public class FragmentReservationsFull extends Fragment {
 
                     break;
                 case ReservationInfo.STATUS_WAIT_CONFIRM:
-                    textView.setText(getString(R.string.tv_pending_approval));
+                    textView.setText("В ожидании подтверждения");
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow_700));
 
                     btnReservation.setVisibility(View.VISIBLE);
-                    tvBrn.setText(getString(R.string.tv_confirm));
+                    tvBrn.setText("Подтвердить");
                     break;
                 case ReservationInfo.STATUS_CONFIRMED:
-                    textView.setText(getString(R.string.tv_confirmed));
+                    textView.setText("Подтвержден");
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.green_700));
                     break;
                 case ReservationInfo.STATUS_WAIT_RETURN:
-                    textView.setText(getString(R.string.tv_waiting_for_return));
+                    textView.setText("В ожидании возврата");
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.yellow_700));
                     break;
                 case ReservationInfo.STATUS_NOT_CONFIRMED:
-                    textView.setText(getString(R.string.tv_not_verified));
+                    textView.setText("Не подтвержден");
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.red_700));
                     break;
                 default:
-                    textView.setText(getString(R.string.tv_unknown_status));
+                    textView.setText("Статус неизвестен");
                     break;
             }
-        } else textView.setText(getString(R.string.tv_not_booked));
+        } else textView.setText("Не забронирован!");
 
     }
 

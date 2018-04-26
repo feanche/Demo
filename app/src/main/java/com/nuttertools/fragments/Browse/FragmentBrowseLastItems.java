@@ -65,7 +65,9 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
         toolbar.setTitle(title);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
+
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+
         initRecyclerView();
         initButtons();
         presenter = new BrowsePresenter(this);

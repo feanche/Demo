@@ -100,13 +100,21 @@ public class MyAdsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            Intent intent = new Intent(MyAdsActivity.this, MyAdsFullActivity.class);
-            intent.putExtra("id", ar.get(position).getId());
-            startActivity(intent);
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent intent = new Intent(MyAdsActivity.this, MyAdsFullActivity.class);
+                intent.putExtra("id", ar.get(position).getId());
+                startActivity(intent);
+            }
         });
 
-        adapter.setDotsClickListener(position -> createListDialog(position));
+        adapter.setDotsClickListener(new MyAdsAdapter.DotsClickListener() {
+            @Override
+            public void onClick(int position) {
+                createListDialog(position);
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     // This method performs the actual data-refresh operation.
@@ -126,27 +134,34 @@ public class MyAdsActivity extends AppCompatActivity {
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
 
-                            if (task.getResult().size() == 0) {
-                                //view.showToast("Нет данных");
+                                if (task.getResult().size() == 0) {
+                                    //view.showToast("Нет данных");
+                                    swipeRefreshLayout.setRefreshing(false);
+
+                                    return;
+                                }
+
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                    userAdsModel.setId(document.getId());
+                                    ar.add(userAdsModel);
+                                }
+                                adapter.notifyDataSetChanged();
                                 swipeRefreshLayout.setRefreshing(false);
-                                return;
                             }
-
-                            for (DocumentSnapshot document : task.getResult()) {
-                                UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
-                                userAdsModel.setId(document.getId());
-                                ar.add(userAdsModel);
-                            }
-                            adapter.notifyDataSetChanged();
-                            swipeRefreshLayout.setRefreshing(false);
                         }
                     })
-                    .addOnFailureListener(e -> {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     });
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -166,17 +181,21 @@ public class MyAdsActivity extends AppCompatActivity {
             WriteBatch batch = db.batch();
 
             // Update the Ads
+            DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(ads.getId());
             DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(ads.getId());
 
             //batch.delete(adsRef);
             batch.delete(myReservationRef);
 
             // Commit the batch
-            batch.commit().addOnCompleteListener(task -> {
-                ar.remove(position);
-                adapter.notifyDataSetChanged();
-                Log.d(TAG, "batch success");
-                dialog.dismiss();
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    ar.remove(position);
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "batch success");
+                    dialog.dismiss();
+                }
             });
         }
     }
@@ -184,11 +203,14 @@ public class MyAdsActivity extends AppCompatActivity {
     public MaterialDialog createListDialog(int position) {
         return new MaterialDialog.Builder(this)
                 .items(R.array.dialog_my_ads_activity)
-                .itemsCallback((dialog, view, which, text) -> {
-                    switch (which) {
-                        case 0:
-                            deleteAds(position);
-                            break;
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                deleteAds(position);
+                                break;
+                        }
                     }
                 })
                 .show();

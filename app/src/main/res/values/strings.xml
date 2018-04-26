@@ -41,34 +41,37 @@
 
     <string name="button_submit">Разместить</string>
     <string name="title_activity_full_info">FullInfoActivity</string>
-    <string name="title_activity_login">Войти</string>
+    <string name="title_activity_login">Sign in</string>
 
+    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Пароль (опционально)</string>
-    <string name="action_sign_in">Войти или зарегистрироваться</string>
-    <string name="action_sign_in_short">Войти</string>
-    <string name="error_invalid_email">Неверный email</string>
-    <string name="error_invalid_password">Пароль короткий</string>
-    <string name="error_incorrect_password">Неверный пароль</string>
-    <string name="error_field_required">Это поле обязательно</string>
-    <string name="permission_rationale">Необходимо разрешение для доступа к электронной почте</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 
     <string name="signed_in">Signed In</string>
     <string name="signed_out">Signed Out</string>
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="firebase_user_management">Firebase User Management</string>
 
-    <string name="phone_title_text">Номер телефона</string>
-    <string name="auth_failed">Ошибка авторизации</string>
-    <string name="start_phone_auth">Старт</string>
-    <string name="verify_phone_auth">Подтверждение</string>
-    <string name="resend_phone_auth">Переотправить</string>
-    <string name="hint_phone_number">Номер телефона</string>
-    <string name="hint_verification_code">Код подтверждения</string>
-    <string name="status_code_sent">Код отправлен</string>
-    <string name="status_verification_failed">Ошибка подтвеждения</string>
-    <string name="status_verification_succeeded">Успешное подтверждение</string>
-    <string name="status_sign_in_failed">Ошибка входа</string>
+    <string name="phone_title_text">Phone Number</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="start_phone_auth">Start</string>
+    <string name="verify_phone_auth">Verify</string>
+    <string name="resend_phone_auth">Resend</string>
+    <string name="hint_phone_number">Phone Number</string>
+    <string name="hint_verification_code">Verification Code</string>
+    <string name="status_code_sent">Code Sent</string>
+    <string name="status_verification_failed">Verification failed</string>
+    <string name="status_verification_succeeded">Verification succeeded</string>
+    <string name="status_sign_in_failed">Sign-in failed</string>
     <string name="instant_validation">(instant validation)</string>
     <string name="title_personal_sign_in">Авторизация</string>
     <string name="title_personal_sign_out">Выйти</string>
@@ -80,26 +83,4 @@
     <string name="notifications_admin_channel_name">admin channel</string>
     <string name="notifications_admin_channel_description">admin_channel_desc</string>
 
-    <string name="title_my_orders">Мои заказы</string>
-    <string name="title_my_booking">Мои бронирования</string>
-    
-    <string name="dialog_wait">Пожалуйста, подождите!</string>
-    
-    <string name="tv_pending_approval">В ожидании подтверждения</string>
-    <string name="tv_confirm">Подтвердить</string>
-    <string name="tv_confirmed">Подтвержден</string>
-    <string name="tv_waiting_for_return">В ожидании возврата</string>
-    <string name="tv_not_verified">Не подтвержден</string>
-    <string name="tv_unknown_status">Статус неизвестен</string>
-    <string name="tv_not_booked">Не забронирован!</string>
-    <string name="tv_delivery_method">Способ отправки: доставка</string>
-
-    <string name="toast_something_wrong">Что-то пошло не так</string>
-    <string name="toast_successfull_logout">Успешный выход</string>
-
-    <string name="snackbar_quote_exc">Квота превышена</string>
-
-    <string name="et_invalid_code">Неверный код</string>
-    <string name="et_invalid_phone">Неверный номер телефона</string>
-    <string name="et_not_be_empty">Не может быть пустым</string>
 </resources>

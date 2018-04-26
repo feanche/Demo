@@ -2,6 +2,7 @@ package com.nuttertools.fragments.Browse;
 
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nuttertools.FullInfo.FullInfoActivity;
+import com.nuttertools.MainActivity;
+import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
 import com.nuttertools.category.CategoryActivity;
 import com.nuttertools.fragments.Browse.adapters.UserAdsAdapter;

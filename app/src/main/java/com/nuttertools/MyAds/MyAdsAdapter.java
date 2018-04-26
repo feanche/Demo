@@ -68,7 +68,12 @@ public class MyAdsAdapter extends RecyclerView.Adapter<MyAdsAdapter.UserViewHold
                 .centerCrop()
                 .into(holder.imageView);
 
-        holder.ivDots.setOnClickListener(v -> dotsClickListener.onClick(position));
+        holder.ivDots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dotsClickListener.onClick(position);
+            }
+        });
     }
 
     @Override
