@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputEditText;
@@ -22,6 +23,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -38,6 +40,9 @@ import java.util.UUID;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.nuttertools.UserAddressesActivity.AddressesActivity;
 import com.nuttertools.fragments.Category.Category;
 import com.nuttertools.models.UserAdsModel;
@@ -85,6 +90,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     private int categoryId;
     Uri fileUri;
     Uri downloadUrl;
+    private String adId;
+    byte[] photo;
     ArrayList<String> arReportUrl = new ArrayList<>();
     ImagesRecyclerAdapter imagesRecyclerAdapter;
     CategoriesAdapter categoriesAdapter;
@@ -93,6 +100,8 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     public static final int TEXT_REQUEST = 400;
     public static final String EXTRA_MESSAGE = "com.nuttertools.EXTRA_MESSAGE";
     private TextInputEditText priceField;
+
+    UserAdsModel userAdsModel;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -170,15 +179,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
             AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
             yesOrNoDialog.setTitle("Подтверждаете размещение объявления?");
             yesOrNoDialog.setPositiveButton("OK", (dialog, which) -> {
-                completenessCheck();
-                if (!complete) {
+                //completenessCheck();
+                /*if (!complete) {
                     Toast.makeText(getApplicationContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
                 } else if (complete && arReportUrl.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Добавьте хотя бы одно изображение", Toast.LENGTH_SHORT).show();
-                } else if (complete && !arReportUrl.isEmpty()){
+                } else if (complete && !arReportUrl.isEmpty()){*/
                     sendDataToFirestore();
-                    finish();
-                }
+                   /* finish();
+                }*/
             });
 
             yesOrNoDialog.setNegativeButton("Отмена", (dialog, which) ->
@@ -278,15 +287,16 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream);
         final byte[] data = byteArrayOutputStream.toByteArray();
         if (data.length > 0) {
-            uploadImageToStorage(data);
+            //uploadImageToStorage(data);
+            photo = data;
         }
     }
 
-    public void uploadImageToStorage(byte[] data) {
-        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+    public void uploadImageToStorage(byte[] data, String adId) {
+        StorageReference ref = storageReference.child("images/" + adId + "/"+ UUID.randomUUID().toString());
         uploadTask = ref.putBytes(data);
         uploadTask.addOnFailureListener(e ->
-                Toast.makeText(getApplicationContext(),"Ошибка загрузки изображения",Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(),"Ошибка отправки данных",Toast.LENGTH_SHORT)
                         .show())
                 .addOnProgressListener(taskSnapshot -> {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
@@ -296,7 +306,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     imagesRecyclerAdapter.setIsLoaded(arReportUrl.size(), true);
                     downloadUrl = taskSnapshot.getDownloadUrl();
                     arReportUrl.add(downloadUrl.toString());
-                    Toast.makeText(getApplicationContext(),"Изображение добавлено",Toast.LENGTH_SHORT).show();
+                    db.collection(FirebaseConst.ADS).document(adId).update("photoUrl",arReportUrl);
+                    Toast.makeText(getApplicationContext(),"Объявление размещено",Toast.LENGTH_SHORT).show();
+                    finish();
                 });
     }
 
@@ -316,25 +328,26 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     public void sendDataToFirestore() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        UserAdsModel userAdsModel = new UserAdsModel(
-                locationLat,
-                locationLon,
-                Integer.parseInt(price.getEditText().getText().toString()),
-                categoryId,
-                title.getEditText().getText().toString(),
-                arReportUrl,
-                description.getEditText().getText().toString(),
-                new Date(),
-                commentToAddress,
-                priceType);
+        userAdsModel = new UserAdsModel();
+        userAdsModel.setLocationLat(locationLat);
+        userAdsModel.setLocationLon(locationLon);
+        userAdsModel.setPrice(Integer.parseInt(price.getEditText().getText().toString()));
+        userAdsModel.setCategoryId(categoryId);
+        userAdsModel.setTitle(title.getEditText().getText().toString());
+        userAdsModel.setDescription(description.getEditText().getText().toString());
+        userAdsModel.setTimestamp(new Date());
+        userAdsModel.setCommentToAddress(commentToAddress);
+        userAdsModel.setPriceType(priceType);
         if (firebaseUser != null) userAdsModel.setUserId(firebaseUser.getUid());
+
         db.collection(FirebaseConst.ADS)
                 .add(userAdsModel)
-                .addOnSuccessListener(documentReference ->
-                        Toast.makeText(getApplicationContext(),"Объявление успешно добавлено",Toast.LENGTH_SHORT)
-                                .show())
+                .addOnSuccessListener(documentReference -> {
+                    adId = documentReference.getId();
+                    uploadImageToStorage(photo, adId);
+                })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getApplicationContext(),"Ошибка загрузки данных",Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(),"Ошибка отправки данных",Toast.LENGTH_SHORT)
                                 .show());
     }
 

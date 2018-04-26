@@ -2,7 +2,6 @@ package com.nuttertools.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,15 +22,9 @@ import com.nuttertools.utils.GlideApp;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,7 +117,6 @@ public class FragmentPersonal extends Fragment {
 
         switch (state) {
             case STATE_AUTH:
-
                 checkUserInFirestore(new CheckUserCallback() {
                     @Override
                     public void onSuccess(Users _user) {
@@ -133,7 +125,6 @@ public class FragmentPersonal extends Fragment {
 
                     @Override
                     public void onUserDoNotCreate() {
-
                     }
                 });
 
@@ -150,8 +141,7 @@ public class FragmentPersonal extends Fragment {
                 break;
             case STATE_NOT_AUTH:
                 tvSignInOut.setText(R.string.title_personal_sign_in);
-                tvToolbarTitle.setText("Вы не авторизованы");
-                //tvToolbarSubtitle.setText("");
+                tvToolbarTitle.setText(R.string.tv_not_authorization);
                 GlideApp.with(getContext())
                         .load(R.mipmap.ic_launcher)
                         .transition(DrawableTransitionOptions.withCrossFade())
@@ -160,70 +150,40 @@ public class FragmentPersonal extends Fragment {
                 addressButtonNonActive();
                 break;
         }
-
     }
 
     private void btnClickListeners() {
-        clSignInOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser == null) {
+        clSignInOut.setOnClickListener(v -> {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser == null) {
 
-                    // Choose authentication providers
-                    List<AuthUI.IdpConfig> providers = Arrays.asList(
-                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                            new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
-                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+                List<AuthUI.IdpConfig> providers = Arrays.asList(
+                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                        new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
+                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
 
-// Create and launch sign-in intent
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setAvailableProviders(providers)
-                                    .setTheme(R.style.AppTheme)
-                                    .build(),
-                            RC_SIGN_IN);
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(providers)
+                                .setTheme(R.style.AppTheme)
+                                .build(),
+                        RC_SIGN_IN);
 
-                } else {
-                    AuthUI.getInstance()
-                            .signOut(getActivity())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    updateUI(STATE_NOT_AUTH);
-                                }
-                            });
-                }
+            } else {
+                AuthUI.getInstance()
+                        .signOut(getActivity())
+                        .addOnCompleteListener(task -> updateUI(STATE_NOT_AUTH));
             }
         });
 
-        clEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), ProfileCreateActivity.class));
-            }
-        });
+        clEditProfile.setOnClickListener(v -> startActivity(new Intent(getContext(), ProfileCreateActivity.class)));
 
-        clNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), NotificationsActivity.class));
-            }
-        });
+        clNotifications.setOnClickListener(v -> startActivity(new Intent(getContext(), NotificationsActivity.class)));
 
-        clAddresses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddressesActivity.class));
-            }
-        });
+        clAddresses.setOnClickListener(v -> startActivity(new Intent(getContext(), AddressesActivity.class)));
 
-        clMyAds.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), MyAdsActivity.class));
-            }
-        });
+        clMyAds.setOnClickListener(v -> startActivity(new Intent(getContext(), MyAdsActivity.class)));
     }
 
     private void checkUserInFirestore(CheckUserCallback checkUserCallback) {
@@ -234,15 +194,11 @@ public class FragmentPersonal extends Fragment {
                     .get()
                     .addOnCompleteListener(snapshotTask -> {
                         if (snapshotTask.isSuccessful()) {
-
                             if (!snapshotTask.getResult().exists()) {
-                                //Создание  пользователя после аутентификации
-                                //startActivity(new Intent(getContext(), ProfileCreateActivity.class));
                                 checkUserCallback.onUserDoNotCreate();
                             } else {
                                 user = snapshotTask.getResult().toObject(Users.class);
                                 checkUserCallback.onSuccess(user);
-                                //tvToolbarSubtitle.setText(user.getPhoneNumber());
                             }
 
                         }
@@ -255,12 +211,7 @@ public class FragmentPersonal extends Fragment {
         if(firebaseUser!=null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("users").document(firebaseUser.getUid()).collection("notifications")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                            tv3.setText("Уведомления " + documentSnapshots.getDocuments().size());
-                        }
-                    });
+                    .addSnapshotListener((documentSnapshots, e) -> tv3.setText("Уведомления " + documentSnapshots.getDocuments().size()));
         }
     }
 
@@ -273,9 +224,7 @@ public class FragmentPersonal extends Fragment {
         }
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
                 updateUI();
                 checkUserInFirestore(new CheckUserCallback() {
                     @Override
@@ -288,10 +237,7 @@ public class FragmentPersonal extends Fragment {
                         startActivity(new Intent(getContext(), ProfileCreateActivity.class));
                     }
                 });
-                // ...
             } else {
-                // Sign in failed, check response for error code
-                // ...
             }
         }
     }

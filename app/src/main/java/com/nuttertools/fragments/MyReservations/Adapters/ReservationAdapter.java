@@ -51,12 +51,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         String dateEnd = sf.format(ads.getReservationInfo().getReservationDateEnd());
         holder.tvTimestamp.setText("Начало брони " + date + "\nКонец брони " + dateEnd);
         setStatus(holder.tvStatus, ads.getReservationInfo());
-        holder.ivDots.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dotsClickListener.onClick(position);
-            }
-        });
+        holder.ivDots.setOnClickListener(v -> dotsClickListener.onClick(position));
     }
 
     private void setStatus(TextView textView, ReservationInfo info) {
@@ -65,23 +60,23 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
                 break;
             case ReservationInfo.STATUS_WAIT_CONFIRM:
-                textView.setText("В ожидании подтверждения");
+                textView.setText(R.string.tv_pending_approval);
                 textView.setTextColor(ContextCompat.getColor(context, R.color.yellow_700));
                 break;
             case ReservationInfo.STATUS_CONFIRMED:
-                textView.setText("Подтвержден");
+                textView.setText(R.string.tv_confirmed);
                 textView.setTextColor(ContextCompat.getColor(context, R.color.green_700));
                 break;
             case ReservationInfo.STATUS_WAIT_RETURN:
-                textView.setText("В ожидании возврата");
+                textView.setText(R.string.tv_waiting_for_return);
                 textView.setTextColor(ContextCompat.getColor(context, R.color.yellow_700));
                 break;
             case ReservationInfo.STATUS_NOT_CONFIRMED:
-                textView.setText("Не подтвержден");
+                textView.setText(R.string.tv_not_verified);
                 textView.setTextColor(ContextCompat.getColor(context, R.color.red_700));
                 break;
             default:
-                textView.setText("Статус неизвестен");
+                textView.setText(R.string.tv_unknown_status);
                 break;
         }
     }

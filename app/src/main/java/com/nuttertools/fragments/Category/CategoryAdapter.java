@@ -5,15 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.nuttertools.R;
-import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.GlideApp;
 import com.nuttertools.utils.SquareImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,16 +39,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
         holder.tvTitle.setText(category.getName());
         holder.tvDesc.setText(category.getDescription());
 
-        /*SimpleDateFormat sf = new SimpleDateFormat("HH:mm yyyy-MM-dd");
-        String date = sf.format(new Date(user.getPublicTime()));
-        holder.tvDate.setText("Время публикации: \n" +  date);*/
-
         if(category.getImgUrl()!=null)
-        GlideApp.with(context)
-                .load(category.getImgUrl())
-                .fitCenter()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.imageView);
+            GlideApp.with(context)
+                    .load(category.getImgUrl())
+                    .fitCenter()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.imageView);
     }
 
     @Override

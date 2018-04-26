@@ -2,15 +2,15 @@ package com.nuttertools.MyAds;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,18 +19,15 @@ import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.CreateDialog;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.ItemClickSupport;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
@@ -45,8 +42,8 @@ public class MyAdsActivity extends AppCompatActivity {
     private MaterialDialog dialog;
     private FloatingActionButton fab;
     public static final int NEW_ITEM = 1;
+    private ConstraintLayout container_empty;
 
-    //Toolbar back button click
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -69,7 +66,7 @@ public class MyAdsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_ads_name));
+        getSupportActionBar().setTitle(getString(R.string.activity_my_ads_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -100,28 +97,15 @@ public class MyAdsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent intent = new Intent(MyAdsActivity.this, MyAdsFullActivity.class);
-                intent.putExtra("id", ar.get(position).getId());
-                startActivity(intent);
-            }
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
+            Intent intent = new Intent(MyAdsActivity.this, MyAdsFullActivity.class);
+            intent.putExtra("id", ar.get(position).getId());
+            startActivity(intent);
         });
 
-        adapter.setDotsClickListener(new MyAdsAdapter.DotsClickListener() {
-            @Override
-            public void onClick(int position) {
-                createListDialog(position);
-            }
-        });
+        adapter.setDotsClickListener(position -> createListDialog(position));
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-                    // This method performs the actual data-refresh operation.
-                    // The method calls setRefreshing(false) when it's finished.
-                    getDate();
-                }
-        );
+        swipeRefreshLayout.setOnRefreshListener(() -> getDate());
 
     }
 
@@ -134,35 +118,26 @@ public class MyAdsActivity extends AppCompatActivity {
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-
-                                if (task.getResult().size() == 0) {
-                                    //view.showToast("Нет данных");
-                                    swipeRefreshLayout.setRefreshing(false);
-
-                                    return;
-                                }
-
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
-                                    userAdsModel.setId(document.getId());
-                                    ar.add(userAdsModel);
-                                }
-                                adapter.notifyDataSetChanged();
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
                                 swipeRefreshLayout.setRefreshing(false);
+                                return;
                             }
+                            for (DocumentSnapshot document : task.getResult()) {
+                                UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
+                                userAdsModel.setId(document.getId());
+                                ar.add(userAdsModel);
+                            }
+                            adapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnFailureListener(e -> {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnSuccessListener(queryDocumentSnapshots -> emptyCheck());
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -177,25 +152,18 @@ public class MyAdsActivity extends AppCompatActivity {
         UserAdsModel ads = ar.get(position);
 
         if (firebaseUser != null) {
-            // Get a new write batch
             WriteBatch batch = db.batch();
-
-            // Update the Ads
-            DocumentReference adsRef = db.collection(FirebaseConst.ADS).document(ads.getId());
-            DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_ADS).document(ads.getId());
-
-            //batch.delete(adsRef);
+            DocumentReference myReservationRef = db
+                    .collection(FirebaseConst.USERS)
+                    .document(firebaseUser.getUid())
+                    .collection(FirebaseConst.MY_ADS)
+                    .document(ads.getId());
             batch.delete(myReservationRef);
 
-            // Commit the batch
-            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    ar.remove(position);
-                    adapter.notifyDataSetChanged();
-                    Log.d(TAG, "batch success");
-                    dialog.dismiss();
-                }
+            batch.commit().addOnCompleteListener(task -> {
+                ar.remove(position);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
             });
         }
     }
@@ -203,18 +171,27 @@ public class MyAdsActivity extends AppCompatActivity {
     public MaterialDialog createListDialog(int position) {
         return new MaterialDialog.Builder(this)
                 .items(R.array.dialog_my_ads_activity)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                deleteAds(position);
-                                break;
-                        }
+                .itemsCallback((dialog, view, which, text) -> {
+                    switch (which) {
+                        case 0:
+                            deleteAds(position);
+                            break;
                     }
                 })
                 .show();
     }
 
+    private void emptyCheck() {
+        container_empty = findViewById(R.id.container_empty_notifications);
+        if (adapter.getItemCount() == 0) {
+            EmptyFragment emptyFragment = EmptyFragment.instance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_empty_notifications, emptyFragment)
+                    .commit();
+            container_empty.setVisibility(View.VISIBLE);
+        } else {
+            container_empty.setVisibility(View.GONE);
+        }
+    }
 
 }

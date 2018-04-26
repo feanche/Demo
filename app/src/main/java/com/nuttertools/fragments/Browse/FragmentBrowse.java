@@ -1,10 +1,11 @@
 package com.nuttertools.fragments.Browse;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nuttertools.FullInfo.FullInfoActivity;
-import com.nuttertools.MainActivity;
-import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
 import com.nuttertools.category.CategoryActivity;
 import com.nuttertools.fragments.Browse.adapters.UserAdsAdapter;
 import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
     private CollapsingToolbarLayout collapsingToolbarLayout;
     int adId;
     public static Bundle bundle = new Bundle();
+    private ConstraintLayout container_empty;
 
     public static FragmentBrowse instance(int id, String name) {
         bundle.putInt("id", id);
@@ -71,9 +72,7 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
 
     private void initRecyclerView() {
         arUserAds = new ArrayList<>();
-
         adapter = new UserAdsAdapter(getContext(), arUserAds);
-
         recyclerView = view.findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -81,21 +80,13 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent intent = new Intent(getActivity(), FullInfoActivity.class);
-                intent.putExtra("key", arUserAds.get(position).getId());
-                startActivity(intent);
-            }
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
+            Intent intent = new Intent(getActivity(), FullInfoActivity.class);
+            intent.putExtra("key", arUserAds.get(position).getId());
+            startActivity(intent);
         });
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-                    // This method performs the actual data-refresh operation.
-                    // The method calls setRefreshing(false) when it's finished.
-                    presenter.getAds(adId);
-                }
-        );
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getAds(adId));
 
     }
 
@@ -119,6 +110,20 @@ public class FragmentBrowse extends Fragment implements BrowseFragmentContract.V
         arUserAds.clear();
         arUserAds.addAll(ar);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void emptyCheck() {
+        container_empty = view.findViewById(R.id.container_empty_browse);
+        if (adapter.getItemCount() == 0) {
+            EmptyFragment emptyFragment = EmptyFragment.instance();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_empty_browse, emptyFragment)
+                    .commit();
+            container_empty.setVisibility(View.VISIBLE);
+        } else {
+            container_empty.setVisibility(View.GONE);
+        }
     }
 
 

@@ -1,10 +1,9 @@
 package com.nuttertools.fragments.Category;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,21 +11,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.nuttertools.FullInfo.FullInfoActivity;
-import com.nuttertools.MainActivity;
 import com.nuttertools.R;
 import com.nuttertools.category.CategoryActivity;
 import com.nuttertools.fragments.Browse.FragmentBrowse;
-import com.nuttertools.fragments.Browse.adapters.UserAdsAdapter;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.ItemClickSupport;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
@@ -40,11 +33,9 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
     private CategoryMvp.Presenter presenter;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private ArrayList<Category> ar = new ArrayList<>();
     private CategoryAdapter adapter;
-
-
+    private ConstraintLayout container_empty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,12 +44,11 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         setHasOptionsMenu(true);
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.app_name));
+        toolbar.setTitle(getString(R.string.app_name));
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         ((CategoryActivity) getActivity()).setSupportActionBar(toolbar);
-        ((CategoryActivity) getActivity()).getSupportActionBar().setTitle("Категории");
-        //((CategoryActivity) getActivity()).getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        ((CategoryActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_categories));
         ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((CategoryActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -83,22 +73,10 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
 
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                presenter.recyclerItemClick(position);
-            }
-        });
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> presenter.recyclerItemClick(position));
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-                    // This method performs the actual data-refresh operation.
-                    // The method calls setRefreshing(false) when it's finished.
-                    presenter.getDate();
-                }
-        );
-
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getDate());
     }
-
 
     @Override
     public void onDestroy() {
@@ -108,16 +86,9 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void showLoading() {
@@ -138,11 +109,24 @@ public class FragmentCategory extends Fragment implements CategoryMvp.View {
 
     @Override
     public void openActivity(int id, String name) {
-
         FragmentBrowse fragmentBrowse = FragmentBrowse.instance(id, name);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.addToBackStack("browseFragment");
         transaction.replace(R.id.container, fragmentBrowse)
                 .commit();
+    }
+
+    @Override
+    public void emptyCheck() {
+        container_empty = view.findViewById(R.id.container_empty_category);
+        if (adapter.getItemCount() == 0) {
+            EmptyFragment emptyFragment = EmptyFragment.instance();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_empty_category, emptyFragment)
+                    .commit();
+            container_empty.setVisibility(View.VISIBLE);
+        } else {
+            container_empty.setVisibility(View.GONE);
+        }
     }
 }

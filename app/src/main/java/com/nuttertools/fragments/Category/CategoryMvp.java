@@ -13,6 +13,7 @@ public interface CategoryMvp {
     interface View extends BaseView {
         void updateRecyclerView(ArrayList<Category> categories);
         void openActivity(int id, String name);
+        void emptyCheck();
     }
 
     interface Presenter {

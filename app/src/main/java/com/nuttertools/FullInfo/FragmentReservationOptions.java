@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
@@ -31,7 +30,6 @@ import com.nuttertools.models.Address;
 import com.nuttertools.models.ReservationInfo;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.models.Users;
-import com.nuttertools.utils.CreateDialog;
 import com.nuttertools.utils.GlideApp;
 import com.squareup.picasso.Picasso;
 

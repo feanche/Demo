@@ -13,6 +13,7 @@ public interface BrowseFragmentContract {
 
     interface View extends BaseView{
         void addDate(ArrayList<UserAdsModel> arAds);
+        void emptyCheck();
     }
 
     interface Presenter {

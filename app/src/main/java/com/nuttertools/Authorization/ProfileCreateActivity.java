@@ -1,41 +1,29 @@
 package com.nuttertools.Authorization;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.nuttertools.MyFirebaseInstanceIDService;
 import com.nuttertools.R;
 import com.nuttertools.fragments.FragmentPersonal;
 import com.nuttertools.models.Users;
-import com.nuttertools.utils.FirebaseMethods;
+import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.GlideApp;
-import com.firebase.ui.auth.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.squareup.picasso.Picasso;
 
 public class ProfileCreateActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProfileCreateActivity";
     private ImageView ivProfile;
     private TextInputEditText edName, edSubName, edPhone, edEmail;
     private FirebaseUser firebaseUser;
@@ -43,8 +31,6 @@ public class ProfileCreateActivity extends AppCompatActivity {
     private ConstraintLayout cl;
     private ProgressBar progressBar;
 
-
-    //Toolbar back button click
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -58,11 +44,9 @@ public class ProfileCreateActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Редактирование");
+        getSupportActionBar().setTitle(getString(R.string.title_profile_edit));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
 
         cl = findViewById(R.id.cl);
         cl.setVisibility(View.INVISIBLE);
@@ -90,11 +74,10 @@ public class ProfileCreateActivity extends AppCompatActivity {
     private void checkUserInFirestore (FirebaseUser firebaseUser) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(firebaseUser.getUid())
+        db.collection(FirebaseConst.USERS).document(firebaseUser.getUid())
                 .get()
                 .addOnCompleteListener(snapshotTask -> {
                     if (snapshotTask.isSuccessful()) {
-                        //Если пользователь есть в бд
                         if (snapshotTask.getResult().exists()) {
                             Users user = snapshotTask.getResult().toObject(Users.class);
                             edName.setText(user.getFirstName() == null ? (firebaseUser.getDisplayName()) : user.getFirstName());
@@ -124,20 +107,18 @@ public class ProfileCreateActivity extends AppCompatActivity {
                         cl.setVisibility(View.VISIBLE);
                     }
                 });
-
-
     }
 
     public void updateUserInfo (View view) {
         progressBar.setVisibility(View.VISIBLE);
 
         if(edName.getText().toString().isEmpty()) {
-            edName.setError("Вы должны ввести имя");
+            edName.setError(getString(R.string.et_should_enter_name));
             return;
         }
 
         if(edPhone.getText().toString().isEmpty()) {
-            edPhone.setError("Вы должны ввести номер");
+            edPhone.setError(getString(R.string.et_should_enter_phone));
             return;
         }
 
@@ -147,32 +128,19 @@ public class ProfileCreateActivity extends AppCompatActivity {
                 .setDisplayName(edName.getText() + " " + edSubName.getText())
                 .build();
 
-        //Обновляем профиль FireBase
         firebaseUser.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("ProfileCreateActivity", "User profile updated.");
-
-                            //создаем/обновляем профиль в Firestore
-                            Users user = new Users(firebaseUser.getUid(), edName.getText().toString(), edEmail.getText().toString(), edPhone.getText().toString());
-                            if(firebaseUser.getPhotoUrl()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
-                            //user.setPustNotificationToken(FirebaseInstanceId.getInstance().getToken());
-                            //FirebaseMethods.updateToken();
-                            db.collection("users").document(firebaseUser.getUid())
-                                    .set(user)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "Document snapshot setted");
-                                            Toast.makeText(getApplicationContext(), "Профиль успешно изменен!", Toast.LENGTH_LONG).show();
-                                            setResult(FragmentPersonal.REQUEST_CODE);
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            finish();
-                                        }
-                                    });
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Users user = new Users(firebaseUser.getUid(), edName.getText().toString(), edEmail.getText().toString(), edPhone.getText().toString());
+                        if(firebaseUser.getPhotoUrl()!=null) user.setPhoto(firebaseUser.getPhotoUrl().toString());
+                        db.collection(FirebaseConst.USERS).document(firebaseUser.getUid())
+                                .set(user)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getApplicationContext(), getString(R.string.toast_success_profile_edit), Toast.LENGTH_LONG).show();
+                                    setResult(FragmentPersonal.REQUEST_CODE);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    finish();
+                                });
                     }
                 });
     }
