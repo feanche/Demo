@@ -56,15 +56,19 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_last_items, container, false);
-        setHasOptionsMenu(true);
+
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
+
         toolbar = view.findViewById(R.id.toolbar);
-        String title = getString(R.string.title_last_added_items);
-        toolbar.setTitle(title);
+        toolbar.setTitle(getString(R.string.title_last_added_items));
+
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
+
+        setHasOptionsMenu(true);
 
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
 

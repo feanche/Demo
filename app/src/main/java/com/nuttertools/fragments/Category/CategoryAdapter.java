@@ -47,11 +47,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.UserVi
         holder.tvDate.setText("Время публикации: \n" +  date);*/
 
         if(category.getImgUrl()!=null)
-        GlideApp.with(context)
-                .load(category.getImgUrl())
-                .fitCenter()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.imageView);
+            GlideApp.with(context)
+                    .load(category.getImgUrl())
+                    .fitCenter()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.imageView);
     }
 
     @Override

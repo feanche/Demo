@@ -54,11 +54,11 @@ public class UserAdsAdapter extends RecyclerView.Adapter<UserAdsAdapter.UserView
 
 
         if(user.getPhotoUrl().size() != 0)
-        GlideApp.with(context)
-                .load(user.getPhotoUrl().get(0))
-                .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.imageView);
+            GlideApp.with(context)
+                    .load(user.getPhotoUrl().get(0))
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.imageView);
     }
 
     @Override
