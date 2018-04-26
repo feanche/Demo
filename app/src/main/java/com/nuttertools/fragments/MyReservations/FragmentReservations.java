@@ -1,7 +1,6 @@
 package com.nuttertools.fragments.MyReservations;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.nuttertools.MainActivity;
 import com.nuttertools.R;
 
 import com.nuttertools.fragments.MyReservations.Adapters.ReservationAdapter;
@@ -24,8 +22,6 @@ import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.ItemClickSupport;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,7 +53,7 @@ public class FragmentReservations extends Fragment {
         swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_colors));
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.title_my_orders));
+        toolbar.setTitle(getString(R.string.title_my_orders));
 
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -102,11 +98,11 @@ public class FragmentReservations extends Fragment {
     }
 
     private void emptyCheck() {
-        container_empty = view.findViewById(R.id.container_empty);
+        container_empty = view.findViewById(R.id.container_empty_reservations);
         if (adapter.getItemCount() == 0) {
             EmptyFragment emptyFragment = EmptyFragment.instance();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.container_empty, emptyFragment)
+            transaction.replace(R.id.container_empty_reservations, emptyFragment)
                     .commit();
             container_empty.setVisibility(View.VISIBLE);
         } else {
@@ -159,7 +155,7 @@ public class FragmentReservations extends Fragment {
 
     public MaterialDialog createDialog() {
         return new MaterialDialog.Builder(getContext())
-                .content(getResources().getString(R.string.dialog_wait))
+                .content(getString(R.string.dialog_wait))
                 .progress(true, 0)
                 .show();
     }
@@ -172,17 +168,19 @@ public class FragmentReservations extends Fragment {
         UserAdsModel ads = ar.get(position);
         if (firebaseUser != null) {
             WriteBatch batch = db.batch();
-            DocumentReference myReservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.MY_RESERVATIONS).document(ads.getId());
+            DocumentReference myReservationRef = db
+                    .collection(FirebaseConst.USERS)
+                    .document(firebaseUser.getUid())
+                    .collection(FirebaseConst.MY_RESERVATIONS)
+                    .document(ads.getId());
             batch.delete(myReservationRef);
-            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    ar.remove(position);
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                    emptyCheck();
-                }
-            });
+            batch.commit()
+                    .addOnCompleteListener(task -> {
+                        ar.remove(position);
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                        emptyCheck();
+                    });
         }
     }
 

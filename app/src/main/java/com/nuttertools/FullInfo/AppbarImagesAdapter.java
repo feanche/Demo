@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.nuttertools.R;
 import com.nuttertools.utils.GlideApp;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -42,7 +41,7 @@ public class AppbarImagesAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup view, final int position) {
         View myImageLayout = inflater.inflate(R.layout.appbar_image_slide, view, false);
-        ImageView myImage = (ImageView) myImageLayout.findViewById(R.id.image);
+        ImageView myImage = myImageLayout.findViewById(R.id.image);
 
         GlideApp.with(context)
                 .load(images.get(position))

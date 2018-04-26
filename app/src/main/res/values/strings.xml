@@ -82,6 +82,8 @@
 
     <string name="title_my_orders">Мои заказы</string>
     <string name="title_my_booking">Мои бронирования</string>
+    <string name="title_profile_edit">Редактирование</string>
+    <string name="title_categories">Категории</string>
 
     <string name="dialog_wait">Пожалуйста, подождите!</string>
 
@@ -93,13 +95,17 @@
     <string name="tv_unknown_status">Статус неизвестен</string>
     <string name="tv_not_booked">Не забронирован!</string>
     <string name="tv_delivery_method">Способ отправки: доставка</string>
+    <string name="tv_not_authorization">Вы не авторизованы</string>
 
     <string name="toast_something_wrong">Что-то пошло не так</string>
     <string name="toast_successfull_logout">Успешный выход</string>
+    <string name="toast_success_profile_edit">Профиль успешно изменен!</string>
 
     <string name="snackbar_quote_exc">Квота превышена</string>
 
     <string name="et_invalid_code">Неверный код</string>
     <string name="et_invalid_phone">Неверный номер телефона</string>
     <string name="et_not_be_empty">Не может быть пустым</string>
+    <string name="et_should_enter_name">Вы должны ввести имя</string>
+    <string name="et_should_enter_phone">Вы должны ввести номер</string>
 </resources>

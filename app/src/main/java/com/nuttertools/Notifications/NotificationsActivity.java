@@ -1,8 +1,8 @@
 package com.nuttertools.Notifications;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,24 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.nuttertools.FullInfo.FullInfoActivity;
 import com.nuttertools.R;
-import com.nuttertools.fragments.Browse.adapters.*;
-import com.nuttertools.models.ReservationQuery;
-import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.ItemClickSupport;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
@@ -43,14 +34,13 @@ public class NotificationsActivity extends AppCompatActivity {
     private ArrayList<Notification> arNotificatons = new ArrayList<>();
     private NotificationsAdapter adapter;
     private RecyclerView recyclerView;
+    private ConstraintLayout container_empty;
 
-    //Toolbar back button click
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +55,28 @@ public class NotificationsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.activity_notifications_name));
+        getSupportActionBar().setTitle(getString(R.string.activity_notifications_name));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         initRecyclerView();
         getDate();
     }
 
-    private void initRecyclerView() {
+    private void emptyCheck() {
+        container_empty = findViewById(R.id.container_empty_notifications);
+        if (adapter.getItemCount() == 0) {
+            EmptyFragment emptyFragment = EmptyFragment.instance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_empty_notifications, emptyFragment)
+                    .commit();
+            container_empty.setVisibility(View.VISIBLE);
+        } else {
+            container_empty.setVisibility(View.GONE);
+        }
+    }
 
+    private void initRecyclerView() {
         adapter = new NotificationsAdapter(getApplicationContext(), arNotificatons);
         recyclerView = findViewById(R.id.items);
         recyclerView.setHasFixedSize(true);
@@ -81,37 +84,25 @@ public class NotificationsActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
-
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
-            }
-        });
-
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-
                 return false;
             }
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //Remove swiped item from list and notify the RecyclerView
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 WriteBatch batch = db.batch();
-                // Set the value of reservationsQuery
-                DocumentReference reservationRef = db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.NOTIFICATIONS).document(arNotificatons.get(viewHolder.getAdapterPosition()).getId());
+                DocumentReference reservationRef = db
+                        .collection(FirebaseConst.USERS)
+                        .document(firebaseUser.getUid())
+                        .collection(FirebaseConst.NOTIFICATIONS)
+                        .document(arNotificatons.get(viewHolder.getAdapterPosition()).getId());
                 batch.delete(reservationRef);
-                // Commit the batch
-                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(TAG, "batch success");
-                    }
-                });
+                batch.commit().addOnCompleteListener(task -> Log.d(TAG, "batch success"));
                 arNotificatons.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
@@ -121,12 +112,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-                    // This method performs the actual data-refresh operation.
-                    // The method calls setRefreshing(false) when it's finished.
-            getDate();
-                }
-        );
+        swipeRefreshLayout.setOnRefreshListener(() -> getDate());
 
     }
 
@@ -138,34 +124,25 @@ public class NotificationsActivity extends AppCompatActivity {
             db.collection(FirebaseConst.USERS).document(firebaseUser.getUid()).collection(FirebaseConst.NOTIFICATIONS)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-
-                                if (task.getResult().size() == 0) {
-                                    //view.showToast("Нет данных");
-
-                                    return;
-                                }
-
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    Notification notification = document.toObject(Notification.class);
-                                    notification.setId(document.getId());
-                                    arNotificatons.add(notification);
-                                }
-                                adapter.notifyDataSetChanged();
-                                swipeRefreshLayout.setRefreshing(false);
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
+                                return;
                             }
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Notification notification = document.toObject(Notification.class);
+                                notification.setId(document.getId());
+                                arNotificatons.add(notification);
+                            }
+                            adapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnFailureListener(e -> {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getApplicationContext(), "Ошибка " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnSuccessListener(queryDocumentSnapshots -> emptyCheck());
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }

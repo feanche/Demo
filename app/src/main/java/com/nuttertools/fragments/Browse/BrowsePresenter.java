@@ -1,7 +1,7 @@
 package com.nuttertools.fragments.Browse;
 
-import android.util.Log;
-
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.FirebaseConst;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -15,8 +15,6 @@ import java.util.ArrayList;
  */
 
 public class BrowsePresenter implements BrowseFragmentContract.Presenter {
-
-    public static String TAG = "BrowsePresenter";
 
     private BrowseFragmentContract.View view;
     private ArrayList<UserAdsModel> arAds = new ArrayList<>();
@@ -41,7 +39,6 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                             return;
                         }
                         for (DocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
                             UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
                             userAdsModel.setId(document.getId());
                             arAds.add(userAdsModel);
@@ -49,7 +46,8 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                         view.hideLoading();
                         view.addDate(arAds);
                     } else view.hideLoading();
-                });
+                })
+                .addOnSuccessListener(queryDocumentSnapshots -> view.emptyCheck());
     }
 
     @Override
@@ -68,7 +66,6 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                             return;
                         }
                         for (DocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
                             UserAdsModel userAdsModel = document.toObject(UserAdsModel.class);
                             userAdsModel.setId(document.getId());
                             arAds.add(userAdsModel);
@@ -76,6 +73,8 @@ public class BrowsePresenter implements BrowseFragmentContract.Presenter {
                         view.hideLoading();
                         view.addDate(arAds);
                     } else view.hideLoading();
-                });
+                })
+                .addOnSuccessListener(queryDocumentSnapshots -> view.emptyCheck());
     }
+
 }

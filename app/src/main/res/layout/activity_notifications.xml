@@ -63,4 +63,11 @@
         android:backgroundTint="@color/secondaryText"
         android:src="@drawable/ic_add_black_24dp" />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container_empty_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.design.widget.CoordinatorLayout>

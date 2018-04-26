@@ -1,12 +1,12 @@
 package com.nuttertools.fragments.Browse;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +19,11 @@ import android.view.ViewGroup;
 
 import com.nuttertools.FullInfo.FullInfoActivity;
 import com.nuttertools.MainActivity;
-import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
 import com.nuttertools.category.CategoryActivity;
 import com.nuttertools.fragments.Browse.adapters.UserAdsAdapter;
 import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.EmptyFragment;
 import com.nuttertools.utils.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -47,6 +47,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
     int adId;
     public static Bundle bundle = new Bundle();
     private Menu menu;
+    private ConstraintLayout container_empty;
 
     public static FragmentBrowseLastItems instance(int id, String name) {
         bundle.putInt("id", id);
@@ -82,26 +83,12 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-
-    @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
         if (visible) {
             if(toolbar!=null) ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         }
     }
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -133,12 +120,7 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
             startActivity(intent);
         });
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-                    // This method performs the actual data-refresh operation.
-                    // The method calls setRefreshing(false) when it's finished.
-                    presenter.getLastAddedItems(20);
-                }
-        );
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.getLastAddedItems(20));
 
     }
 
@@ -165,20 +147,30 @@ public class FragmentBrowseLastItems extends Fragment implements BrowseFragmentC
     }
 
     @Override
+    public void emptyCheck() {
+        container_empty = view.findViewById(R.id.container_empty_last_items);
+        if (adapter.getItemCount() == 0) {
+            EmptyFragment emptyFragment = EmptyFragment.instance();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_empty_last_items, emptyFragment)
+                    .commit();
+            container_empty.setVisibility(View.VISIBLE);
+        } else {
+            container_empty.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id) {
             case R.id.action_search:
                 startActivity(new Intent(getContext(), CategoryActivity.class));
         }
-        //noinspection SimplifiableIfStatement
-
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }
