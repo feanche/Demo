@@ -17,19 +17,11 @@ package com.nuttertools;
  */
 
 
-        import android.support.annotation.NonNull;
-        import android.util.Log;
+import android.util.Log;
 
-        import com.nuttertools.utils.FirebaseMethods;
-        import com.google.android.gms.tasks.OnCompleteListener;
-        import com.google.android.gms.tasks.Task;
-        import com.google.firebase.auth.FirebaseAuth;
-        import com.google.firebase.firestore.FirebaseFirestore;
-        import com.google.firebase.iid.FirebaseInstanceId;
-        import com.google.firebase.iid.FirebaseInstanceIdService;
-
-        import java.util.HashMap;
-        import java.util.Map;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.nuttertools.utils.FirebaseMethods;
 
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {

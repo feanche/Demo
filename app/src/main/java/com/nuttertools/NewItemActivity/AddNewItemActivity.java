@@ -27,22 +27,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.nuttertools.UserAddressesActivity.AddressesActivity;
-import com.nuttertools.fragments.Category.Category;
-import com.nuttertools.models.UserAdsModel;
-import com.nuttertools.utils.CreateDialog;
-import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,8 +37,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import com.nuttertools.R;
+import com.nuttertools.UserAddressesActivity.AddressesActivity;
+import com.nuttertools.fragments.Category.Category;
+import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.CreateDialog;
+import com.nuttertools.utils.FirebaseConst;
+import com.nuttertools.utils.GlideApp;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Alexander on 10.01.2018.

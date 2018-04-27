@@ -1,12 +1,10 @@
 package com.nuttertools.fragments.Browse;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.nuttertools.models.UserAdsModel;
-import com.nuttertools.utils.FirebaseConst;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.FirebaseConst;
 
 import java.util.ArrayList;
 

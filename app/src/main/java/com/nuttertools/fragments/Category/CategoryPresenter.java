@@ -1,9 +1,9 @@
 package com.nuttertools.fragments.Category;
 
-import com.nuttertools.utils.FirebaseConst;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.nuttertools.utils.FirebaseConst;
 
 import java.util.ArrayList;
 

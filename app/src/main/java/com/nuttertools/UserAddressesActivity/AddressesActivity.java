@@ -10,25 +10,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.nuttertools.MapsActivity;
-import com.nuttertools.NewItemActivity.AddNewItemActivity;
-import com.nuttertools.models.Address;
-import com.nuttertools.utils.CreateDialog;
-import com.nuttertools.utils.EmptyFragment;
-import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.ItemClickSupport;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.nuttertools.MapsActivity;
+import com.nuttertools.NewItemActivity.AddNewItemActivity;
 import com.nuttertools.R;
+import com.nuttertools.models.Address;
+import com.nuttertools.utils.CreateDialog;
+import com.nuttertools.utils.EmptyFragment;
+import com.nuttertools.utils.FirebaseConst;
+import com.nuttertools.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 

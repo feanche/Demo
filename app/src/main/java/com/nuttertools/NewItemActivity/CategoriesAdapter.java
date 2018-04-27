@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.nuttertools.fragments.Category.Category;
 import com.nuttertools.R;
+import com.nuttertools.fragments.Category.Category;
 
 import java.util.ArrayList;
 

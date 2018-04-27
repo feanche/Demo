@@ -15,19 +15,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.nuttertools.R;
-
-import com.nuttertools.fragments.MyReservations.Adapters.ReservationAdapter;
-import com.nuttertools.models.UserAdsModel;
-import com.nuttertools.utils.EmptyFragment;
-import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.ItemClickSupport;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
+import com.nuttertools.R;
+import com.nuttertools.fragments.MyReservations.Adapters.ReservationAdapter;
+import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.utils.EmptyFragment;
+import com.nuttertools.utils.FirebaseConst;
+import com.nuttertools.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 

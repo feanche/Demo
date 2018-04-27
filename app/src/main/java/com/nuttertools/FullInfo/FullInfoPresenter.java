@@ -1,15 +1,15 @@
 package com.nuttertools.FullInfo;
 
-import com.nuttertools.R;
-import com.nuttertools.models.ReservationInfo;
-import com.nuttertools.models.UserAdsModel;
-import com.nuttertools.models.Users;
-import com.nuttertools.utils.FirebaseConst;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
+import com.nuttertools.R;
+import com.nuttertools.models.ReservationInfo;
+import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.models.Users;
+import com.nuttertools.utils.FirebaseConst;
 
 /**
  * Created by lAntimat on 15.01.2018.

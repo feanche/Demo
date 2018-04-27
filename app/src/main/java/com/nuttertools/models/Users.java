@@ -1,7 +1,5 @@
 package com.nuttertools.models;
 
-import java.util.ArrayList;
-
 /**
  * Created by GabdrakhmanovII on 22.01.2018.
  */

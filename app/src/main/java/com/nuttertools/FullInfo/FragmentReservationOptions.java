@@ -31,7 +31,6 @@ import com.nuttertools.models.ReservationInfo;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.models.Users;
 import com.nuttertools.utils.GlideApp;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

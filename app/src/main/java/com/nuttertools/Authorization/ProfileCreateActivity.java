@@ -1,9 +1,9 @@
 package com.nuttertools.Authorization;
 
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,16 +11,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.nuttertools.R;
-import com.nuttertools.fragments.FragmentPersonal;
-import com.nuttertools.models.Users;
-import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.GlideApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.nuttertools.R;
+import com.nuttertools.fragments.FragmentPersonal;
+import com.nuttertools.models.Users;
+import com.nuttertools.utils.FirebaseConst;
+import com.nuttertools.utils.GlideApp;
 
 public class ProfileCreateActivity extends AppCompatActivity {
 

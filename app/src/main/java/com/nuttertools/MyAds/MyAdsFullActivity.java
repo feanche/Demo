@@ -15,13 +15,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.nuttertools.R;
-import com.nuttertools.models.ReservationInfo;
-import com.nuttertools.models.UserAdsModel;
-import com.nuttertools.models.Users;
-import com.nuttertools.utils.CreateDialog;
-import com.nuttertools.utils.FirebaseConst;
-import com.nuttertools.utils.GlideApp;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +23,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
-import com.squareup.picasso.Picasso;
+import com.nuttertools.R;
+import com.nuttertools.models.ReservationInfo;
+import com.nuttertools.models.UserAdsModel;
+import com.nuttertools.models.Users;
+import com.nuttertools.utils.CreateDialog;
+import com.nuttertools.utils.FirebaseConst;
+import com.nuttertools.utils.GlideApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

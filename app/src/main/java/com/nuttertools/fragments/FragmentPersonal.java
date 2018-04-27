@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nuttertools.Authorization.ProfileCreateActivity;
 import com.nuttertools.MyAds.MyAdsActivity;
 import com.nuttertools.Notifications.NotificationsActivity;
@@ -19,12 +25,6 @@ import com.nuttertools.R;
 import com.nuttertools.UserAddressesActivity.AddressesActivity;
 import com.nuttertools.models.Users;
 import com.nuttertools.utils.GlideApp;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.List;

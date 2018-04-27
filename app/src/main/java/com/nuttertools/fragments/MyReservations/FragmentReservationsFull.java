@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nuttertools.MainActivity;
 import com.nuttertools.R;
 import com.nuttertools.models.ReservationInfo;
@@ -23,9 +26,6 @@ import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.models.Users;
 import com.nuttertools.utils.FirebaseConst;
 import com.nuttertools.utils.GlideApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

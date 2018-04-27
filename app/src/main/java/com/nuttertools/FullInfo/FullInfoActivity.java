@@ -3,7 +3,6 @@ package com.nuttertools.FullInfo;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -21,7 +20,6 @@ import com.nuttertools.R;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.models.Users;
 import com.nuttertools.utils.GlideApp;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 

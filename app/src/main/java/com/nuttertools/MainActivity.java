@@ -9,16 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nuttertools.adapters.ViewPagerAdapter;
 import com.nuttertools.fragments.Browse.FragmentBrowseLastItems;
 import com.nuttertools.fragments.FragmentPersonal;
 import com.nuttertools.fragments.MyReservations.FragmentReservations;
 import com.nuttertools.utils.CustomViewPager;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 
 import java.util.HashMap;
 
