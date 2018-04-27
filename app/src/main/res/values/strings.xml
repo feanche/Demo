@@ -111,6 +111,8 @@
     <string name="toast_current_location">Текущее местоположение</string>
     <string name="toast_default_address_edit_error">Ошибка изменения адреса по-умолчанию</string>
     <string name="toast_address_delete_error">Ошибка удаления адреса</string>
+    <string name="toast_item_reserved">Товар забронирован!</string>
+    <string name="toast_document_not_exist">Документа не существует!</string>
 
     <string name="snackbar_quote_exc">Квота превышена</string>
 
