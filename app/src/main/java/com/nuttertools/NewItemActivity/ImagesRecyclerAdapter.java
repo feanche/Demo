@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.nuttertools.R;
 import com.nuttertools.utils.GlideApp;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -42,7 +41,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         void ivDelClick(int position);
     }
 
-
     public ImagesRecyclerAdapter(Context context, ArrayList<UploadImage> itemList, BtnClickListener listener) {
         this.context = context;
         this.mList = itemList;
@@ -67,12 +65,7 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((SecondViewHolder) holder).progressBar.setVisibility(View.GONE);
             ((SecondViewHolder) holder).imageView.setVisibility(View.INVISIBLE);
 
-            ((SecondViewHolder) holder).ivAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.ivAddClick();
-                }
-            });
+            ((SecondViewHolder) holder).ivAdd.setOnClickListener(view -> listener.ivAddClick());
         } else {
             ((SecondViewHolder) holder).ivAdd.setVisibility(View.GONE);
             ((SecondViewHolder) holder).ivDel.setVisibility(View.VISIBLE);
@@ -87,7 +80,6 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ((SecondViewHolder) holder).progressBar.setVisibility(View.INVISIBLE);
             }
 
-
             GlideApp.with(context)
                     .load(mList.get(position).getUri())
                     .fitCenter()
@@ -95,15 +87,8 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(((SecondViewHolder) holder).imageView);
 
-            ((SecondViewHolder) holder).ivDel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.ivDelClick(position);
-                }
-            });
+            ((SecondViewHolder) holder).ivDel.setOnClickListener(view -> listener.ivDelClick(position));
         }
-
-
     }
 
     @Override
@@ -141,13 +126,13 @@ public class ImagesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public SecondViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.ivPhoto);
+            imageView = itemView.findViewById(R.id.ivPhoto);
             imageView.setDrawingCacheEnabled(true);
             imageView.buildDrawingCache();
 
-            ivAdd = (ImageView) itemView.findViewById(R.id.ivAdd);
-            ivDel = (ImageView) itemView.findViewById(R.id.ivDel);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.photoAddProgressBar);
+            ivAdd = itemView.findViewById(R.id.ivAdd);
+            ivDel = itemView.findViewById(R.id.ivDel);
+            progressBar = itemView.findViewById(R.id.photoAddProgressBar);
             progressBar.setProgress(0);
             progressBar.setMax(100);
         }

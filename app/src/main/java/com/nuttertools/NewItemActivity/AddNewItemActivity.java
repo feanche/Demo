@@ -1,7 +1,6 @@
 package com.nuttertools.NewItemActivity;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputEditText;
@@ -23,7 +21,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -40,9 +37,6 @@ import java.util.UUID;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.nuttertools.UserAddressesActivity.AddressesActivity;
 import com.nuttertools.fragments.Category.Category;
 import com.nuttertools.models.UserAdsModel;
@@ -58,7 +52,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import com.nuttertools.R;
-import com.nuttertools.utils.NumberTextWatcher;
 
 /**
  * Created by Alexander on 10.01.2018.
@@ -79,7 +72,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
     boolean complete = true;
     public static final int GALLERY = 200;
     public static final int CAMERA = 300;
-    final static String TAG = "myLogs_AddNewItem";
     private TextView localityText;
     private Uri localPhotoUri;
     private ConstraintLayout locationButton;
@@ -120,7 +112,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.activity_my_ad_name));
+        getSupportActionBar().setTitle(R.string.activity_my_ad_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -177,21 +169,21 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
         publishButton.setOnClickListener(v -> {
             AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
-            yesOrNoDialog.setTitle("Подтверждаете размещение объявления?");
-            yesOrNoDialog.setPositiveButton("OK", (dialog, which) -> {
-                //completenessCheck();
-                /*if (!complete) {
-                    Toast.makeText(getApplicationContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+            yesOrNoDialog.setTitle(R.string.dialog_approve_ad_placement);
+            yesOrNoDialog.setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                completenessCheck();
+                if (!complete) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_fill_all_fields, Toast.LENGTH_SHORT).show();
                 } else if (complete && arReportUrl.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Добавьте хотя бы одно изображение", Toast.LENGTH_SHORT).show();
-                } else if (complete && !arReportUrl.isEmpty()){*/
+                    Toast.makeText(getApplicationContext(), R.string.toast_add_one_image, Toast.LENGTH_SHORT).show();
+                } else if (complete && !arReportUrl.isEmpty()){
                     sendDataToFirestore();
-                   /* finish();
-                }*/
+                    finish();
+                }
             });
 
-            yesOrNoDialog.setNegativeButton("Отмена", (dialog, which) ->
-                    Toast.makeText(getApplicationContext(), "Тебе что-то не понравилось", Toast.LENGTH_SHORT).show());
+            yesOrNoDialog.setNegativeButton(R.string.dialog_cancel, (dialog, which) ->
+                    Toast.makeText(getApplicationContext(), R.string.toast_did_not_like_something, Toast.LENGTH_SHORT).show());
             yesOrNoDialog.show();
         });
         initRecyclerView();
@@ -287,7 +279,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream);
         final byte[] data = byteArrayOutputStream.toByteArray();
         if (data.length > 0) {
-            //uploadImageToStorage(data);
             photo = data;
         }
     }
@@ -296,7 +287,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
         StorageReference ref = storageReference.child("images/" + adId + "/"+ UUID.randomUUID().toString());
         uploadTask = ref.putBytes(data);
         uploadTask.addOnFailureListener(e ->
-                Toast.makeText(getApplicationContext(),"Ошибка отправки данных",Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(),R.string.toast_error_data_send,Toast.LENGTH_SHORT)
                         .show())
                 .addOnProgressListener(taskSnapshot -> {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
@@ -307,7 +298,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     downloadUrl = taskSnapshot.getDownloadUrl();
                     arReportUrl.add(downloadUrl.toString());
                     db.collection(FirebaseConst.ADS).document(adId).update("photoUrl",arReportUrl);
-                    Toast.makeText(getApplicationContext(),"Объявление размещено",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.toast_ad_placed,Toast.LENGTH_SHORT).show();
                     finish();
                 });
     }
@@ -347,7 +338,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     uploadImageToStorage(photo, adId);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getApplicationContext(),"Ошибка отправки данных",Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(),R.string.toast_error_data_send,Toast.LENGTH_SHORT)
                                 .show());
     }
 
@@ -367,7 +358,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-        String[] pictureDialogItems = {"Выбрать из галереи", "Сделать фото на камеру"};
+        String[] pictureDialogItems = {getString(R.string.dialog_choose_from_galery), getString(R.string.dialog_take_photo)};
         pictureDialog.setItems(pictureDialogItems, (dialog, which) -> {
             switch (which) {
                 case 0:
@@ -414,7 +405,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
                     imagesRecyclerAdapter.notifyDataSetChanged();
         })
                 .addOnFailureListener(e ->
-                Toast.makeText(getApplicationContext(),"Ошибка удаления изображения",Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(),R.string.toast_error_image_removing,Toast.LENGTH_SHORT)
                         .show());
     }
 
@@ -446,12 +437,12 @@ public class AddNewItemActivity extends AppCompatActivity implements ImagesRecyc
 
     private void exitAddActivityConfirmation() {
         AlertDialog.Builder yesOrNoDialog = new AlertDialog.Builder(AddNewItemActivity.this);
-        yesOrNoDialog.setTitle("Действительно хотите выйти?");
-        yesOrNoDialog.setMessage("После выхода вся информация будет утеряна");
+        yesOrNoDialog.setTitle(R.string.dialog_get_out);
+        yesOrNoDialog.setMessage(R.string.dialog_info_will_lost);
         yesOrNoDialog
-                .setPositiveButton("Да", (dialog, which) ->
+                .setPositiveButton(R.string.dialog_yes, (dialog, which) ->
                         deleteAllPhoto())
-                .setNegativeButton("Нет", (dialog, which) -> {
+                .setNegativeButton(R.string.dialog_no, (dialog, which) -> {
 
                 });
         yesOrNoDialog.show();

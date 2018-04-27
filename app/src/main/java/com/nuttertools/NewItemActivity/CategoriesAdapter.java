@@ -2,13 +2,10 @@ package com.nuttertools.NewItemActivity;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.nuttertools.fragments.Category.Category;
@@ -40,8 +37,8 @@ public class CategoriesAdapter extends ArrayAdapter<Category>{
 
         Category item = data.get(position);
 
-        if (item != null) { // парсим данные с каждого объекта
-            TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_layout);
+        if (item != null) {
+            TextView myCountry = row.findViewById(R.id.text_spinner_layout);
             if (myCountry != null)
                 myCountry.setText(item.getName());
         }
@@ -50,7 +47,7 @@ public class CategoriesAdapter extends ArrayAdapter<Category>{
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) { // этот код выполняется, когда вы нажимаете на спиннер
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
         if (row == null) {
             LayoutInflater inflater = context.getLayoutInflater();
@@ -59,8 +56,8 @@ public class CategoriesAdapter extends ArrayAdapter<Category>{
 
         Category item = data.get(position);
 
-        if (item != null) { // парсим данные с каждого объекта
-            TextView myCountry = (TextView) row.findViewById(R.id.text_spinner_dropdown);
+        if (item != null) {
+            TextView myCountry = row.findViewById(R.id.text_spinner_dropdown);
             if (myCountry != null)
                 myCountry.setText(item.getName());
         }

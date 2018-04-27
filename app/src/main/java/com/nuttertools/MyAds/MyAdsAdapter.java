@@ -12,7 +12,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.nuttertools.R;
 import com.nuttertools.models.UserAdsModel;
 import com.nuttertools.utils.GlideApp;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

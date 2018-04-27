@@ -214,7 +214,7 @@ public class AddressesActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Адрес <"+address.getCommentToAddress()+"> выбран по-умолчанию",Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(),"Ошибка изменения адреса по-умолчанию",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.toast_default_address_edit_error,Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
 
@@ -245,7 +245,7 @@ public class AddressesActivity extends AppCompatActivity {
                     emptyCheck();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getApplicationContext(),"Ошибка удаления адреса",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.toast_address_delete_error,Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 });
     }

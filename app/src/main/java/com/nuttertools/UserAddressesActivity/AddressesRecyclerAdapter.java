@@ -51,12 +51,7 @@ public class AddressesRecyclerAdapter extends RecyclerView.Adapter<AddressesRecy
         } else {
             holder.checkDefault.setVisibility(View.GONE);
         }
-        holder.ivDots.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dotsClickListener.onClick(position);
-            }
-        });
+        holder.ivDots.setOnClickListener(v -> dotsClickListener.onClick(position));
     }
 
     @Override

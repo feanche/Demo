@@ -66,8 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static String LOCATION_LON = "location_lon";
     public static String COMMENT = "cv_comment";
 
-    final static String TAG = "myLogs_MapsActivity";
-
     EditText find_location, text_comment;
     CardView btn_pinMarker, cv_comment;
     TextView comment_complete;
@@ -143,7 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.setMyLocationEnabled(true);
                     }
                 } else {
-                    Toast.makeText(this, "Нет доступа к местоположению", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_no_access_location, Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -296,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             break;
             case R.id.comment_complete:
                 if (text_comment.getText().toString().isEmpty()) {
-                    comment = "Последнее местоположение";
+                    comment = getString(R.string.last_location);
                 } else {
                     comment = text_comment.getText().toString();
                 }
@@ -308,7 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             break;
             case R.id.show_my_location: {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
-                Toast.makeText(this, "Текущее местоположение", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_current_location, Toast.LENGTH_SHORT).show();
             }
             break;
         }
